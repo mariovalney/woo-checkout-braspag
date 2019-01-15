@@ -147,7 +147,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 require_once $module_data[0];
 
                 if ( ! class_exists( $module_data[1] ) ) continue;
-                $this->modules[ $module ] = new $module_data[1]( $this );
+                $this->modules[ $module ] = new $module_data[1]();
             }
 
             $loaded = array_keys( $this->modules );
@@ -259,18 +259,26 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
             }
 
             // Running Modules (first of all)
-            foreach ( $this->modules as $module ) {
-                $module->run();
+            foreach ( $this->modules as $module_slug => $module ) {
+                // Run Module: before anything
+                if ( method_exists( $module, 'run' ) ) {
+                    $module->run( $this );
+                }
 
                 // Include Files if Configured
                 if ( property_exists( $module, 'includes' ) ) {
                     foreach ( (array) $module->includes as $class ) {
-                        $file = WCB_PLUGIN_PATH . '/modules/' . $module::MODULE_SLUG . '/includes/' . $class . '.php';
+                        $file = WCB_PLUGIN_PATH . '/modules/' . $module_slug . '/includes/' . $class . '.php';
                         if ( file_exists( $file ) ) require_once $file;
                     }
                 }
 
-                // After Run Method
+                // Define Hooks: after include everything
+                if ( method_exists( $module, 'define_hooks' ) ) {
+                    $module->define_hooks();
+                }
+
+                // After Run Method: last method
                 if ( method_exists( $module, 'after_run' ) ) {
                     $module->after_run();
                 }
@@ -295,4 +303,4 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
 global $wcb_core;
 
 $wcb_core = new Woo_Checkout_Braspag();
-$wcb_core->run();
+add_action( 'plugins_loaded', [ $wcb_core, 'run' ] );
