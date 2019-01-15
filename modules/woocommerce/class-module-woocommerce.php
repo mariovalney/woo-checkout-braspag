@@ -37,11 +37,45 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
         }
 
         /**
+         * Define the core functionalities into plugin.
+         *
+         * @since    1.0.0
+         * @param    Woo_Checkout_Braspag      $core   The Core object
+         */
+        public function define_hooks() {
+            if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) return;
+
+            $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
+            $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
+        }
+
+        /**
          * Action: 'admin_notices'
          * Missing something
          */
         public function dependencies_notices() {
             include_once 'includes/views/html-notice-woocommerce-missing.php';
+        }
+
+        /**
+         * Filter: 'woocommerce_payment_gateways'
+         * Add gateway to WooCommerce
+         */
+        public function add_woocommerce_gateway( $methods ) {
+            $methods[] = 'WC_Checkout_Braspag_Gateway';
+
+            return $methods;
+        }
+
+        /**
+         * Filter: 'plugin_action_links_{plugin_file}'
+         * Add Settings link to plugins dashboard
+         */
+        public function plugin_action_links( $links ) {
+            $url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_checkout_braspag_gateway' );
+            $plugin_links = [ '<a href="' . esc_url( $url ) . '">' . __( 'Settings', WCB_TEXTDOMAIN ) . '</a>' ];
+
+            return array_merge( $plugin_links, $links );
         }
 
     }
