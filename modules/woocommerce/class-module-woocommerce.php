@@ -33,6 +33,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $this->includes = array(
                 'class-wc-checkout-braspag-gateway',
+                'class-wc-checkout-braspag-api',
             );
         }
 
@@ -44,6 +45,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          */
         public function define_hooks() {
             if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) return;
+            if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) return;
 
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );

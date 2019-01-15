@@ -31,16 +31,25 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->init_form_fields();
             $this->init_settings();
 
-            // Options
-            $this->title           = $this->get_option( 'title' );
-            // $this->description     = $this->get_option( 'description' );
-            // $this->merchant_id     = $this->get_option( 'merchant_id' );
-            // $this->antifraud       = $this->get_option( 'antifraud' );
-            // $this->cc_authorized   = $this->get_option( 'cc_authorized' );
-            // $this->send_only_total = $this->get_option( 'send_only_total' );
-            // $this->debug           = $this->get_option( 'debug' );
+            // All Options
+            $this->title                = $this->get_option( 'title' );
+            $this->description          = $this->get_option( 'description' );
+            $this->merchant_id          = $this->get_option( 'merchant_id' );
+            $this->sandbox              = $this->get_option( 'sandbox' );
+            $this->merchant_key         = $this->get_option( 'merchant_key' );
+            $this->sandbox_merchant_key = $this->get_option( 'sandbox_merchant_key' );
+            $this->debug                = $this->get_option( 'debug' );
 
-            // Hooks
+            // Active Logs
+            $this->log = ( 'yes' == $this->debug ) ? new WC_Logger() : false;
+
+            // Start API
+            $is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
+            $merchant_key = ( $is_sandbox ) ? $this->sandbox_merchant_key : $this->merchant_key;
+
+            $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $is_sandbox );
+
+            // Register Hooks
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         }
 
@@ -50,25 +59,80 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function init_form_fields() {
+            $merchant_id_description = sprintf(
+                __( 'Please enter your Merchant ID. You can find it in %s.', WCB_TEXTDOMAIN ),
+                '<a href="https://admin.braspag.com.br/Account/MyMerchants" target="_blank">' . __( 'Braspag Admin > My Merchants', WCB_TEXTDOMAIN ) . '</a>'
+            );
+
+            $merchant_key_description = sprintf(
+                __( 'Please enter your Merchant Key. You received it after your register or you can enter in contact at %s.', WCB_TEXTDOMAIN ),
+                '<a href="mailto:suporte@braspag.com.br">suporte@braspag.com.br</a>'
+            );
+
+            $debug_description = sprintf(
+                __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
+                '<a href="' . esc_url( admin_url( 'admin.php?page=wc-status&tab=logs&log_file=' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log' ) ) . '">' . __( 'System Status &gt; Logs', WCB_TEXTDOMAIN ) . '</a>'
+            );
+
             $this->form_fields = array(
-                'enabled'   => array(
+                'enabled'               => array(
                     'type'    => 'checkbox',
                     'title'   => __( 'Enable/Disable', WCB_TEXTDOMAIN ),
                     'label'   => __( 'Enable Checkout Braspag', WCB_TEXTDOMAIN ),
                     'default' => 'no',
                 ),
-                'title'     => array(
+                'title'                 => array(
                     'type'        => 'text',
                     'title'       => __( 'Title', WCB_TEXTDOMAIN ),
                     'description' => __( 'Title of payment method to user.', WCB_TEXTDOMAIN ),
                     'default'     => __( 'Braspag', WCB_TEXTDOMAIN ),
                 ),
-                'description' => array(
+                'description'           => array(
                     'type'        => 'textarea',
                     'title'       => __( 'Description', WCB_TEXTDOMAIN ),
                     'description' => __( 'User will see this description during checkout.', WCB_TEXTDOMAIN ),
                     'default'     => __( 'Pay with credit card, debit card, online debit or banking billet.', WCB_TEXTDOMAIN ),
                 ),
+                'braspag_section'       => array(
+                    'type'        => 'title',
+                    'title'       => __( 'Braspag Settings', WCB_TEXTDOMAIN ),
+                ),
+                'merchant_id'           => array(
+                    'type'              => 'text',
+                    'title'             => __( 'Merchant ID', WCB_TEXTDOMAIN ),
+                    'description'       => $merchant_id_description,
+                    'default'           => '',
+                    'custom_attributes' => [ 'required' => 'required' ],
+                ),
+                'sandbox'               => array(
+                    'type'        => 'checkbox',
+                    'title'       => __( 'Braspag Sandbox', WCB_TEXTDOMAIN ),
+                    'label'       => __( 'Enable Braspag Sandbox', WCB_TEXTDOMAIN ),
+                    'desc_tip'    => true,
+                    'default'     => 'no',
+                    'description' => __( 'You can use sandbox to test the payments (requires a sandbox Merchant ID).', WCB_TEXTDOMAIN ),
+                ),
+                'merchant_key'          => array(
+                    'type'        => 'text',
+                    'title'       => __( 'Merchant Key', WCB_TEXTDOMAIN ),
+                    'description' => $merchant_key_description,
+                ),
+                'sandbox_merchant_key'  => array(
+                    'type'        => 'text',
+                    'title'       => __( 'Sandbox Merchant Key', WCB_TEXTDOMAIN ),
+                    'description' => $merchant_key_description,
+                ),
+                'debug_section'         => array(
+                    'type'        => 'title',
+                    'title'       => __( 'Log Settings', WCB_TEXTDOMAIN ),
+                ),
+                'debug'                 => array(
+                    'type'        => 'checkbox',
+                    'title'       => __( 'Debug Log', WCB_TEXTDOMAIN ),
+                    'label'       => __( 'Enable logging', WCB_TEXTDOMAIN ),
+                    'description' => $debug_description,
+                    'default'     => 'no',
+                )
             );
         }
 
