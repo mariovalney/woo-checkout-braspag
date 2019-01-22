@@ -12,8 +12,13 @@ var dir_assets = 'modules/*/assets/',
 /**
  * TASK: scripts
  */
+var js_source_files = [
+    dir_js + '*.js',
+    '!' + dir_js + '*.min.js',
+];
+
 function scripts() {
-    return gulp.src(dir_js + 'scripts.js')
+    return gulp.src(js_source_files)
         .pipe(rename(function(path) {
             path.extname = '.min.js';
         }))
@@ -30,7 +35,7 @@ gulp.task('scripts', scripts);
  */
 
 function watch_changes() {
-    gulp.watch(dir_js + 'scripts.js', gulp.series('scripts'));
+    gulp.watch(js_source_files, gulp.series('scripts'));
 }
 
 gulp.task('watch', watch_changes);

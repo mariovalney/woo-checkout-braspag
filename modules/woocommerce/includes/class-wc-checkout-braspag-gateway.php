@@ -24,7 +24,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->method_title         = __( 'Checkout Braspag', WCB_TEXTDOMAIN );
             $this->method_description   = __( 'Accept payments by credit card, debit card, online debit or banking billet using the Checkout Braspag.', WCB_TEXTDOMAIN );
 
-            // Has fields on Checkout ?
+            // Has fields on Checkout
             $this->has_fields = true;
 
             // Load the form fields and settings
@@ -51,7 +51,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $is_sandbox );
 
             // Register Hooks
-            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') );
+            add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_script') );
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script') );
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         }
 
@@ -187,18 +188,37 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Action 'admin_enqueue_scripts'
          * Enqueue scripts for gateway settings page.
          *
-         * No need to validate admin page as WooCommerce says:
+         * @return void
+         */
+        public function enqueue_admin_script() {
+            $this->enqueue_script( 'admin', [ 'jquery', 'underscore' ] );
+        }
+
+        /**
+         * Action 'wp_enqueue_script'
+         * Enqueue scripts for checkout page.
+         *
+         * @return void
+         */
+        public function enqueue_frontend_script() {
+            $this->enqueue_script( 'frontend' );
+        }
+
+        /**
+         * Enqueue scripts for gateway settings page.
+         *
+         * We do not validate page into actions because WooCommerce says:
          * "Gateways are only loaded when needed, such as during checkout and on the settings page in admin"
          *
          * @link https://docs.woocommerce.com/document/payment-gateway-api/#section-8
          *
          * @return void
          */
-        public function enqueue_scripts() {
-            $script_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/scripts';
+        private function enqueue_script( $script, $dependencies = [ 'jquery' ] ) {
+            $script_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/' . $script;
             $script_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
 
-            wp_enqueue_script( $this->id . '-script', $script_url, [ 'jquery', 'underscore' ], WCB_VERSION, true );
+            wp_enqueue_script( $this->id . '-' . $script . '-script', $script_url, $dependencies, WCB_VERSION, true );
         }
 
     }

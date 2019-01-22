@@ -15,3 +15,10 @@
 defined( 'ABSPATH' ) || exit;
 
 echo wpautop( $description );
+
+?>
+
+<fieldset id="braspag-payment-form">
+
+</fieldset>
+
