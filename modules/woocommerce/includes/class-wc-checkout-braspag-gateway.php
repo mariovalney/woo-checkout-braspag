@@ -32,6 +32,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->init_settings();
 
             // All Options
+            $this->enabled              = $this->get_option( 'enabled' );
             $this->title                = $this->get_option( 'title' );
             $this->description          = $this->get_option( 'description' );
             $this->merchant_id          = $this->get_option( 'merchant_id' );
@@ -50,8 +51,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $is_sandbox );
 
             // Register Hooks
-            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') );
+            add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
         }
 
         /**
@@ -140,6 +141,34 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
+         * Check if the gateway is available for use.
+         *
+         * @return bool
+         */
+        public function is_available() {
+            if ( $this->enabled != 'yes' ) return false;
+            if ( ! $this->api->is_valid() ) return false;
+
+            return apply_filters( 'wc_checkout_braspag_using_supported_currency', ( get_woocommerce_currency() == 'BRL' ) );
+        }
+
+        /**
+         * Process the payment and return the result.
+         *
+         * @param  int $order_id
+         *
+         * @return array
+         */
+        public function process_payment( $order_id ) {
+            $order = wc_get_order( $order_id );
+
+            return array(
+                'result'    => 'success',
+                'redirect'  => $order->get_checkout_payment_url( true ),
+            );
+        }
+
+        /**
          * Action 'admin_enqueue_scripts'
          * Enqueue scripts for gateway settings page.
          *
@@ -147,6 +176,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * "Gateways are only loaded when needed, such as during checkout and on the settings page in admin"
          *
          * @link https://docs.woocommerce.com/document/payment-gateway-api/#section-8
+         *
+         * @return void
          */
         public function enqueue_scripts() {
             $script_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/scripts';
