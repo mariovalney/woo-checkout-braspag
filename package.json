@@ -1,0 +1,28 @@
+{
+  "name": "woo-checkout-braspag",
+  "version": "1.0.0",
+  "description": "Checkout Braspag for WooCommerce",
+  "author": "Mário Valney",
+  "main": "index.js",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Vizir/woo-checkout-braspag"
+  },
+  "keywords": [
+    "WooCommerce",
+    "WordPress",
+    "gateway",
+    "payment",
+    "braspag",
+    "cielo"
+  ],
+  "license": "GPLv2 or later",
+  "homepage": "https://github.com/Vizir/woo-checkout-braspag",
+  "devDependencies": {
+    "gulp": "^4.0.0",
+    "gulp-rename": "^1.4.0",
+    "gulp-uglify-es": "^1.0.4",
+    "gulp-watch": "^5.0.1"
+  }
+}

@@ -24,8 +24,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->method_title         = __( 'Checkout Braspag', WCB_TEXTDOMAIN );
             $this->method_description   = __( 'Accept payments by credit card, debit card, online debit or banking billet using the Checkout Braspag.', WCB_TEXTDOMAIN );
 
-            // Has fields
-            $this->has_fields = true;
+            // Has fields on Checkout ?
+            $this->has_fields = false;
 
             // Load the form fields and settings
             $this->init_form_fields();
@@ -51,6 +51,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Register Hooks
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+            add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_scripts') );
         }
 
         /**
@@ -105,35 +106,53 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'custom_attributes' => [ 'required' => 'required' ],
                 ),
                 'sandbox'               => array(
-                    'type'        => 'checkbox',
-                    'title'       => __( 'Braspag Sandbox', WCB_TEXTDOMAIN ),
-                    'label'       => __( 'Enable Braspag Sandbox', WCB_TEXTDOMAIN ),
-                    'desc_tip'    => true,
-                    'default'     => 'no',
-                    'description' => __( 'You can use sandbox to test the payments (requires a sandbox Merchant ID).', WCB_TEXTDOMAIN ),
+                    'type'              => 'checkbox',
+                    'title'             => __( 'Braspag Sandbox', WCB_TEXTDOMAIN ),
+                    'label'             => __( 'Enable Braspag Sandbox', WCB_TEXTDOMAIN ),
+                    'desc_tip'          => true,
+                    'default'           => 'no',
+                    'description'       => __( 'You can use sandbox to test the payments (requires a sandbox Merchant ID).', WCB_TEXTDOMAIN ),
                 ),
                 'merchant_key'          => array(
-                    'type'        => 'text',
-                    'title'       => __( 'Merchant Key', WCB_TEXTDOMAIN ),
-                    'description' => $merchant_key_description,
+                    'type'              => 'text',
+                    'title'             => __( 'Merchant Key', WCB_TEXTDOMAIN ),
+                    'description'       => $merchant_key_description,
+                    'custom_attributes' => [ 'data-condition' => '!woocommerce_checkout-braspag_sandbox' ],
                 ),
                 'sandbox_merchant_key'  => array(
-                    'type'        => 'text',
-                    'title'       => __( 'Sandbox Merchant Key', WCB_TEXTDOMAIN ),
-                    'description' => $merchant_key_description,
+                    'type'              => 'text',
+                    'title'             => __( 'Sandbox Merchant Key', WCB_TEXTDOMAIN ),
+                    'description'       => $merchant_key_description,
+                    'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_sandbox' ],
                 ),
                 'debug_section'         => array(
-                    'type'        => 'title',
-                    'title'       => __( 'Log Settings', WCB_TEXTDOMAIN ),
+                    'type'  => 'title',
+                    'title' => __( 'Log Settings', WCB_TEXTDOMAIN ),
                 ),
                 'debug'                 => array(
-                    'type'        => 'checkbox',
-                    'title'       => __( 'Debug Log', WCB_TEXTDOMAIN ),
-                    'label'       => __( 'Enable logging', WCB_TEXTDOMAIN ),
-                    'description' => $debug_description,
-                    'default'     => 'no',
-                )
+                    'type'          => 'checkbox',
+                    'title'         => __( 'Debug Log', WCB_TEXTDOMAIN ),
+                    'label'         => __( 'Enable logging', WCB_TEXTDOMAIN ),
+                    'description'   => $debug_description,
+                    'default'       => 'no',
+                ),
             );
+        }
+
+        /**
+         * Action 'admin_enqueue_scripts'
+         * Enqueue scripts for gateway settings page.
+         *
+         * No need to validate admin page as WooCommerce says:
+         * "Gateways are only loaded when needed, such as during checkout and on the settings page in admin"
+         *
+         * @link https://docs.woocommerce.com/document/payment-gateway-api/#section-8
+         */
+        public function enqueue_scripts() {
+            $script_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/scripts';
+            $script_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
+
+            wp_enqueue_script( $this->id . '-script', $script_url, [ 'jquery', 'underscore' ], WCB_VERSION, true );
         }
 
     }
