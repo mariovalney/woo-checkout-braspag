@@ -1,0 +1,15 @@
+{
+	"autoload" : {
+		"psr-0" : {
+			"Braspag" : "src"
+		}
+	},
+	"name" : "braspag/BraspagApiPhpSdk",
+	"description" : "Integração com a API da Braspag",
+	"license" : "MIT",
+	"type" : "library",
+	"require" : {
+		"php" : ">=5.6"
+	},
+	"homepage" : "https://github.com/Braspag/BraspagApiPhpSdk"
+}

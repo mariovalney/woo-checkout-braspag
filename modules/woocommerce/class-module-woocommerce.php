@@ -18,7 +18,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
     class WCB_Module_Woocommerce {
 
         /**
-         * Define the core functionalities into plugin.
+         * Run
          *
          * @since    1.0.0
          * @param    Woo_Checkout_Braspag      $core   The Core object
@@ -34,11 +34,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $this->includes = array(
                 'class-wc-checkout-braspag-gateway',
                 'class-wc-checkout-braspag-api',
+                'vendor/autoload',
             );
         }
 
         /**
-         * Define the core functionalities into plugin.
+         * Define hooks
          *
          * @since    1.0.0
          * @param    Woo_Checkout_Braspag      $core   The Core object

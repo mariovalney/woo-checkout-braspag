@@ -1,0 +1,8 @@
+{
+  "config": {
+    "vendor-dir": "modules/woocommerce/includes/vendor/"
+  },
+  "require": {
+    "braspag/braspagapiphpsdk": "^3.0"
+  }
+}
