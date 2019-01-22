@@ -25,7 +25,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->method_description   = __( 'Accept payments by credit card, debit card, online debit or banking billet using the Checkout Braspag.', WCB_TEXTDOMAIN );
 
             // Has fields on Checkout ?
-            $this->has_fields = false;
+            $this->has_fields = true;
 
             // Load the form fields and settings
             $this->init_form_fields();
@@ -150,6 +150,21 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             if ( ! $this->api->is_valid() ) return false;
 
             return apply_filters( 'wc_checkout_braspag_using_supported_currency', ( get_woocommerce_currency() == 'BRL' ) );
+        }
+
+        /**
+         * Payment fields.
+         *
+         */
+        public function payment_fields() {
+            $defaults = array(
+                'description'   => $this->description,
+            );
+
+            $override_args = apply_filters( 'wc_checkout_braspag_form_data', [] );
+            $args = wp_parse_args( $override_args, $defaults );
+
+            wc_get_template( 'checkout-form.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
         }
 
         /**

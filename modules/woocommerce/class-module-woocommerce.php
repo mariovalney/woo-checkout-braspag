@@ -26,6 +26,10 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
         public function run( Woo_Checkout_Braspag $core ) {
             $this->core = $core;
 
+            if ( ! defined( 'WCB_WOOCOMMERCE_TEMPLATES' ) ) {
+                define( 'WCB_WOOCOMMERCE_TEMPLATES', WCB_PLUGIN_PATH . '/modules/woocommerce/includes/templates/' );
+            }
+
             if ( ! class_exists( 'WC_Payment_Gateway' ) || ! defined( 'WC_VERSION' ) || ! version_compare( WC_VERSION, '2.2', '>=' ) ) {
                 $this->core->add_action( 'admin_notices', array( $this, 'dependencies_notices' ) );
                 return;
