@@ -281,7 +281,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function enqueue_admin_script() {
-            $this->enqueue_script( 'admin', [ 'jquery', 'underscore' ] );
+            $this->enqueue_asset( 'admin', [ 'jquery', 'underscore' ] );
         }
 
         /**
@@ -291,11 +291,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function enqueue_frontend_script() {
-            $this->enqueue_script( 'frontend' );
+            $this->enqueue_asset( 'frontend', [ 'jquery' ] );
+            $this->enqueue_asset( 'frontend', [], false );
         }
 
         /**
-         * Enqueue scripts for gateway settings page.
+         * Enqueue scripts or styles for gateway settings page.
          *
          * We do not validate page into actions because WooCommerce says:
          * "Gateways are only loaded when needed, such as during checkout and on the settings page in admin"
@@ -304,11 +305,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * @return void
          */
-        private function enqueue_script( $script, $dependencies = [ 'jquery' ] ) {
-            $script_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/' . $script;
-            $script_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.js' : '.min.js';
+        private function enqueue_asset( $handle, $dependencies = [], $is_script = true ) {
+            $ext = ( $is_script ) ? 'js' : 'css';
 
-            wp_enqueue_script( $this->id . '-' . $script . '-script', $script_url, $dependencies, WCB_VERSION, true );
+            $file_url = WCB_PLUGIN_URL . '/modules/woocommerce/assets/' . $ext . '/' . $handle;
+            $file_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.' . $ext : '.min.' . $ext;
+
+            if ( $is_script ) {
+                wp_enqueue_script( $this->id . '-' . $handle . '-script', $file_url, $dependencies, WCB_VERSION, true );
+                return;
+            }
+
+            wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, WCB_VERSION );
         }
 
     }

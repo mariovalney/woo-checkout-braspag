@@ -21,6 +21,8 @@
   "homepage": "https://github.com/Vizir/woo-checkout-braspag",
   "devDependencies": {
     "gulp": "^4.0.0",
+    "gulp-autoprefixer": "^6.0.0",
+    "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.4.0",
     "gulp-uglify-es": "^1.0.4",
     "gulp-watch": "^5.0.1"

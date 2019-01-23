@@ -1,0 +1,40 @@
+#braspag-payment-methods {
+    margin: 0;
+    display: block;
+}
+
+#braspag-payment-methods li {
+    display: inline-block;
+    margin: 0 10px 20px 0;
+}
+
+#braspag-payment-methods li:last-of-type {
+    margin-right: 0;
+}
+
+#braspag-payment-methods li label {
+    display: block;
+    cursor: pointer;
+    padding: 0.5rem 0.8rem;
+    border: 1px solid #CCCCCC;
+    border-radius: 4px;
+    color: #333333;
+    user-select: none;
+}
+
+#braspag-payment-methods li label.active {
+    border-color: #333333;
+}
+
+#braspag-payment-methods li label input {
+    display: none;
+}
+
+.braspag-method-form {
+    display: none;
+    margin: 0.5rem 0 1.5rem;
+}
+
+.braspag-method-form.active {
+    display: block;
+}
