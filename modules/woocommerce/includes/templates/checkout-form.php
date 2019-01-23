@@ -1,5 +1,4 @@
 <?php
-
 /**
  * The Template for checkout form
  *
@@ -8,6 +7,9 @@
  * HOWEVER, on occasion WooCommerce will need to update template files and you
  * (the theme developer) will need to copy the new files to your theme to
  * maintain compatibility. Just like WooCommerce.
+ *
+ * @var $description                string  The gateway description
+ * @var $methods                    array   Array of payment methods: { code => name }
  *
  * @version 1.0.0
  */
@@ -54,7 +56,10 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
             $first_method = false;
 
             echo '<div id="braspag-payment-method-' . $code . '-form" class="braspag-method-form' . $active . '">';
+
+            // Payment Method Template
             wc_get_template( 'payment-methods/' . $code . '-form.php', [], 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
+
             echo '</div>';
         }
     ?>
