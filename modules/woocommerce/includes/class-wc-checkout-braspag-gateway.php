@@ -41,8 +41,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 'code'      => 'DebitCard',
                 'enabled'   => false,
             ),
-            'bt' => array(
-                'name'      => 'Bank Ticket',
+            'bs' => array(
+                'name'      => 'Bank Slip',
                 'code'      => 'Boleto',
                 'enabled'   => false,
             ),
@@ -58,7 +58,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->id                   = 'checkout-braspag';
             $this->icon                 = apply_filters( 'wc_checkout_braspag_icon', WCB_PLUGIN_URL . '/modules/woocommerce/assets/images/braspag.png' );
             $this->method_title         = __( 'Checkout Braspag', WCB_TEXTDOMAIN );
-            $this->method_description   = __( 'Accept payments by credit card, debit card, online debit or banking billet using the Checkout Braspag.', WCB_TEXTDOMAIN );
+            $this->method_description   = __( 'Accept payments by credit card, debit card, eletronic transfer or bank slip using the Braspag Checkout.', WCB_TEXTDOMAIN );
 
             // Has fields on Checkout
             $this->has_fields = true;
@@ -97,7 +97,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
             // Register Hooks - Custom Actions
-            add_action( 'wc_checkout_braspag_print_bank_ticket_description', array( $this, 'print_bank_ticket_description' ) );
+            add_action( 'wc_checkout_braspag_print_bank_slip_description', array( $this, 'print_bank_slip_description' ) );
         }
 
         /**
@@ -140,7 +140,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'type'        => 'textarea',
                     'title'       => __( 'Description', WCB_TEXTDOMAIN ),
                     'description' => __( 'User will see this description during checkout.', WCB_TEXTDOMAIN ),
-                    'default'     => __( 'Pay with credit card, debit card, online debit or banking billet.', WCB_TEXTDOMAIN ),
+                    'default'     => __( 'Pay with credit card, debit card, eletronic transfer or bank slip.', WCB_TEXTDOMAIN ),
                 ),
                 'braspag_section'       => array(
                     'type'        => 'title',
@@ -190,24 +190,24 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'description'       => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
                 );
 
-                if ( $code == 'bt' ) {
-                    $bt_description_default = __( 'The order will be confirmed only after the payment approval. It can take 2 or 3 days.', WCB_TEXTDOMAIN );
-                    $bt_description_default .= "\n\n" . __( 'After clicking "Proceed to payment" you will receive your bank ticket and will be able to print and pay in your internet banking or in a lottery retailer.', WCB_TEXTDOMAIN );
+                if ( $code == 'bs' ) {
+                    $bs_description_default = __( 'The order will be confirmed only after the payment approval. It can take 2 or 3 days.', WCB_TEXTDOMAIN );
+                    $bs_description_default .= "\n\n" . __( 'After clicking "Proceed to payment" you will receive your bank slip and will be able to print and pay in your internet banking or in a lottery retailer.', WCB_TEXTDOMAIN );
 
                     $this->form_fields['method_' . $code . '_description'] = array(
                         'type'              => 'textarea',
                         'title'             => __( 'Description', WCB_TEXTDOMAIN ),
-                        'description'       => __( 'Text about payment using bank ticket to display to your customer (accepts HTML).', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Text about payment using bank slip to display to your customer (accepts HTML).', WCB_TEXTDOMAIN ),
                         'css'               => 'min-height: 150px;',
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bt_enabled' ],
-                        'default'           => $bt_description_default,
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
+                        'default'           => $bs_description_default,
                     );
                 }
             }
 
             // Options after Payment Methods
             $this->form_fields = array_merge( $this->form_fields, array(
-                'bt_description'    => array(
+                'bs_description'    => array(
                     'type'  => 'title',
                     'title' => __( 'Log Settings', WCB_TEXTDOMAIN ),
                 ),
@@ -315,14 +315,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
-         * Action 'wc_checkout_braspag_print_bank_ticket_description'
-         * Print description for Bank Ticket payment method
+         * Action 'wc_checkout_braspag_print_bank_slip_description'
+         * Print description for Bank Slip payment method
          *
          * @return void
          */
-        public function print_bank_ticket_description() {
-            $description = $this->get_option( 'method_bt_description' );
-            $description = apply_filters( 'wc_checkout_braspag_bank_ticket_description', $description );
+        public function print_bank_slip_description() {
+            $description = $this->get_option( 'method_bs_description' );
+            $description = apply_filters( 'wc_checkout_braspag_bank_slip_description', $description );
 
             echo wpautop( $description );
         }
