@@ -17,6 +17,42 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
     class WC_Checkout_Braspag_Gateway extends WC_Payment_Gateway {
 
+        /**
+         * Payment Methods
+         *
+         * Array of payment methods 'code' => array of data {
+         *   name    string  Name of Payment Method
+         *   type    string  Type sent to API
+         *   enabled string  If we can use it
+         * }
+         *
+         * This is the only data you need to change to manage payment options.
+         *
+         * @var array
+         */
+        private $payment_methods = array(
+            'cc' => array(
+                'name'      => 'Credit Card',
+                'code'      => 'CreditCard',
+                'enabled'   => false,
+            ),
+            'dc' => array(
+                'name'      => 'Debit Card',
+                'code'      => 'DebitCard',
+                'enabled'   => false,
+            ),
+            'bt' => array(
+                'name'      => 'Bank Ticket',
+                'code'      => 'Boleto',
+                'enabled'   => false,
+            ),
+            'et' => array(
+                'name'      => 'Eletronic Transfer',
+                'code'      => 'EletronicTransfer',
+                'enabled'   => false,
+            ),
+        );
+
         public function __construct() {
             // Required infos
             $this->id                   = 'checkout-braspag';
@@ -31,7 +67,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->init_form_fields();
             $this->init_settings();
 
-            // All Options
+            // Load Payment Options
+            $this->init_payment_options();
+
+            // Options
             $this->enabled              = $this->get_option( 'enabled' );
             $this->title                = $this->get_option( 'title' );
             $this->description          = $this->get_option( 'description' );
@@ -62,6 +101,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function init_form_fields() {
+            // Descriptions
             $merchant_id_description = sprintf(
                 __( 'Please enter your Merchant ID. You can find it in %s.', WCB_TEXTDOMAIN ),
                 '<a href="https://admin.braspag.com.br/Account/MyMerchants" target="_blank">' . __( 'Braspag Admin > My Merchants', WCB_TEXTDOMAIN ) . '</a>'
@@ -69,14 +109,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             $merchant_key_description = sprintf(
                 __( 'Please enter your Merchant Key. You received it after your register or you can enter in contact at %s.', WCB_TEXTDOMAIN ),
-                '<a href="mailto:suporte@braspag.com.br">suporte@braspag.com.br</a>'
+                '<a href="mailto:suporte@braspag.com.br" target="_blank">suporte@braspag.com.br</a>'
             );
 
             $debug_description = sprintf(
                 __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
-                '<a href="' . esc_url( admin_url( 'admin.php?page=wc-status&tab=logs&log_file=' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log' ) ) . '">' . __( 'System Status &gt; Logs', WCB_TEXTDOMAIN ) . '</a>'
+                '<a href="' . esc_url( admin_url( 'admin.php?page=wc-status&tab=logs&log_file=' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log' ) ) . '" target="_blank">' . __( 'System Status &gt; Logs', WCB_TEXTDOMAIN ) . '</a>'
             );
 
+            // Form Fields (Before Payment Options)
             $this->form_fields = array(
                 'enabled'               => array(
                     'type'    => 'checkbox',
@@ -127,6 +168,26 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'description'       => $merchant_key_description,
                     'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_sandbox' ],
                 ),
+                'methods_section'       => array(
+                    'type'  => 'title',
+                    'title' => __( 'Payment Methods', WCB_TEXTDOMAIN ),
+                ),
+            );
+
+            // Payment Methods Options
+            foreach ( $this->payment_methods as $code => $data ) {
+                $this->form_fields['method_' . $code . '_enabled'] = array(
+                    'type'              => 'checkbox',
+                    'title'             => $data['name'],
+                    'label'             => sprintf( __( 'Enable payment using %s', WCB_TEXTDOMAIN ), mb_strtolower( $data['name'] ) ),
+                    'desc_tip'          => true,
+                    'default'           => 'no',
+                    'description'       => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
+                );
+            }
+
+            // Options after Payment Methods
+            $this->form_fields = array_merge( $this->form_fields, array(
                 'debug_section'         => array(
                     'type'  => 'title',
                     'title' => __( 'Log Settings', WCB_TEXTDOMAIN ),
@@ -138,7 +199,22 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'description'   => $debug_description,
                     'default'       => 'no',
                 ),
-            );
+            ) );
+        }
+
+        /**
+         * Init payment methods data
+         *
+         * @return void
+         */
+        public function init_payment_options() {
+            foreach ( $this->payment_methods as $code => $data ) {
+                $enabled = ( $this->get_option( 'method_' . $code . '_enabled', 'no' ) === 'yes' );
+                $enabled = apply_filters( 'wc_checkout_braspag_method_' . $code . '_enabled', $enabled );
+
+                $this->payment_methods[ $code ]['name'] = __( $data['name'], WCB_TEXTDOMAIN );
+                $this->payment_methods[ $code ]['enabled'] = $enabled;
+            }
         }
 
         /**
@@ -158,10 +234,24 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          */
         public function payment_fields() {
+            $payment_methods = [];
+
+            foreach ( $this->payment_methods as $code => $data ) {
+                if ( empty( $data['enabled'] ) ) continue;
+
+                $payment_methods[ $code ] = $data['name'];
+            }
+
             $defaults = array(
                 'description'   => $this->description,
+                'methods'       => $payment_methods,
             );
 
+            /**
+             * Filters the data passed to checkout template.
+             *
+             * We use wp_parse_args so you can filter a empty array to override defaults.
+             */
             $override_args = apply_filters( 'wc_checkout_braspag_form_data', [] );
             $args = wp_parse_args( $override_args, $defaults );
 
