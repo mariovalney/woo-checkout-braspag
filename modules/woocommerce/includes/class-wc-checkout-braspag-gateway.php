@@ -89,10 +89,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->log = ( 'yes' == $this->debug ) ? new WC_Logger() : false;
 
             // Start API
-            $is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
-            $merchant_key = ( $is_sandbox ) ? $this->sandbox_merchant_key : $this->merchant_key;
+            $this->is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
+            $merchant_key = ( $this->is_sandbox ) ? $this->sandbox_merchant_key : $this->merchant_key;
 
-            $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $is_sandbox );
+            $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $this->is_sandbox );
 
             // Register Hooks - Script
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_script') );
@@ -278,7 +278,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $payment_methods = [];
 
             foreach ( $this->payment_methods as $code => $data ) {
+                // Ignore if not enabled
                 if ( empty( $data['enabled'] ) ) continue;
+
+                // Ignore if has no provider selected (and we are not in sandbox)
+                if ( ! $this->is_sandbox && empty( $this->get_option( 'method_' . $code . '_provider' ) ) ) continue;
 
                 $payment_methods[ $code ] = $data['name'];
             }
