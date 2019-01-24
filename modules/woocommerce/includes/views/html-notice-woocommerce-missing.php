@@ -16,6 +16,12 @@ if ( current_user_can( 'install_plugins' ) ) {
 
 ?>
 
-<div class="error">
-    <p><strong><?php _e( 'WooCommerce Checkout Braspag', WCB_TEXTDOMAIN ); ?></strong>: <?php printf( __( 'This plugin depends on the last version of %s to work!', WCB_TEXTDOMAIN ), '<a href="' . esc_url( $url ) . '">' . __( 'WooCommerce', WCB_TEXTDOMAIN ) . '</a>' ); ?></p>
+<div class="notice notice-error">
+    <p><?php
+        printf(
+            __( '%s depends on the last version of %s to work!', WCB_TEXTDOMAIN ),
+            '<strong>WooCommerce Checkout Braspag</strong>',
+            '<a href="' . esc_url( $url ) . '">' . __( 'WooCommerce', WCB_TEXTDOMAIN ) . '</a>'
+        );
+    ?></p>
 </div>

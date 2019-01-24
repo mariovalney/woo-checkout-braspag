@@ -59,10 +59,10 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
         /**
          * Action: 'admin_notices'
-         * Missing something
+         * Missing something from WooCommerce
          */
         public function dependencies_notices() {
-            include_once 'includes/views/html-notice-woocommerce-missing.php';
+            include_once WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/html-notice-woocommerce-missing.php';
         }
 
         /**

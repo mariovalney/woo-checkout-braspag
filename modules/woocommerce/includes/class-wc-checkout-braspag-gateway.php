@@ -17,6 +17,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
     class WC_Checkout_Braspag_Gateway extends WC_Payment_Gateway {
 
+        const EXTRA_FIELDS_PLUGIN_NAME = 'WooCommerce Extra Checkout Fields for Brazil';
+        const EXTRA_FIELDS_PLUGIN_SLUG = 'woocommerce-extra-checkout-fields-for-brazil';
+        const EXTRA_FIELDS_PLUGIN_FILE = 'woocommerce-extra-checkout-fields-for-brazil/woocommerce-extra-checkout-fields-for-brazil.php';
+        const EXTRA_FIELDS_PLUGIN_CLASS = 'Extra_Checkout_Fields_For_Brazil';
+
         /**
          * Payment Methods
          *
@@ -94,11 +99,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $this->is_sandbox );
 
-            // Register Hooks - Script
+            // Register Hooks - WordPress
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_script') );
             add_action( 'admin_enqueue_scripts', array( $this, 'enqueue_admin_script') );
+            add_action( 'admin_notices', array( $this, 'add_notices' ) );
 
-            // Register Hooks - Gateway
+            // Register Hooks - WooCommerce
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
 
             // Register Hooks - Custom Actions
@@ -120,6 +126,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $merchant_key_description = sprintf(
                 __( 'Please enter your Merchant Key. You received it after your register or you can enter in contact at %s.', WCB_TEXTDOMAIN ),
                 '<a href="mailto:suporte@braspag.com.br" target="_blank">suporte@braspag.com.br</a>'
+            );
+
+            $use_extra_fields_description = sprintf(
+                __( 'The %s is a popular plugin to add customer fields and masks. If you do not want to add this fields or create your own implementation, unmark this and use or filters to add customer data.', WCB_TEXTDOMAIN ),
+                '<a href="https://wordpress.org/plugins/' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_SLUG . '" target="_blank">' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME . '</a>'
             );
 
             $debug_description = sprintf(
@@ -229,9 +240,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Options after Payment Methods
             $this->form_fields = array_merge( $this->form_fields, array(
-                'bs_description'    => array(
+                'advanced_section'  => array(
                     'type'  => 'title',
-                    'title' => __( 'Log Settings', WCB_TEXTDOMAIN ),
+                    'title' => __( 'Advanced Settings', WCB_TEXTDOMAIN ),
+                ),
+                'use_extra_fields'  => array(
+                    'type'          => 'checkbox',
+                    'title'         => __( 'Customer Fields', WCB_TEXTDOMAIN ),
+                    'label'         => sprintf( __( 'Use "%s"', WCB_TEXTDOMAIN ), WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME ),
+                    'description'   => $use_extra_fields_description,
+                    'default'       => 'yes',
                 ),
                 'debug'                 => array(
                     'type'          => 'checkbox',
@@ -339,6 +357,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 'result'   => 'fail',
                 'redirect' => '',
             );
+        }
+
+        /**
+         * Action 'admin_notices'
+         * Enqueue scripts for gateway settings page.
+         *
+         * @return void
+         */
+        public function add_notices() {
+            $using_extra_fields = ( $this->get_option( 'use_extra_fields', 'yes' ) == 'yes' );
+
+            if ( $using_extra_fields && ! class_exists( WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_CLASS ) ) {
+                include_once WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/html-notice-extra-fields-missing.php';
+            }
         }
 
         /**
