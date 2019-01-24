@@ -38,6 +38,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $this->includes = array(
                 'class-wc-checkout-braspag-gateway',
                 'class-wc-checkout-braspag-api',
+                'class-wc-checkout-braspag-providers',
                 'vendor/autoload',
             );
         }

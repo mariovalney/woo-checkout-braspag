@@ -32,25 +32,29 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          */
         private $payment_methods = array(
             'cc' => array(
+                'enabled'   => false,
                 'name'      => 'Credit Card',
                 'code'      => 'CreditCard',
-                'enabled'   => false,
+                'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
             ),
             'dc' => array(
+                'enabled'   => false,
                 'name'      => 'Debit Card',
                 'code'      => 'DebitCard',
-                'enabled'   => false,
+                'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
             ),
             'bs' => array(
+                'enabled'   => false,
                 'name'      => 'Bank Slip',
                 'code'      => 'Boleto',
-                'enabled'   => false,
+                'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
             ),
             // TODO: Still waiting Braspag Support
             // 'et' => array(
+            //     'enabled'   => false,
             //     'name'      => 'Eletronic Transfer',
             //     'code'      => 'EletronicTransfer',
-            //     'enabled'   => false,
+            //     'providers' => WC_Checkout_Braspag_Providers::ELETRONIC_TRANSFER,
             // ),
         );
 
@@ -191,13 +195,30 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'description'       => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
                 );
 
+                $sub_option_preffix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+
+                // Providers
+                if ( ! empty( $data['providers'] ) ) {
+                    $providers_as_option = WC_Checkout_Braspag_Providers::get_provider_as_option( $data['providers'] );
+
+                    $this->form_fields['method_' . $code . '_provider'] = array(
+                        'type'              => 'select',
+                        'title'             => $sub_option_preffix . __( 'Provider', WCB_TEXTDOMAIN ),
+                        'description'       => sprintf( __( 'Your %s provider', WCB_TEXTDOMAIN ), mb_strtolower( $data['name'] ) ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'default'           => '',
+                        'options'           => $providers_as_option,
+                    );
+                }
+
+                // Bank Slip Options
                 if ( $code == 'bs' ) {
                     $bs_description_default = __( 'The order will be confirmed only after the payment approval. It can take 2 or 3 days.', WCB_TEXTDOMAIN );
                     $bs_description_default .= "\n\n" . __( 'After clicking "Proceed to payment" you will receive your bank slip and will be able to print and pay in your internet banking or in a lottery retailer.', WCB_TEXTDOMAIN );
 
                     $this->form_fields['method_' . $code . '_description'] = array(
                         'type'              => 'textarea',
-                        'title'             => __( 'Description', WCB_TEXTDOMAIN ),
+                        'title'             => $sub_option_preffix . __( 'Description', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Text about payment using bank slip to display to your customer (accepts HTML).', WCB_TEXTDOMAIN ),
                         'css'               => 'min-height: 150px;',
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
