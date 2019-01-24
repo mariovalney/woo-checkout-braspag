@@ -65,6 +65,35 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             return apply_filters( 'wc_checkout_braspag_api_is_valid', ( ! empty( $this->merchant ) ), $this->merchant, $this->environment );
         }
 
+        /**
+         * Try to do a payment request
+         *
+         * @return array
+         */
+        public function do_payment_request( $method, $order ) {
+            return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds', WCB_VERSION ) );
+        }
+
+        /**
+         * Return a array with success
+         * @see WC_Checkout_Braspag_Api::do_payment_request()
+         *
+         * @return array
+         */
+        private function return_success( $url, $data = [] ) {
+            return [ 'url' => $url, 'data' => $data ];
+        }
+
+        /**
+         * Return a array with errors
+         * @see WC_Checkout_Braspag_Api::do_payment_request()
+         *
+         * @return array
+         */
+        private function return_error( $error ) {
+            return [ 'errors' => (array) $error ];
+        }
+
     }
 
 }

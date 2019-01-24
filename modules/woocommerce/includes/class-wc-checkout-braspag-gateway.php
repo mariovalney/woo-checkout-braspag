@@ -313,9 +313,31 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
 
+            $method = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : '';
+            $response = $this->api->do_payment_request( $method, $order );
+
+            // TODO: Update Order after gateway response
+            if ( ! empty( $response['data'] ) ) {
+                // $this->update_order( $response['data'] );
+            }
+
+            // Success if a URL is returned
+            if ( ! empty( $response['url'] ) ) {
+                return array(
+                    'result'    => 'success',
+                    'redirect'  => $response['url'],
+                );
+            }
+
+            // If not success, add error notices
+            $errors = ( ! empty( $response['errors'] ) ) ? $response['errors'] : [];
+            foreach ( $errors as $error ) {
+                wc_add_notice( $error, 'error' );
+            }
+
             return array(
-                'result'    => 'success',
-                'redirect'  => $order->get_checkout_payment_url( true ),
+                'result'   => 'fail',
+                'redirect' => '',
             );
         }
 
