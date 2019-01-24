@@ -46,11 +46,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 'code'      => 'Boleto',
                 'enabled'   => false,
             ),
-            'et' => array(
-                'name'      => 'Eletronic Transfer',
-                'code'      => 'EletronicTransfer',
-                'enabled'   => false,
-            ),
+            // TODO: Still waiting Braspag Support
+            // 'et' => array(
+            //     'name'      => 'Eletronic Transfer',
+            //     'code'      => 'EletronicTransfer',
+            //     'enabled'   => false,
+            // ),
         );
 
         public function __construct() {
