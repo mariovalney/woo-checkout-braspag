@@ -2,7 +2,13 @@
   "config": {
     "vendor-dir": "modules/woocommerce/includes/vendor/"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/Vizir/BraspagApiPhpSdk"
+    }
+  ],
   "require": {
-    "braspag/braspagapiphpsdk": "^3.0"
+    "braspag/braspagapiphpsdk": "dev-vizir-update"
   }
 }

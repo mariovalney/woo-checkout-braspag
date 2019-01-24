@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8dc792ef930e6adc6baa784b07573899",
+    "content-hash": "e8727a89b72bc739a8924f461bedbe72",
     "packages": [
         {
-            "name": "braspag/braspagapiphpsdk",
-            "version": "v3.0",
+            "name": "braspag/BraspagApiPhpSdk",
+            "version": "dev-vizir-update",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Braspag/BraspagApiPhpSdk.git",
-                "reference": "aa7b567f8bc5c8d928d9d291017bca7fc35482a6"
+                "url": "https://github.com/Vizir/BraspagApiPhpSdk.git",
+                "reference": "f597e443eec04fa2fe26f4c08055dfbce600cca3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Braspag/BraspagApiPhpSdk/zipball/aa7b567f8bc5c8d928d9d291017bca7fc35482a6",
-                "reference": "aa7b567f8bc5c8d928d9d291017bca7fc35482a6",
+                "url": "https://api.github.com/repos/Vizir/BraspagApiPhpSdk/zipball/f597e443eec04fa2fe26f4c08055dfbce600cca3",
+                "reference": "f597e443eec04fa2fe26f4c08055dfbce600cca3",
                 "shasum": ""
             },
             "require": {
@@ -25,23 +25,27 @@
             },
             "type": "library",
             "autoload": {
-                "psr-0": {
-                    "Braspag": "src"
+                "psr-4": {
+                    "Braspag\\": "src/Braspag"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "MIT"
             ],
             "description": "Integração com a API da Braspag",
             "homepage": "https://github.com/Braspag/BraspagApiPhpSdk",
-            "time": "2017-05-05T15:29:56+00:00"
+            "support": {
+                "source": "https://github.com/Vizir/BraspagApiPhpSdk/tree/dev-vizir"
+            },
+            "time": "2017-05-22T19:44:51+00:00"
         }
     ],
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "braspag/braspagapiphpsdk": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],
