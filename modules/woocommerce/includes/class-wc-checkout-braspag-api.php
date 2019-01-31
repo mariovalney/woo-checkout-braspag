@@ -13,38 +13,69 @@
 // If this file is called directly, call the cops.
 defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
 
-use Braspag\API\Merchant;
-use Braspag\API\Environment;
-use Braspag\API\Sale;
-use Braspag\API\Braspag;
-use Braspag\API\Payment;
-
 if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
     class WC_Checkout_Braspag_Api {
 
         /**
-         * Merchant
-         * @var Braspag\API\Merchant
+         * API Addresses
+         * Starting with protocol and withou end slash
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador#ambientes
          */
-        private $merchant;
+        const ENDPOINT_API = 'https://api.braspag.com.br';
+        const ENDPOINT_API_QUERY = 'https://apiquery.braspag.com.br';
+        const ENDPOINT_SANDBOX_API = 'https://apisandbox.braspag.com.br';
+        const ENDPOINT_SANDBOX_API_QUERY = 'https://apiquerysandbox.braspag.com.br';
 
         /**
-         * Environment
-         * @var Braspag\API\Environment
+         * Merchant ID
          */
-        private $environment;
+        private $merchant_id;
 
+        /**
+         * Merchant Key
+         */
+        private $merchant_key;
+
+        /**
+         * Endpoint API
+         */
+        private $endpoint_api;
+
+        /**
+         * Endpoint API QUERY
+         */
+        private $endpoint_api_query;
+
+        /**
+         * Set parameters and start API
+         *
+         * @return void
+         */
         public function __construct( $merchant_id, $merchant_key, $is_sandbox = false ) {
-            // Check we can use Braspag SDK
-            if ( ! class_exists( 'Braspag\API\Merchant' ) ) return false;
+            $this->merchant_id = $merchant_id;
+            $this->merchant_key = $merchant_key;
+            $this->endpoint_api = ( $is_sandbox ) ? self::ENDPOINT_SANDBOX_API : self::ENDPOINT_API;
+            $this->endpoint_api_query = ( $is_sandbox ) ? self::ENDPOINT_SANDBOX_API_QUERY : self::ENDPOINT_API_QUERY;
 
-            // Check we have necessary data
-            if ( empty( $merchant_id ) || empty( $merchant_key ) ) return false;
+            /**
+             * Filter allow developers to change API endpoint
+             *
+             * @param $endpoint_api string
+             *
+             * @return string
+             */
+            $this->endpoint_api = apply_filters( 'wc_checkout_braspag_endpoint_api_url', $this->endpoint_api );
 
-            // SDK Configuration
-            $this->merchant = new Merchant( $merchant_id, $merchant_key );
-            $this->environment = ( $is_sandbox ) ? Environment::sandbox() : Environment::production();
+            /**
+             * Filter allow developers to change API QUERY endpoint
+             *
+             * @param $endpoint_api_query string
+             *
+             * @return string
+             */
+            $this->endpoint_api_query = apply_filters( 'wc_checkout_braspag_endpoint_api_query_url', $this->endpoint_api_query );
         }
 
         /**
@@ -53,16 +84,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @return bool
          */
         public function is_valid() {
+            $is_valid = ( ! empty( $this->merchant_id ) );
+
             /**
              * Filter allow developers to disable gateway
              *
-             * @param ! empty( $merchant )  bool
-             * @param $merchant             Braspag\API\Merchant
-             * @param $environment          Braspag\API\Environment
+             * @param $is_valid     bool
+             * @param $merchant_id  string
+             * @param $merchant_key string
              *
              * @return bool
              */
-            return apply_filters( 'wc_checkout_braspag_api_is_valid', ( ! empty( $this->merchant ) ), $this->merchant, $this->environment );
+            return apply_filters( 'wc_checkout_braspag_api_is_valid', $is_valid, $this->merchant_id, $this->merchant_key );
         }
 
         /**
