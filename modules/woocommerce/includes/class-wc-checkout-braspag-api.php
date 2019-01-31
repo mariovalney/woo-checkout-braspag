@@ -103,8 +103,35 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @return array
          */
-        public function do_payment_request( $method, $order ) {
-            return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds', WCB_VERSION ) );
+        public function do_payment_request( $method, $order, $gateway ) {
+            // Check Payment Method
+            if ( empty( $method ) ) {
+                return $this->return_error( __( 'Please, select a payment method.', WCB_VERSION ) );
+            }
+
+            // Search for request class
+            $class = WC_Checkout_Braspag_Request::get_request_class( 'payment_' . $method );
+            if ( ! is_callable( array( $class, 'do_request' ) ) ) {
+                return $this->return_error( __( 'Please, select a valid payment method.', WCB_VERSION ) );
+            }
+
+            // Request
+            $request = new $class( $order, $gateway );
+
+            // print_r( json_decode( json_encode( $request ) ) ); exit;
+            try {
+                $response = $request->do_request();
+
+                if ( ! empty( $response['errors'] ) ) {
+                    return $this->return_error( $response['errors'] );
+                }
+
+                // return $this->return_success( $url, $data );
+            } catch (Exception $e) {
+                return $this->return_error( $e->getMessage() );
+            }
+
+            return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds.', WCB_VERSION ) );
         }
 
         /**
