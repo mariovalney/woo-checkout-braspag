@@ -1,38 +1,74 @@
 'use strict';
 
 jQuery(document).ready(function($) {
-    var conditions_to_trigger = [];
+    var inputs_to_init = [];
 
     $('[data-condition]').each(function(index, el) {
-        var condition = $(el).data('condition');
+        var condition_attr = $(el).data('condition');
 
-        if ( ! condition ) return;
+        if ( ! condition_attr ) return;
 
-        var truth = ( condition.indexOf('!') !== 0 ) ? true : false,
-            option = ( truth ) ? condition : condition.substring(1),
-            option_element = $( '[name="' + option + '"]' );
+        var checks = [],
+            conditions = condition_attr.split( '|' ),
+            elements_to_observe = [];
 
-        if ( ! option_element.length ) return;
+        for (var i = 0; i < conditions.length; i++) {
 
-        // Conditions to trigger after this
-        conditions_to_trigger.push( option );
+            var truth = ( conditions[i].indexOf('!') !== 0 ) ? true : false,
+                option = ( truth ) ? conditions[i] : conditions[i].substring(1);
+
+            option = option.split( '=', 2 );
+
+            var option_element = $( '[name="' + option[0] + '"]' );
+
+            if ( ! option_element.length ) continue;
+
+            checks.push({
+                element: option_element,
+                truth: truth,
+                value: option[1] || true
+            });
+
+            // Elements to trigger
+            elements_to_observe.push( option_element );
+
+            // Inputs to trigger after finish
+            inputs_to_init.push( option[0] );
+        }
 
         // Refresh conditions on change
-        option_element.on('change', function(event) {
-            var value = $(this).prop('checked');
+        for (var j = 0; j < elements_to_observe.length; j++) {
+            elements_to_observe[j].on('change', function(event) {
+                var show = true,
+                    value = ( $(this).prop('type') === 'checkbox' ) ? $(this).prop('checked') : $(this).val();
 
-            if ( value === truth ) {
-                $(el).parents('tr').fadeIn(200);
-                return;
-            }
+                for (var i = 0; i < checks.length; i++) {
+                    // If check is not for you
+                    if ( ! $(this).is( checks[i].element ) ) continue;
 
-            $(el).parents('tr').hide();
-        });
+                    // If value is equal and we want this
+                    if ( value == checks[i].value && checks[i].truth ) continue;
+
+                    // If value is different and we want this
+                    if ( value != checks[i].value && ! checks[i].truth ) continue;
+
+                    // Nope: we should hide
+                    show = false;
+                }
+
+                if ( show ) {
+                    $(el).parents('tr').fadeIn(200);
+                    return;
+                }
+
+                $(el).parents('tr').hide();
+            });
+        }
     });
 
     // Trigger conditions
-    conditions_to_trigger = _.uniq( conditions_to_trigger );
-    _.each(conditions_to_trigger, function(element) {
+    inputs_to_init = _.uniq( inputs_to_init );
+    _.each(inputs_to_init, function(element) {
         $( '[name="' + element + '"]' ).trigger('change');
     });
 });
