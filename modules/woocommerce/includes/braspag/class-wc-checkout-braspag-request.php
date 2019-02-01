@@ -18,6 +18,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
     class WC_Checkout_Braspag_Request extends WC_Checkout_Braspag_Model {
 
         /**
+         * Method Code
+         * Classes should override
+         */
+        const METHOD_CODE = '';
+
+        /**
+         * Endpoint to create a transation
+         * Classes should override
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador
+         */
+        const TRANSACTION_ENDPOINT = '';
+
+        /**
          * The gateway to be used
          */
         protected $gateway;
@@ -36,21 +50,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
         }
 
         /**
-         * Send request to API
-         *
-         * @since    1.0.0
-         *
-         * @param    array  $data
-         */
-        public function do_request() {
-            $errors = $this->validate();
-
-            if ( ! empty( $errors ) ) {
-                return [ 'errors' => $errors ];
-            }
-        }
-
-        /**
          * Populate data.
          *
          * @see WC_Order()
@@ -63,6 +62,185 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             $this->MerchantOrderId  = $order->get_id();
             $this->Customer         = new WC_Checkout_Braspag_Customer( $order );
+        }
+
+        /**
+         * Validate data.
+         * If child override validation, we do not need to matter with constants.
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $errors
+         */
+        public function validate() {
+            if ( ! empty( $this::METHOD_CODE ) && ! empty( $this::TRANSACTION_ENDPOINT ) ) return [];
+
+            return [ __( 'Invalid payment method.', WCB_TEXTDOMAIN ) ];
+        }
+
+        /**
+         * Check a $transaction->Payment node is equal to the current request
+         *
+         * @param    array  $payment_data
+         */
+        public function is_equal_payment( $payment_data ) {
+            die( 'All payment methods should override this method' );
+        }
+
+        /**
+         * Send payment request to API
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $data
+         */
+        public function do_request() {
+            $errors = $this->validate();
+
+            if ( ! empty( $errors ) ) {
+                return [ 'errors' => $errors ];
+            }
+
+            return $this->post_transaction();
+        }
+
+        /**
+         * Cancel transaction
+         * For methods it don't accept canceling, return false
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $data
+         */
+        public function cancel_transaction( $payment_id, $amount ) {
+            die( 'All payment methods should override this method' );
+        }
+
+        /**
+         * Send request to API
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $data
+         */
+        private function post_transaction() {
+            /**
+             * Filter endpoint to create a transaction
+             *
+             * @var string  $endpoint
+             */
+            $endpoint = $this->gateway->api->get_endpoint_api() . $this::TRANSACTION_ENDPOINT;
+            $endpoint = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_transaction_endpoint', $endpoint );
+
+            // Create WP Request
+            $request = array(
+                'method'    => 'POST',
+                'timeout'   => 30,
+                'headers'   => array(
+                    'Content-Type'  => 'application/json',
+                    'MerchantId'    => $this->gateway->api->get_merchant_id(),
+                    'MerchantKey'   => $this->gateway->api->get_merchant_key(),
+                ),
+                'body'      => json_encode( $this ),
+            );
+
+            /**
+             * Filter request
+             *
+             * @var string  $request
+             * @var obj     $this
+             */
+            $request = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_transaction_request', $request, $this );
+
+            // Send the request
+            $result = WC_Checkout_Braspag_Api::make_request( $endpoint, $request );
+
+            // Check for success
+            $response = $result['response'] ?? [];
+            $body = json_decode( ( $result['body'] ?? '' ), true );
+
+            // If the payment WAS NOT CREATED
+            if ( $response['code'] !== WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
+                // Braspag return a array with a object
+                $body = (array) $body;
+                $body = array_shift( $body );
+
+                $code = $body['Code'] ?? '';
+                $message = $body['Message'] ?? '';
+
+                // Translate erro message
+                if ( ! empty( $message ) ) {
+                    $message = __( $message, WCB_TEXTDOMAIN );
+                }
+
+                /**
+                 * Check for duplicated code to treat the error
+                 *
+                 * Some Merchants do not allow duplicated payments to MerchantOrderId
+                 * (WC_Order->id) so we should cancel it before try again.
+                 */
+                if ( $code == WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
+                    // TODO: return if we got it ?
+                    return $this->process_duplicated_payment();
+                }
+
+                /**
+                 * To be catched
+                 * @see WC_Checkout_Braspag_Api::do_payment_request()
+                 */
+                throw new Exception( $message );
+            }
+
+            // Return the body
+            return ( empty( $result['body'] ) ) ? '' : $result['body'];
+        }
+
+        /**
+         * Try to process a duplicated payment:
+         * - If the payment is equal, try to continue
+         * - If it's not equal, try to cancel
+         */
+        private function process_duplicated_payment() {
+            $default_error = __( 'You already tried to pay this order and we were not able to cancel the previous attempt. Please, try again or contact us.', WCB_TEXTDOMAIN );
+
+            /**
+             * Try to find all payments
+             *
+             * The duplicated (and successully created) should be the last
+             * we can ignore others because they are not authorized
+             */
+            $api_query = new WC_Checkout_Braspag_Query( $this->gateway );
+            $payments = $api_query->get_sale_by_MerchantOrderId( $this->MerchantOrderId );
+            usort( $payments, function( $payment_a, $payment_b ) {
+                $date_a = strtotime( $payment_a['ReceveidDate'] );
+                $date_b = strtotime( $payment_b['ReceveidDate'] );
+
+                return $date_b - $date_a;
+            } );
+
+            // If not find any payment, alert error
+            if ( empty( $payments[0]['PaymentId'] ) ) {
+                throw new Exception( $default_error );
+            }
+
+            // Get transaction
+            $transaction = $api_query->get_transaction( $payments[0]['PaymentId'] );
+
+            if ( empty( $transaction['Payment'] ) ) {
+                throw new Exception( $default_error );
+            }
+
+            // If it's the same payment, return transaction
+            if ( $this->is_equal_payment( $transaction['Payment'] ) ) {
+                return $transaction;
+            }
+
+            // Try to cancel
+            if ( $this->cancel_transaction( $transaction['Payment']['PaymentId'], $transaction['Payment']['Amount'] ) ) {
+                throw new Exception( __( 'You already tried to pay this order. We are canceling this attempt so you can retry.', WCB_TEXTDOMAIN ) );
+            }
+
+            throw new Exception( $default_error );
         }
 
         /**

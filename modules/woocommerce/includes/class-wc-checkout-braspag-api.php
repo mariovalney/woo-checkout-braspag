@@ -172,13 +172,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             try {
                 $response = $request->do_request();
 
+                // Check for errors
                 if ( ! empty( $response['errors'] ) ) {
                     return $this->return_error( $response['errors'] );
                 }
 
-                // return $this->return_success( $url, $data );
+                // It's a transaction ?
+                if ( ! empty( $response['MerchantOrderId'] ) ) {
+                    //  return $this->return_success( $url, $data );
+                }
             } catch (Exception $e) {
-                return $this->return_error( $e->getMessage() );
+                $message = $e->getMessage();
+                if ( empty( $message ) ) return;
+
+                return $this->return_error( $message );
             }
 
             return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds.', WCB_VERSION ) );
