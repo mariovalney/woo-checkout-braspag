@@ -2,7 +2,7 @@
 
 /**
  * WC_Checkout_Braspag_Request_Payment_Cc
- * Class responsible to creat a request to Braspag API
+ * Class responsible to request a Credit Card Payment to API
  *
  * @package         Woo_Checkout_Braspag
  * @subpackage      WC_Checkout_Braspag_Request_Payment_Cc
@@ -40,6 +40,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'ServiceTaxAmount'  => 0,
                 'Installments'      => (int) ( $_POST['braspag_payment_installments'] ?? 0 ),
                 'SoftDescriptor'    => $this->gateway->get_option( 'method_cc_soft_description' ),
+                'Capture'           => ( $this->gateway->get_option( 'method_cc_auto_capture', 'no' ) === 'yes' ),
                 'Credentials'       => array(
                     'Code'  => $this->gateway->get_option( 'method_cc_credential_code' ),
                     'Key'   => $this->gateway->get_option( 'method_cc_credential_key' ),

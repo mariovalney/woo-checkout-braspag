@@ -45,11 +45,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
         public function do_request() {
             $errors = $this->validate();
 
-            return array(
-                'errors'    => $errors,
-                'data'      => '',
-                'url'       => '',
-            );
+            if ( ! empty( $errors ) ) {
+                return [ 'errors' => $errors ];
+            }
         }
 
         /**

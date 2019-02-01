@@ -233,6 +233,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'default'           => '',
                     );
 
+                    $this->form_fields['method_' . $code . '_auto_capture'] = array(
+                        'type'              => 'checkbox',
+                        'title'             => $sub_option_preffix . __( 'Auto Capture', WCB_TEXTDOMAIN ),
+                        'label'             => __( 'Enable Auto Capture', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Check with your acquirer. If false we try to capture the transaction after authorization.', WCB_TEXTDOMAIN ),
+                        'desc_tip'          => true,
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'default'           => 'no',
+                    );
+
                     $this->form_fields['method_' . $code . '_credential_code'] = array(
                         'type'              => 'text',
                         'title'             => $sub_option_preffix . __( 'Credential Code', WCB_TEXTDOMAIN ),
