@@ -29,6 +29,21 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         const ENDPOINT_SANDBOX_API_QUERY = 'https://apiquerysandbox.braspag.com.br';
 
         /**
+         * HTTP Codes
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador?json#lista-de-http-status-code
+         */
+        const STATUS_RESPONSE_OK = '200';
+        const STATUS_RESPONSE_CREATED = '201';
+
+        /**
+         * API Codes
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador?json#c%C3%B3digos-de-erros-da-api
+         */
+        const ERROR_API_DUPLICATED = '302';
+
+        /**
          * Merchant ID
          */
         private $merchant_id;
@@ -99,6 +114,42 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         }
 
         /**
+         * Get Merchant Id
+         *
+         * @return string
+         */
+        public function get_merchant_id() {
+            return $this->merchant_id;
+        }
+
+        /**
+         * Get Merchant Key
+         *
+         * @return string
+         */
+        public function get_merchant_key() {
+            return $this->merchant_key;
+        }
+
+        /**
+         * Get endpoint API
+         *
+         * @return string
+         */
+        public function get_endpoint_api() {
+            return $this->endpoint_api;
+        }
+
+        /**
+         * Get endpoint API QUERY
+         *
+         * @return string
+         */
+        public function get_endpoint_api_query() {
+            return $this->endpoint_api_query;
+        }
+
+        /**
          * Try to do a payment request
          *
          * @return array
@@ -118,7 +169,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             // Request
             $request = new $class( $order, $gateway );
 
-            // print_r( json_decode( json_encode( $request ) ) ); exit;
             try {
                 $response = $request->do_request();
 
@@ -152,6 +202,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          */
         private function return_error( $error ) {
             return [ 'errors' => (array) $error ];
+        }
+
+        /**
+         * Make a request
+         *
+         * @see wp_remote_request()
+         */
+        public static function make_request( $url, $args ) {
+            $result = wp_remote_request( $url, $args );
+
+            if ( ! is_wp_error( $result ) ) return $result;
+
+            error_log( $result->get_error_message() );
+            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.' ) );
         }
 
     }
