@@ -89,10 +89,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
         /**
          * Send payment request to API
+         * Expect exceptions: use inside try catch
          *
          * @since    1.0.0
          *
          * @param    array  $data
+         * @return   array  $transaction A array with 'errors' key if some problem
+         *                               happend or a "transaction" from Braspag if success.
          */
         public function do_request() {
             $errors = $this->validate();
@@ -135,12 +138,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             // Create WP Request
             $request = array(
                 'method'    => 'POST',
-                'timeout'   => 30,
-                'headers'   => array(
-                    'Content-Type'  => 'application/json',
-                    'MerchantId'    => $this->gateway->api->get_merchant_id(),
-                    'MerchantKey'   => $this->gateway->api->get_merchant_key(),
-                ),
+                'headers'   => [ 'Content-Type'  => 'application/json' ],
                 'body'      => json_encode( $this ),
             );
 
@@ -153,52 +151,55 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $request = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_transaction_request', $request, $this );
 
             // Send the request
-            $result = WC_Checkout_Braspag_Api::make_request( $endpoint, $request );
+            $result = $this->gateway->api->make_request( $endpoint, $request );
 
             // Check for success
             $response = $result['response'] ?? [];
             $body = json_decode( ( $result['body'] ?? '' ), true );
 
-            // If the payment WAS NOT CREATED
-            if ( $response['code'] !== WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
-                // Braspag return a array with a object
-                $body = (array) $body;
-                $body = array_shift( $body );
-
-                $code = $body['Code'] ?? '';
-                $message = $body['Message'] ?? '';
-
-                // Translate erro message
-                if ( ! empty( $message ) ) {
-                    $message = __( $message, WCB_TEXTDOMAIN );
-                }
-
-                /**
-                 * Check for duplicated code to treat the error
-                 *
-                 * Some Merchants do not allow duplicated payments to MerchantOrderId
-                 * (WC_Order->id) so we should cancel it before try again.
-                 */
-                if ( $code == WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
-                    // TODO: return if we got it ?
-                    return $this->process_duplicated_payment();
-                }
-
-                /**
-                 * To be catched
-                 * @see WC_Checkout_Braspag_Api::do_payment_request()
-                 */
-                throw new Exception( $message );
+            // If the payment WAS CREATED
+            if ( (string) $response['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
+                return $body;
             }
 
-            // Return the body
-            return ( empty( $result['body'] ) ) ? '' : $result['body'];
+            /**
+             * If the payment WAS NOT CREATED
+             * Braspag returns a array with a object
+             */
+            $body = (array) $body;
+            $body = array_shift( $body );
+
+            $code = $body['Code'] ?? '';
+            $message = $body['Message'] ?? '';
+
+            // Translate error message
+            if ( ! empty( $message ) ) {
+                $message = __( $message, WCB_TEXTDOMAIN );
+            }
+
+            /**
+             * Check for duplicated code to treat the error
+             *
+             * Some Merchants do not allow duplicated payments to MerchantOrderId
+             * (WC_Order->id) so we should cancel it before try again.
+             */
+            if ( $code == WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
+                return $this->process_duplicated_payment();
+            }
+
+            /**
+             * To be catched
+             * @see WC_Checkout_Braspag_Api::do_payment_request()
+             */
+            throw new Exception( $message );
         }
 
         /**
          * Try to process a duplicated payment:
          * - If the payment is equal, try to continue
          * - If it's not equal, try to cancel
+         *
+         * @return   array  $transaction if it's the same or
          */
         private function process_duplicated_payment() {
             $default_error = __( 'You already tried to pay this order and we were not able to cancel the previous attempt. Please, try again or contact us.', WCB_TEXTDOMAIN );

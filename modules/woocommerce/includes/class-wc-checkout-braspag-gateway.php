@@ -90,14 +90,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->sandbox_merchant_key = $this->get_option( 'sandbox_merchant_key' );
             $this->debug                = $this->get_option( 'debug' );
 
-            // Active Logs
-            $this->log = ( 'yes' == $this->debug ) ? new WC_Logger() : false;
+            // Is Sandbox?
+            $this->is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
 
             // Start API
-            $this->is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
             $merchant_key = ( $this->is_sandbox ) ? $this->sandbox_merchant_key : $this->merchant_key;
-
-            $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $this->is_sandbox );
+            $this->api = new WC_Checkout_Braspag_Api( $this->merchant_id, $merchant_key, $this );
 
             // Register Hooks - WordPress
             add_action( 'wp_enqueue_scripts', array( $this, 'enqueue_frontend_script') );
@@ -433,6 +431,30 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 'result'   => 'fail',
                 'redirect' => '',
             );
+        }
+
+        /**
+         * Create Log
+         * Write to WC Logger with context
+         *
+         * @link https://woocommerce.wordpress.com/2017/01/26/improved-logging-in-woocommerce-2-7/
+         */
+        public function log( $message, $level = 'debug', $source = '', array $context = [] ) {
+            if ( 'yes' !== $this->debug ) return;
+
+            $logger = wc_get_logger();
+
+            if ( ! method_exists( $logger, $level ) ) return;
+
+            $context['source'] = ( ! empty( $source ) ) ? $source : $this->id;
+
+            // Format Message
+            if ( ! is_string( $message ) ) {
+                $message = print_r( $message, true );
+            }
+
+            // Call it
+            call_user_func( array( $logger, $level ), $message, $context );
         }
 
         /**

@@ -129,20 +129,72 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @since    1.0.0
          *
          * @param    array  $data
+         * @return   array  $transaction A array with 'errors' key if some problem
+         *                               happend or a "transaction" from Braspag if success.
          */
         public function do_request() {
             $transaction = parent::do_request();
 
-            print_r( $transaction );
-            exit(2);
+            $payment = $transaction['Payment'] ?? [];
+
+            // If not captured, do it
+            if ( empty( $payment['CapturedDate'] ) ) {
+                if ( ! $this->capture_transaction( $transaction ) ) {
+                    /**
+                     * Action after try to capture the transaction
+                     *
+                     * Note: It do not trigger if Auto Capture is true.
+                     */
+                    $not_captured_action = 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_not_captured';
+                    do_action( $not_captured_action, $transaction );
+
+                    if ( ! has_action( $not_captured_action ) ) {
+                        throw new Exception();
+                    }
+                }
+            }
+
+            return $transaction;
+        }
+
+        /**
+         * Capture the transaction
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador?shell#requisi%C3%A7%C3%A3o13
+         * @since    1.0.0
+         *
+         * @param    array  $data
+         * @return   bool
+         */
+        public function capture_transaction( $transaction ) {
+            if ( empty( $transaction['Payment'] ) ) throw new Exception();
+
+            // Get PaymentId
+            $payment_id = $transaction['Payment']['PaymentId'];
+
+            /**
+             * Filter endpoint to capture a transaction
+             * You can use it to add 'Amount' or 'ServiceTaxAmount' to URL
+             *
+             * @var string  $endpoint
+             */
+            $endpoint = $this->gateway->api->get_endpoint_api() . $this::TRANSACTION_ENDPOINT . $payment_id . '/capture';
+            $endpoint = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_capture_transaction_endpoint', $endpoint );
+
+            // PUT Request
+            $result = $this->gateway->api->make_put_request( $endpoint );
+
+            return ( $result['response']['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK );
         }
 
         /**
          * Cancel the transaction
          *
+         * @link https://braspag.github.io/manual/braspag-pagador?shell#requisi%C3%A7%C3%A3o26
          * @since    1.0.0
          *
          * @param    array  $data
+         * @return   bool
          */
         public function cancel_transaction( $payment_id, $amount ) {
             /**
@@ -153,19 +205,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $endpoint = $this->gateway->api->get_endpoint_api() . $this::TRANSACTION_ENDPOINT . $payment_id . '/void?amount=' . $amount;
             $endpoint = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_cancel_transaction_endpoint', $endpoint );
 
-            // Create WP Request
-            $request = array(
-                'method'    => 'PUT',
-                'timeout'   => 30,
-                'blocking'  => true,
-                'headers'   => array(
-                    'Content-Length'    => 0,
-                    'MerchantId'        => $this->gateway->api->get_merchant_id(),
-                    'MerchantKey'       => $this->gateway->api->get_merchant_key(),
-                ),
-            );
-
-            $result = WC_Checkout_Braspag_Api::make_request( $endpoint, $request );
+            // PUT Request
+            $result = $this->gateway->api->make_put_request( $endpoint );
 
             return ( $result['response']['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK );
         }

@@ -68,11 +68,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @return void
          */
-        public function __construct( $merchant_id, $merchant_key, $is_sandbox = false ) {
+        public function __construct( $merchant_id, $merchant_key, $gateway ) {
             $this->merchant_id = $merchant_id;
             $this->merchant_key = $merchant_key;
-            $this->endpoint_api = ( $is_sandbox ) ? self::ENDPOINT_SANDBOX_API : self::ENDPOINT_API;
-            $this->endpoint_api_query = ( $is_sandbox ) ? self::ENDPOINT_SANDBOX_API_QUERY : self::ENDPOINT_API_QUERY;
+            $this->gateway = $gateway;
+
+            // Endpoints
+            $this->endpoint_api = ( $this->gateway->is_sandbox ) ? self::ENDPOINT_SANDBOX_API : self::ENDPOINT_API;
+            $this->endpoint_api_query = ( $this->gateway->is_sandbox ) ? self::ENDPOINT_SANDBOX_API_QUERY : self::ENDPOINT_API_QUERY;
 
             /**
              * Filter allow developers to change API endpoint
@@ -179,16 +182,70 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
                 // It's a transaction ?
                 if ( ! empty( $response['MerchantOrderId'] ) ) {
-                    //  return $this->return_success( $url, $data );
+                    print_r( $response );
+                    exit;
+                    // return $this->return_success( $url, $data );
                 }
             } catch (Exception $e) {
                 $message = $e->getMessage();
-                if ( empty( $message ) ) return;
 
-                return $this->return_error( $message );
+                if ( ! empty( $message ) ) {
+                    return $this->return_error( $message );
+                }
             }
 
             return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds.', WCB_VERSION ) );
+        }
+
+        /**
+         * Make a request
+         *
+         * @see wp_remote_request()
+         */
+        public function make_request( $url, $args = [] ) {
+            // Default args
+            $default = array(
+                'method'    => 'GET',
+                'timeout'   => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
+                'blocking'  => true,
+                'headers'   => [],
+            );
+
+            $args = wp_parse_args( $args, $default );
+
+            // Required headers
+            $args['headers']['MerchantId'] = $this->get_merchant_id();
+            $args['headers']['MerchantKey'] = $this->get_merchant_key();
+
+            // Make Request
+            $result = wp_remote_request( $url, $args );
+
+            if ( ! is_wp_error( $result ) ) {
+                // Log request
+                $this->gateway->log( [ 'url' => $url, 'result' => $result ] );
+
+                return $result;
+            }
+
+            // Log request error
+            $this->gateway->log( [ 'url' => $url, 'result' => $result ], 'error' );
+
+            // Create a default connection message
+            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.' ) );
+        }
+
+        /**
+         * Make a PUT request
+         *
+         * @see wp_remote_request()
+         */
+        public function make_put_request( $url, $args = [] ) {
+            if ( empty( $args['headers'] ) ) $args['headers'] = [];
+
+            $args['method'] = 'PUT';
+            $args['headers']['Content-Length'] = 0;
+
+            $this->make_request( $url, $args );
         }
 
         /**
@@ -209,20 +266,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          */
         private function return_error( $error ) {
             return [ 'errors' => (array) $error ];
-        }
-
-        /**
-         * Make a request
-         *
-         * @see wp_remote_request()
-         */
-        public static function make_request( $url, $args ) {
-            $result = wp_remote_request( $url, $args );
-
-            if ( ! is_wp_error( $result ) ) return $result;
-
-            error_log( $result->get_error_message() );
-            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.' ) );
         }
 
     }

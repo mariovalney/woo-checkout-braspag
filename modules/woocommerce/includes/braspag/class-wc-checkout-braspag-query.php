@@ -68,30 +68,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
          * @param    string  $endpoint
          */
         private function query( $endpoint, $decode_json = true ) {
-
-            // Create WP Request
-            $request = array(
-                'method'    => 'GET',
-                'timeout'   => 30,
-                'blocking'  => true,
-                'headers'   => array(
-                    'Content-Type'  => 'application/json',
-                    'MerchantId'    => $this->gateway->api->get_merchant_id(),
-                    'MerchantKey'   => $this->gateway->api->get_merchant_key(),
-                ),
-            );
-
             /**
              * Filter request
              *
-             * @var string  $request
-             * @var obj     $this
+             * @var obj     $endpoint
              */
             $endpoint = $this->gateway->api->get_endpoint_api_query() . $endpoint;
-            $request = apply_filters( 'wc_checkout_braspag_query_request', $request, $endpoint );
+            $request = apply_filters( 'wc_checkout_braspag_query_request', $endpoint );
 
             // Send the request
-            $result = WC_Checkout_Braspag_Api::make_request( $endpoint, $request );
+            $result = $this->gateway->api->make_request( $endpoint );
 
             $body = $result['body'] ?? '';
             return ( $decode_json ) ? json_decode( $body, true ) : $body;
