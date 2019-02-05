@@ -356,10 +356,23 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         /**
          * Get payment method data
          *
-         * @return void
+         * @return array
          */
         public function get_payment_method( $method ) {
             return $this->payment_methods[ $method ] ?? [];
+        }
+
+        /**
+         * Get payment method data
+         *
+         * @return string
+         */
+        public function get_payment_method_by_code( $code ) {
+            foreach ( $this->payment_methods as $method => $data ) {
+                if ( $data['code'] == $code ) return $method;
+            }
+
+            return '';
         }
 
         /**
@@ -408,17 +421,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $method = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : '';
             $response = $this->api->do_payment_request( $method, $order, $this );
 
-            // TODO: Update Order after gateway response
-            if ( ! empty( $response['data'] ) ) {
-                // $this->update_order( $response['data'] );
-            }
+            // Update Order after gateway response
+            if ( ! empty( $response['transaction'] ) ) {
+                $updated = $this->update_order_status( $response['transaction'] );
 
-            // Success if a URL is returned
-            if ( ! empty( $response['url'] ) ) {
-                return array(
-                    'result'    => 'success',
-                    'redirect'  => $response['url'],
-                );
+                // Success if a URL is returned
+                if ( $updated ) {
+                    $url = $response['url'] ?? $this->gateway->get_return_url( $order );
+
+                    return array(
+                        'result'    => 'success',
+                        'redirect'  => $url,
+                    );
+                }
             }
 
             // If not success, add error notices
@@ -431,6 +446,111 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 'result'   => 'fail',
                 'redirect' => '',
             );
+        }
+
+        /**
+         * Update order status
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador#resposta
+         *
+         * @param array $transaction API Request response from Braspag
+         */
+        public function update_order_status( $transaction ) {
+            if ( empty( $transaction['MerchantOrderId'] ) || empty( $transaction['Payment'] ) ) {
+                $this->log( 'Update Order Status failed: no MerchantOrderId and/or Payment was provided.' );
+                return false;
+            }
+
+            // Get Order
+            $order = wc_get_order( (int) $transaction['MerchantOrderId'] );
+            if ( empty( $order ) ) {
+                $this->log( 'Update Order Status failed: order is invalid for MerchantOrderId: ' . (int) $transaction['MerchantOrderId'] );
+                return false;
+            }
+
+            // Update Meta Data
+            $this->update_order_transaction_data( $order, $transaction );
+
+            // Get Status
+            $status = $transaction['Payment']['Status'] ?? '';
+
+            // Add status and notes
+            $order_status = '';
+
+            switch ( $status ) {
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED:
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED:
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PENDING:
+                    $order_status = 'on-hold';
+                    break;
+
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED:
+                    $order_status = 'processing';
+                    break;
+
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED:
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_ABORTED:
+                    $order_status = 'failed';
+                    break;
+
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED:
+                    $order_status = 'cancelled';
+                    break;
+
+                case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED:
+                    $order_status = 'refunded';
+                    break;
+
+                default:
+                    $this->log( 'Braspag Status for order ' . $order->get_order_number() . ' is invalid: ' . $status );
+                    return;
+            }
+
+            // Log Status
+            $this->log( 'Braspag Status for order ' . $order->get_order_number() . ' is: ' . $status );
+
+            /**
+             * Update Status
+             *
+             * WooCommerce already trigger 'woocommerce_order_status_{order_status}'
+             * action on WC_Order::update_status() and it do what we need about stock.
+             */
+            if ( $order_status ) {
+                $note = WC_Checkout_Braspag_Messages::payment_status_note( $status );
+                $order->update_status( $order_status, $note );
+            }
+
+            return true;
+        }
+
+        /**
+         * Update order status
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador#resposta
+         *
+         * @param WC_Order  $order          WooCommerce Order
+         * @param array     $transaction    API Request response from Braspag
+         */
+        public function update_order_transaction_data( WC_Order $order, $transaction ) {
+
+            // Payment Data
+            $payment_data = $transaction['Payment'] ?? [];
+            $order->update_meta_data( '_wc_braspag_payment_data', $payment_data );
+
+            // Customer Data
+            $customer_data = $transaction['Customer'] ?? [];
+            $order->update_meta_data( '_wc_braspag_customer_data', $customer_data );
+
+            // Payment ID
+            $payment_id = $payment_data['PaymentId'] ?? '';
+            $order->update_meta_data( '_wc_braspag_payment_id', $payment_id );
+
+            // Payment Method
+            $payment_method = $payment_data['Type'] ?? '';
+            $payment_method = $this->get_payment_method_by_code( $payment_method );
+            $order->update_meta_data( '_wc_braspag_payment_method', $payment_method );
+
+            $order->save();
         }
 
         /**

@@ -137,24 +137,36 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             $payment = $transaction['Payment'] ?? [];
 
-            // If not captured, do it
-            if ( empty( $payment['CapturedDate'] ) ) {
-                if ( ! $this->capture_transaction( $transaction ) ) {
-                    /**
-                     * Action after try to capture the transaction
-                     *
-                     * Note: It do not trigger if Auto Capture is true.
-                     */
-                    $not_captured_action = 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_not_captured';
-                    do_action( $not_captured_action, $transaction );
-
-                    if ( ! has_action( $not_captured_action ) ) {
-                        throw new Exception();
-                    }
-                }
+            // If captured, let's continue
+            if ( ! empty( $payment['CapturedDate'] ) ) {
+                return $transaction;
             }
 
-            return $transaction;
+            $status = $payment['Status'] ?? '';
+
+            // Authorized should capture
+            if ( (int) $status === WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED ) {
+
+                // Capture
+                $this->capture_transaction( $transaction );
+
+                // Log Capture
+                $payment_id = $transaction['Payment']['PaymentId'];
+                $this->gateway->log( 'Payment ' . $payment_id . ' was captured.' );
+
+                return $transaction;
+            }
+
+            // Pending should not be captured or be a error
+            if ( (int) $status === WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PENDING ) {
+                return $transaction;
+            }
+
+            // Other cases we throw to create a notice
+            $reason_code = $payment['ReasonCode'] ?? '';
+            $message = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code );
+
+            throw new Exception( $message );
         }
 
         /**
@@ -164,7 +176,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @since    1.0.0
          *
          * @param    array  $data
-         * @return   bool
+         * @return   void
          */
         public function capture_transaction( $transaction ) {
             if ( empty( $transaction['Payment'] ) ) throw new Exception();
@@ -184,7 +196,26 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             // PUT Request
             $result = $this->gateway->api->make_put_request( $endpoint );
 
-            return ( $result['response']['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK );
+            // If Captured, return
+            $response_code = (int) $result['response']['code'];
+            if ( $response_code === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK ) return;
+
+            // Log
+            $error = $response_code . ' ' . ( $result['response']['message'] ?? '' );
+            $this->gateway->log( 'Payment ' . $payment_id . ' was not captured: ' . $error );
+
+            /**
+             * Action after try to capture the transaction
+             *
+             * Note: It do not trigger if Auto Capture is true.
+             */
+            $not_captured_action = 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_not_captured';
+            do_action( $not_captured_action, $transaction );
+
+            // If there's no action, we throw the standard message
+            if ( has_action( $not_captured_action ) ) {
+                throw new Exception();
+            }
         }
 
         /**
@@ -208,7 +239,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             // PUT Request
             $result = $this->gateway->api->make_put_request( $endpoint );
 
-            return ( $result['response']['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK );
+            return ( (int) $result['response']['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK );
         }
 
         /**

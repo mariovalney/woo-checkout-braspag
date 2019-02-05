@@ -158,7 +158,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $body = json_decode( ( $result['body'] ?? '' ), true );
 
             // If the payment WAS CREATED
-            if ( (string) $response['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
+            if ( (int) $response['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
                 return $body;
             }
 
@@ -183,7 +183,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
              * Some Merchants do not allow duplicated payments to MerchantOrderId
              * (WC_Order->id) so we should cancel it before try again.
              */
-            if ( $code == WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
+            if ( (int) $code === WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
                 return $this->process_duplicated_payment();
             }
 

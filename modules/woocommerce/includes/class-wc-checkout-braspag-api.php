@@ -199,9 +199,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
                 // It's a transaction ?
                 if ( ! empty( $response['MerchantOrderId'] ) ) {
-                    print_r( $response );
-                    exit;
-                    // return $this->return_success( $url, $data );
+                    return $this->return_success( '', $response );
                 }
             } catch (Exception $e) {
                 $message = $e->getMessage();
@@ -239,7 +237,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
             if ( ! is_wp_error( $result ) ) {
                 // Log request
-                $this->gateway->log( [ 'url' => $url, 'result' => $result ] );
+                $this->gateway->log( array(
+                    'url'       => $url,
+                    'response'  => ( $result['response'] ?? '' ),
+                    'body'      => ( $result['body'] ?? '' ),
+                ) );
 
                 return $result;
             }
@@ -262,7 +264,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $args['method'] = 'PUT';
             $args['headers']['Content-Length'] = 0;
 
-            $this->make_request( $url, $args );
+            return $this->make_request( $url, $args );
         }
 
         /**
@@ -271,8 +273,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @return array
          */
-        private function return_success( $url, $data = [] ) {
-            return [ 'url' => $url, 'data' => $data ];
+        private function return_success( $url, $transaction ) {
+            return [ 'url' => $url, 'transaction' => $transaction ];
         }
 
         /**
