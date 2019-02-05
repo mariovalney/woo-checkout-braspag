@@ -30,18 +30,35 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
         /**
          * HTTP Codes
+         * Updated: 05-02-2019
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#lista-de-http-status-code
          */
-        const STATUS_RESPONSE_OK = '200';
-        const STATUS_RESPONSE_CREATED = '201';
+        const STATUS_RESPONSE_OK = 200;
+        const STATUS_RESPONSE_CREATED = 201;
 
         /**
          * API Codes
+         * Updated: 05-02-2019
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#c%C3%B3digos-de-erros-da-api
          */
-        const ERROR_API_DUPLICATED = '302';
+        const ERROR_API_DUPLICATED = 302;
+
+        /**
+         * Transaction Status
+         * Updated: 05-02-2019
+         *
+         * @link https://braspag.github.io/manual/braspag-pagador#lista-de-status-da-transa%C3%A7%C3%A3o
+         */
+        const TRANSACTION_STATUS_NOT_FINISHED = 0;
+        const TRANSACTION_STATUS_AUTHORIZED = 1;
+        const TRANSACTION_STATUS_PAYMENT_CONFIRMED = 2;
+        const TRANSACTION_STATUS_DENIED = 3;
+        const TRANSACTION_STATUS_VOIDED = 10;
+        const TRANSACTION_STATUS_REFUNDED = 11;
+        const TRANSACTION_STATUS_PENDING = 12;
+        const TRANSACTION_STATUS_ABORTED = 13;
 
         /**
          * Merchant ID
