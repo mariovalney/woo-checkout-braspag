@@ -26,7 +26,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
         public static function payment_status_note( $code ) {
             switch ( $code ) {
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED:
-                    return __( 'Braspag: fail when processing the payment.', WCB_TEXTDOMAIN );
+                    return __( 'Braspag: payment is not finished.', WCB_TEXTDOMAIN );
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED:
                     return __( 'Braspag: payment method can be captured (credit/debit card) or paid (bank slip).', WCB_TEXTDOMAIN );
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED:
@@ -88,6 +88,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     break;
 
                 default:
+                    return __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );
                     break;
             }
 
