@@ -104,6 +104,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Register Hooks - WooCommerce
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
+            add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 
             // Register Hooks - Custom Actions
             add_action( 'wc_checkout_braspag_print_bank_slip_description', array( $this, 'print_bank_slip_description' ) );
@@ -610,6 +611,35 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function enqueue_frontend_script() {
             $this->enqueue_asset( 'frontend', [ 'jquery' ] );
             $this->enqueue_asset( 'frontend', [], false );
+        }
+
+        /**
+         * Action 'woocommerce_thankyou_{gateway}'
+         * Run on receipt order page
+         *
+         * @return void
+         */
+        public function thankyou_page( $order_id ) {
+            // Check for PaymentId
+            if ( empty( $_POST['PaymentId'] ) ) return;
+
+            $payment_id = $_POST['PaymentId'];
+
+            // Get transaction
+            try {
+                $api_query = new WC_Checkout_Braspag_Query( $this );
+                $transaction = $api_query->get_transaction( $payment_id );
+            } catch ( Exception $e ) {
+                $this->log( 'Error on thankyou page: ' . $e->getMessage() );
+                return;
+            }
+
+            // Check payment
+            if ( empty( $transaction['MerchantOrderId'] ) ) return;
+            if ( (int) $transaction['MerchantOrderId'] !== (int) $order_id ) return;
+
+            // Update data
+            $this->update_order_status( $transaction );
         }
 
         /**

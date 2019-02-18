@@ -201,7 +201,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 if ( ! empty( $response['MerchantOrderId'] ) ) {
                     return $this->return_success( '', $response );
                 }
-            } catch (Exception $e) {
+
+                // We should redirect ?
+                if ( ! empty( $response['url'] ) ) {
+                    $transaction = $response['transaction'] ?? [];
+                    return $this->return_success( $response['url'], $transaction );
+                }
+            } catch ( Exception $e ) {
                 $message = $e->getMessage();
 
                 if ( ! empty( $message ) ) {

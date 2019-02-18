@@ -18,35 +18,35 @@
 <p class="form-row">
     <label><?php _e( 'Credit Card Number', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input type="text" name="braspag_payment_cc_number" value="0000.0000.0000.0001">
+        <input type="text" name="braspag_payment_cc_number">
     </span>
 </p>
 
 <p class="form-row">
     <label><?php _e( 'Holder Name', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input type="text" name="braspag_payment_cc_holder" value="Card Holder Name">
+        <input type="text" name="braspag_payment_cc_holder">
     </span>
 </p>
 
 <p class="form-row">
     <label><?php _e( 'Expiration Date', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input type="text" name="braspag_payment_cc_expiration_date" value="04/22">
+        <input type="text" name="braspag_payment_cc_expiration_date">
     </span>
 </p>
 
 <p class="form-row">
     <label><?php _e( 'Security Code', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input type="text" name="braspag_payment_cc_security_code" value="123">
+        <input type="text" name="braspag_payment_cc_security_code">
     </span>
 </p>
 
 <p class="form-row">
     <label><?php _e( 'Brand', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input type="text" name="braspag_payment_cc_brand" value="Visa">
+        <input type="text" name="braspag_payment_cc_brand">
     </span>
 </p>
 

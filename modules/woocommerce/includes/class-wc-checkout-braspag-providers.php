@@ -122,18 +122,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 'brands'        => [ 'Visa', 'Master' ],
                 'description'   => 'Débito na plataforma de e-commerce Cielo 3.0',
             ),
-            'Getnet'            => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce GetNet',
-            ),
-            'FirstData'         => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce First Data',
-            ),
-            'GlobalPayments'    => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce Global Payments',
-            ),
+            // 'Getnet'            => array(
+            //     'brands'        => [ 'Visa', 'Master' ],
+            //     'description'   => 'Débito na plataforma de e-commerce GetNet',
+            // ),
+            // 'FirstData'         => array(
+            //     'brands'        => [ 'Visa', 'Master' ],
+            //     'description'   => 'Débito na plataforma de e-commerce First Data',
+            // ),
+            // 'GlobalPayments'    => array(
+            //     'brands'        => [ 'Visa', 'Master' ],
+            //     'description'   => 'Débito na plataforma de e-commerce Global Payments',
+            // ),
         );
 
         /**

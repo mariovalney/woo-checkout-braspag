@@ -58,7 +58,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
          *
          * @since    1.0.0
          */
-        public static function payment_error_message( $reason_code ) {
+        public static function payment_error_message( $reason_code, $is_credit_card = true ) {
+            $card_type = $is_credit_card ? _x( 'credit card', 'To payment error messages.', WCB_TEXTDOMAIN ) : _x( 'debit card', 'To payment error messages.', WCB_TEXTDOMAIN );
+
             switch ( $reason_code ) {
                 case 7:
                     return __( 'Your payment was denied. Please try again with another method.', WCB_TEXTDOMAIN );
@@ -68,7 +70,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                 case 13:
                 case 14:
                 case 15:
-                    return __( 'There was a problem with your credit card. Please try again with another one.', WCB_TEXTDOMAIN );
+                    return sprintf(
+                        _x( 'There was a problem with your %s. Please try again with another one.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
+                        $card_type
+                    );
                     break;
 
                 case 18:
@@ -76,7 +81,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     break;
 
                 case 21:
-                    return __( 'Your credit card number is invalid. Please check it and try again.', WCB_TEXTDOMAIN );
+                    return sprintf(
+                        _x( 'Your %s number is invalid. Please check it and try again.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
+                        $card_type
+                    );
                     break;
 
                 default:

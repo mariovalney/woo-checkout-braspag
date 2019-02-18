@@ -29,7 +29,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          *
          * @link https://braspag.github.io/manual/braspag-pagador
          */
-        const TRANSACTION_ENDPOINT = '';
+        const TRANSACTION_ENDPOINT = '/v2/sales/';
 
         /**
          * The gateway to be used
