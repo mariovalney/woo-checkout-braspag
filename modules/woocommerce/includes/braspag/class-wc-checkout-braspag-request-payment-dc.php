@@ -38,10 +38,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
 
             if ( empty( $this->Payment ) ) return;
 
-            /**
-             * Return URL
-             */
-            $this->Payment['ReturnUrl'] = $this->gateway->get_return_url( $order );
+            // Return URL
+            $this->Payment['ReturnUrl'] = $this->gateway->get_api_return_url();
         }
 
         /**

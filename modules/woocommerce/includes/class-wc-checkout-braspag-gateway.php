@@ -105,6 +105,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             // Register Hooks - WooCommerce
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
+            add_action( 'woocommerce_api_wc_checkout_braspag_gateway', array( $this, 'wc_api_callback' ) );
 
             // Register Hooks - Custom Actions
             add_action( 'wc_checkout_braspag_print_bank_slip_description', array( $this, 'print_bank_slip_description' ) );
@@ -377,6 +378,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
+         * Get API Return Url
+         * @return string Api request URL to callback 'WC_Checkout_Braspag_Gateway'
+         */
+        public function get_api_return_url() {
+            return WC()->api_request_url( 'WC_Checkout_Braspag_Gateway' );
+        }
+
+        /**
          * Payment fields.
          *
          */
@@ -620,26 +629,66 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function thankyou_page( $order_id ) {
-            // Check for PaymentId
-            if ( empty( $_POST['PaymentId'] ) ) return;
+            // Get Order
+            $order = wc_get_order( $order_id );
 
-            $payment_id = $_POST['PaymentId'];
+            if ( empty( $order->get_id() ) ) return;
+
+            // Add Payment Info
+            $args = [];
+            wc_get_template( 'order-received.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
+        }
+
+        /**
+         * WC Api Callback: 'WC_Checkout_Braspag_Gateway'
+         * Process payments
+         *
+         * @return void
+         */
+        public function wc_api_callback() {
+            // Redirect Url
+            $redirect_url = $this->get_return_url();
+
+            // Check for PaymentId
+            $payment_id = $_POST['PaymentId'] ?? '';
+            $payment_id = sanitize_text_field( $payment_id );
+
+            if ( empty( $payment_id ) ) return;
 
             // Get transaction
             try {
                 $api_query = new WC_Checkout_Braspag_Query( $this );
                 $transaction = $api_query->get_transaction( $payment_id );
+
+                // Check payment
+                $merchant_order_id = (int) ( $transaction['MerchantOrderId'] ?? 0 );
+
+                // Check for Order
+                $order = wc_get_order( $merchant_order_id );
+
+                if ( empty( $merchant_order_id ) || empty( $order->get_id() ) ) {
+                    throw new Exception( __( 'There was a problem processing your payment. Please try again.', WCB_TEXTDOMAIN ) );
+
+                    // Log
+                    $this->log( 'Error on checkout_braspag_debit_card: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
+                }
+
+                // Update data
+                if ( $this->update_order_status( $transaction ) ) {
+                    wc_clear_notices();
+                }
+
+                $redirect_url = $this->get_return_url( $order );
             } catch ( Exception $e ) {
-                $this->log( 'Error on thankyou page: ' . $e->getMessage() );
-                return;
+                wc_add_notice( $e->getMessage(), 'error' );
+
+                // Log
+                $this->log( 'Error on checkout_braspag_debit_card: ' . $e->getMessage() );
             }
 
-            // Check payment
-            if ( empty( $transaction['MerchantOrderId'] ) ) return;
-            if ( (int) $transaction['MerchantOrderId'] !== (int) $order_id ) return;
-
-            // Update data
-            $this->update_order_status( $transaction );
+            // Redirect
+            wp_redirect( $redirect_url );
+            exit;
         }
 
         /**
