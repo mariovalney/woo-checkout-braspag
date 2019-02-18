@@ -31,6 +31,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
             $this->Name             = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
             $this->Email            = $order->get_billing_email();
             $this->Birthdate        = '';
+            $this->Identity         = '';
             $this->Address          = new WC_Checkout_Braspag_Address( $order, 'billing' );
             $this->DeliveryAddress  = new WC_Checkout_Braspag_Address( $order, 'shipping' );
 
