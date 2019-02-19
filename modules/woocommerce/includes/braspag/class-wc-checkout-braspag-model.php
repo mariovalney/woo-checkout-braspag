@@ -71,6 +71,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
         }
 
         /**
+         * Sanitize: number (with format)
+         *
+         * @since    1.0.0
+         */
+        public function sanitize_number( $string, $decimals = 0 ) {
+            $number = preg_replace('/[^\d.]*/', '', $string);
+            $number = (float) $string;
+
+            return number_format( $number, (int) $decimals, '.', '' );
+        }
+
+        /**
          * Sanitize: data to format
          *
          * @since    1.0.0

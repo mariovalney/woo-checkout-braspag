@@ -25,7 +25,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
         /**
          * Endpoint to create a transation
-         * Classes should override
+         * Classes can override
          *
          * @link https://braspag.github.io/manual/braspag-pagador
          */
@@ -111,9 +111,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * Cancel transaction
          * For methods it don't accept canceling, return false
          *
-         * @since    1.0.0
-         *
-         * @param    array  $data
+         * @param  string $payment_id
+         * @param  string $amount
+         * @return bool If cancelled.
          */
         public function cancel_transaction( $payment_id, $amount ) {
             die( 'All payment methods should override this method' );

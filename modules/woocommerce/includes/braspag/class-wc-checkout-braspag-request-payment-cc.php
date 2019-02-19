@@ -246,10 +246,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * Cancel the transaction
          *
          * @link https://braspag.github.io/manual/braspag-pagador?shell#requisi%C3%A7%C3%A3o26
-         * @since    1.0.0
          *
-         * @param    array  $data
-         * @return   bool
+         * @param  string $payment_id
+         * @param  string $amount
+         * @return bool If cancelled.
          */
         public function cancel_transaction( $payment_id, $amount ) {
             /**

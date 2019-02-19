@@ -261,6 +261,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'default'           => '',
                     );
 
+                    // Getnet
                     $this->form_fields['method_' . $code . '_credential_username'] = array(
                         'type'              => 'text',
                         'title'             => $sub_option_preffix . __( 'Credential Username', WCB_TEXTDOMAIN ),
@@ -279,6 +280,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'default'           => '',
                     );
 
+                    // GlobalPayments
                     $this->form_fields['method_' . $code . '_credential_signature'] = array(
                         'type'              => 'password',
                         'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
@@ -301,6 +303,81 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'css'               => 'min-height: 150px;',
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
                         'default'           => $bs_description_default,
+                    );
+
+                    $this->form_fields['method_' . $code . '_bank_slip_instructions'] = array(
+                        'type'              => 'textarea',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Instructions', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Instructions displayed on bank slip. If not empty, will override the settings on Braspag.', WCB_TEXTDOMAIN ),
+                        'css'               => 'min-height: 150px;',
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
+                        'default'           => '',
+                    );
+
+                    $this->form_fields['method_' . $code . '_days_to_pay'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Expiration Days', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Days from bank slip registration to customer pay. Will create expiration date. If not zero, will override the settings on Braspag.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
+                    );
+
+                    // Santander
+                    $this->form_fields['method_' . $code . '_nullify_days'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Nullify Days', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Days to cancel the bank slip. Only for Santander.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Santander2', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
+                    );
+
+                    // Bradesco
+                    $this->form_fields['method_' . $code . '_days_to_fine'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Days To Fine', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Days to fine the customer after expiration date. Only for Bradesco.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
+                    );
+
+                    $this->form_fields['method_' . $code . '_fine_rate'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Fine Rate', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Fine amount (%). Only for Bradesco and allow 5 decimals.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 0.00001 ],
+                        'default'           => 0,
+                    );
+
+                    $this->form_fields['method_' . $code . '_fine_amount'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Fine Amount', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Fine amount (in cents). Only for Bradesco and ignored if Fine Rate is not 0 or empty.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
+                    );
+
+                    $this->form_fields['method_' . $code . '_days_to_interest'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Days To Interest', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Days to start charge interestes after expiration date. Only for Bradesco.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
+                    );
+
+                    $this->form_fields['method_' . $code . '_interest_rate'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Interest Rate', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Interest amount (monthly % - for example 30% will change 1% by day). Only for Bradesco and allow 5 decimals.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 0.00001 ],
+                        'default'           => 0,
+                    );
+
+                    $this->form_fields['method_' . $code . '_interest_amount'] = array(
+                        'type'              => 'number',
+                        'title'             => $sub_option_preffix . __( 'Bank Slip Interest Amount', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Interest amount (in cents). Only for Bradesco and ignored if Interest Rate is not 0 or empty.', WCB_TEXTDOMAIN ),
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2', 'min' => 0, 'step' => 1 ],
+                        'default'           => 0,
                     );
                 }
             }
