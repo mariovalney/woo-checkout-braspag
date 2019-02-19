@@ -23,7 +23,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * Card Node to be populated in JSON
          * @var string
          */
-        public $card_node = 'CreditCard';
+        protected $card_node = 'CreditCard';
 
         /**
          * Populate data.
