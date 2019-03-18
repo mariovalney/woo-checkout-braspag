@@ -4,6 +4,8 @@
  * WCB_Module_Woocommerce
  * Class responsible to manage all WooCommerce stuff
  *
+ * Depends: dependence
+ *
  * @package         Woo_Checkout_Braspag
  * @subpackage      WCB_Module_Woocommerce
  * @since           1.0.0
@@ -21,18 +23,25 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * Run
          *
          * @since    1.0.0
-         * @param    Woo_Checkout_Braspag      $core   The Core object
          */
-        public function run( Woo_Checkout_Braspag $core ) {
-            $this->core = $core;
+        public function run() {
+            $module = $this->core->get_module( 'dependence' );
+
+            // Checking Dependences
+            $module->add_dependence( 'woocommerce/woocommerce.php', 'WooCommerce', 'woocommerce' );
+
+            if ( defined( 'WC_VERSION' ) && version_compare( WC_VERSION, '2.2', '<' ) ) {
+                $notice = __( 'Please update <strong>WooCommerce</strong>. The minimum supported version is 2.2.', WCB_TEXTDOMAIN );
+                $module->add_dependence_notice( $notice );
+            }
+
+            // Return if WooCommerce is not found
+            if ( ! class_exists( 'WC_Payment_Gateway' ) ) {
+                return;
+            }
 
             if ( ! defined( 'WCB_WOOCOMMERCE_TEMPLATES' ) ) {
                 define( 'WCB_WOOCOMMERCE_TEMPLATES', WCB_PLUGIN_PATH . '/modules/woocommerce/includes/templates/' );
-            }
-
-            if ( ! class_exists( 'WC_Payment_Gateway' ) || ! defined( 'WC_VERSION' ) || ! version_compare( WC_VERSION, '2.2', '>=' ) ) {
-                $this->core->add_action( 'admin_notices', array( $this, 'dependencies_notices' ) );
-                return;
             }
 
             $this->includes = array(
@@ -63,14 +72,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
-        }
-
-        /**
-         * Action: 'admin_notices'
-         * Missing something from WooCommerce
-         */
-        public function dependencies_notices() {
-            include_once WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/html-notice-woocommerce-missing.php';
         }
 
         /**

@@ -147,7 +147,9 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 require_once $module_data[0];
 
                 if ( ! class_exists( $module_data[1] ) ) continue;
-                $this->modules[ $module ] = new $module_data[1]();
+
+                $this->modules[ $module ]       = new $module_data[1]();
+                $this->modules[ $module ]->core = $this;
             }
 
             $loaded = array_keys( $this->modules );
@@ -258,11 +260,11 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 define( 'WCB_TEXTDOMAIN', 'woo-checkout-braspag' );
             }
 
-            // Running Modules (first of all)
+            // Running Modules
             foreach ( $this->modules as $module_slug => $module ) {
                 // Run Module: before anything
                 if ( method_exists( $module, 'run' ) ) {
-                    $module->run( $this );
+                    $module->run();
                 }
 
                 // Include Files if Configured
@@ -279,6 +281,13 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 }
 
                 // After Run Method: last method
+                if ( method_exists( $module, 'after_run' ) ) {
+                    $module->after_run();
+                }
+            }
+
+            // After Running Modules
+            foreach ( $this->modules as $module_slug => $module ) {
                 if ( method_exists( $module, 'after_run' ) ) {
                     $module->after_run();
                 }
