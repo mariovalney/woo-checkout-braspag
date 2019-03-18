@@ -18,11 +18,6 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
     class WCB_Module_Dependence {
 
         /**
-         * The plugin name to write in notices
-         */
-        const PLUGIN_NAME = 'WooCommerce Checkout Braspag';
-
-        /**
          * List of dependencies to check
          * @var array
          */
@@ -123,9 +118,10 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
             );
 
             return sprintf(
-                __( '<strong>Assine JC</strong> depende do plugin %1$s para funcionar. Clique para %2$s.', WCB_TEXTDOMAIN ),
+                /* translators: %1$s is the plugin name and %2%s is the action of click. */
+                __( '<strong>WooCommerce Checkout Braspag</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
                 $plugin->name,
-                '<a href="' . esc_url( $url ) . '">' . __( 'instalar o plugin', WCB_TEXTDOMAIN ) . '</a>'
+                '<a href="' . esc_url( $url ) . '">' . __( 'install the plugin', WCB_TEXTDOMAIN ) . '</a>'
             );
         }
 
@@ -142,9 +138,10 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
             );
 
             return sprintf(
-                __( '<strong>Assine JC</strong> depende do plugin %1$s para funcionar. Clique para %2$s.', WCB_TEXTDOMAIN ),
+                /* translators: %1$s is the plugin name and %2%s is the action of click. */
+                __( '<strong>WooCommerce Checkout Braspag</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
                 $plugin->name,
-                '<a href="' . esc_url( $url ) . '">' . __( 'ativar o plugin', WCB_TEXTDOMAIN ) . '</a>'
+                '<a href="' . esc_url( $url ) . '">' . __( 'activate the plugin', WCB_TEXTDOMAIN ) . '</a>'
             );
         }
 
