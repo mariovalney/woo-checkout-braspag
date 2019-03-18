@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="WooCheckoutBraspag" namespace="WooCheckoutBraspag">
+    <description>WPCS with space indent and without inline documentation.</description>
+
+    <file>.</file>
+
+    <arg value="s"/>
+
+    <rule ref="WordPress-Extra">
+        <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
+
+        <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket" />
+        <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine" />
+
+        <exclude name="Squiz.PHP.CommentedOutCode.Found" />
+
+        <exclude name="WordPress.Files.FileName.InvalidClassFileName" />
+        <exclude name="WordPress.PHP.DevelopmentFunctions.error_log_error_log" />
+        <exclude name="WordPress.PHP.YodaConditions.NotYoda" />
+        <exclude name="WordPress.WP.I18n.NonSingularStringLiteralDomain" />
+    </rule>
+
+    <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="tabIndent" value="false"/>
+        </properties>
+    </rule>
+
+    <exclude-pattern>vendor/*</exclude-pattern>
+</ruleset>

@@ -1,3 +1,16 @@
-node_modules
+#-------------------------------#
+# Development Files             #
+#-------------------------------#
 
-modules/woocommerce/includes/vendor
+*~
+.DS_Store
+.svn
+.cvs
+*.bak
+*.swp
+*.cache
+Thumbs.db
+.htaccess
+
+node_modules
+vendor
