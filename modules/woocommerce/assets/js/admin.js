@@ -40,11 +40,14 @@ jQuery(document).ready(function($) {
         for (var j = 0; j < elements_to_observe.length; j++) {
             elements_to_observe[j].on('change', function(event) {
                 var show = true,
-                    value = ( $(this).prop('type') === 'checkbox' ) ? $(this).prop('checked') : $(this).val();
+                    value = '';
 
                 for (var i = 0; i < checks.length; i++) {
-                    // If check is not for you
-                    if ( ! $(this).is( checks[i].element ) ) continue;
+                    // Get checked element value
+                    value = checks[i].element.val();
+                    if ( checks[i].element.prop('type') === 'checkbox' ) {
+                        value = checks[i].element.prop('checked');
+                    }
 
                     // If value is equal and we want this
                     if ( value == checks[i].value && checks[i].truth ) continue;
@@ -54,6 +57,7 @@ jQuery(document).ready(function($) {
 
                     // Nope: we should hide
                     show = false;
+                    break;
                 }
 
                 if ( show ) {
