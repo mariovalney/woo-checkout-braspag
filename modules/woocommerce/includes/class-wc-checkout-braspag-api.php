@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
@@ -23,9 +23,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @link https://braspag.github.io/manual/braspag-pagador#ambientes
          */
-        const ENDPOINT_API = 'https://api.braspag.com.br';
-        const ENDPOINT_API_QUERY = 'https://apiquery.braspag.com.br';
-        const ENDPOINT_SANDBOX_API = 'https://apisandbox.braspag.com.br';
+        const ENDPOINT_API               = 'https://api.braspag.com.br';
+        const ENDPOINT_API_QUERY         = 'https://apiquery.braspag.com.br';
+        const ENDPOINT_SANDBOX_API       = 'https://apisandbox.braspag.com.br';
         const ENDPOINT_SANDBOX_API_QUERY = 'https://apiquerysandbox.braspag.com.br';
 
         /**
@@ -34,7 +34,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#lista-de-http-status-code
          */
-        const STATUS_RESPONSE_OK = 200;
+        const STATUS_RESPONSE_OK      = 200;
         const STATUS_RESPONSE_CREATED = 201;
 
         /**
@@ -51,14 +51,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @link https://braspag.github.io/manual/braspag-pagador#lista-de-status-da-transa%C3%A7%C3%A3o
          */
-        const TRANSACTION_STATUS_NOT_FINISHED = 0;
-        const TRANSACTION_STATUS_AUTHORIZED = 1;
+        const TRANSACTION_STATUS_NOT_FINISHED      = 0;
+        const TRANSACTION_STATUS_AUTHORIZED        = 1;
         const TRANSACTION_STATUS_PAYMENT_CONFIRMED = 2;
-        const TRANSACTION_STATUS_DENIED = 3;
-        const TRANSACTION_STATUS_VOIDED = 10;
-        const TRANSACTION_STATUS_REFUNDED = 11;
-        const TRANSACTION_STATUS_PENDING = 12;
-        const TRANSACTION_STATUS_ABORTED = 13;
+        const TRANSACTION_STATUS_DENIED            = 3;
+        const TRANSACTION_STATUS_VOIDED            = 10;
+        const TRANSACTION_STATUS_REFUNDED          = 11;
+        const TRANSACTION_STATUS_PENDING           = 12;
+        const TRANSACTION_STATUS_ABORTED           = 13;
 
         /**
          * Merchant ID
@@ -86,12 +86,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @return void
          */
         public function __construct( $merchant_id, $merchant_key, $gateway ) {
-            $this->merchant_id = $merchant_id;
+            $this->merchant_id  = $merchant_id;
             $this->merchant_key = $merchant_key;
-            $this->gateway = $gateway;
+            $this->gateway      = $gateway;
 
             // Endpoints
-            $this->endpoint_api = ( $this->gateway->is_sandbox ) ? self::ENDPOINT_SANDBOX_API : self::ENDPOINT_API;
+            $this->endpoint_api       = ( $this->gateway->is_sandbox ) ? self::ENDPOINT_SANDBOX_API : self::ENDPOINT_API;
             $this->endpoint_api_query = ( $this->gateway->is_sandbox ) ? self::ENDPOINT_SANDBOX_API_QUERY : self::ENDPOINT_API_QUERY;
 
             /**
@@ -226,16 +226,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         public function make_request( $url, $args = [] ) {
             // Default args
             $default = array(
-                'method'    => 'GET',
-                'timeout'   => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
-                'blocking'  => true,
-                'headers'   => [],
+                'method'   => 'GET',
+                'timeout'  => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
+                'blocking' => true,
+                'headers'  => [],
             );
 
             $args = wp_parse_args( $args, $default );
 
             // Required headers
-            $args['headers']['MerchantId'] = $this->get_merchant_id();
+            $args['headers']['MerchantId']  = $this->get_merchant_id();
             $args['headers']['MerchantKey'] = $this->get_merchant_key();
 
             // Make Request
@@ -244,16 +244,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             if ( ! is_wp_error( $result ) ) {
                 // Log request
                 $this->gateway->log( array(
-                    'url'       => $url,
-                    'response'  => ( $result['response'] ?? '' ),
-                    'body'      => ( $result['body'] ?? '' ),
+                    'url'      => $url,
+                    'response' => ( $result['response'] ?? '' ),
+                    'body'     => ( $result['body'] ?? '' ),
                 ) );
 
                 return $result;
             }
 
             // Log request error
-            $this->gateway->log( [ 'url' => $url, 'result' => $result ], 'error' );
+            $this->gateway->log( [ 'url' => $url, 'result' => $result ], 'error' ); // phpcs:ignore
 
             // Create a default connection message
             throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.' ) );
@@ -265,9 +265,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @see wp_remote_request()
          */
         public function make_put_request( $url, $args = [] ) {
-            if ( empty( $args['headers'] ) ) $args['headers'] = [];
+            if ( empty( $args['headers'] ) ) {
+                $args['headers'] = [];
+            }
 
-            $args['method'] = 'PUT';
+            $args['method']                    = 'PUT';
             $args['headers']['Content-Length'] = 0;
 
             return $this->make_request( $url, $args );
@@ -280,7 +282,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @return array
          */
         private function return_success( $url, $transaction ) {
-            return [ 'url' => $url, 'transaction' => $transaction ];
+            return [
+                'url'         => $url,
+                'transaction' => $transaction,
+            ];
         }
 
         /**

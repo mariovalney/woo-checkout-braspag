@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
 
@@ -74,7 +74,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
              * @var obj     $endpoint
              */
             $endpoint = $this->gateway->api->get_endpoint_api_query() . $endpoint;
-            $request = apply_filters( 'wc_checkout_braspag_query_request', $endpoint );
+            $request  = apply_filters( 'wc_checkout_braspag_query_request', $endpoint );
 
             // Send the request
             $result = $this->gateway->api->make_request( $endpoint );

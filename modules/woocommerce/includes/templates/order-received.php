@@ -12,55 +12,56 @@ if ( ! defined( 'ABSPATH' ) ) {
 ?>
 
 <p class="woocommerce-thankyou-order-received-payment-data">
-    <?php _e( 'Your payment data:', VZR_TEXTDOMAIN ); ?>
+    <?php esc_html_e( 'Your payment data:', VZR_TEXTDOMAIN ); ?>
 </p>
 
 <ul class="woocommerce-thankyou-payment-details order_details">
     <li class="woocommerce-order-overview__payment-method-name method-name">
-        <?php _e( 'Method name:', WCB_TEXTDOMAIN ); ?>
-        <strong><?php echo $method['name']; ?></strong>
+        <?php esc_html_e( 'Method name:', WCB_TEXTDOMAIN ); ?>
+        <strong><?php echo esc_html( $method['name'] ); ?></strong>
     </li>
 
-    <?php if ( ! empty( $payment['Installments'] ) ): ?>
+    <?php if ( ! empty( $payment['Installments'] ) ) : ?>
         <li class="woocommerce-order-overview__payment-method-name method-name">
-            <?php _e( 'Installments:', WCB_TEXTDOMAIN ); ?>
+            <?php esc_html_e( 'Installments:', WCB_TEXTDOMAIN ); ?>
             <strong>
                 <?php
-                    if ( ! empty( $payment['Amount'] ) ) {
-                        $installment = $payment['Amount'] / $payment['Installments'] / 100;
-                        $installment = number_format( $installment, 2, ',', '' );
+                if ( ! empty( $payment['Amount'] ) ) {
+                    $installment = $payment['Amount'] / $payment['Installments'] / 100;
+                    $installment = number_format( $installment, 2, ',', '' );
 
-                        printf( __( '%s x R$%s' ), $payment['Installments'], $installment );
-                    } else {
-                        echo $payment['Installments'];
-                    }
+                    // translators: First is installments count and second is amount by installment
+                    echo esc_html( sprintf( __( '%1$s x R$%2$s' ), $payment['Installments'], $installment ) );
+                } else {
+                    echo esc_html( $payment['Installments'] );
+                }
                 ?>
             </strong>
         </li>
     <?php endif; ?>
 
-    <?php if ( ! empty( $payment['CreditCard'] ) ): ?>
+    <?php if ( ! empty( $payment['CreditCard'] ) ) : ?>
         <li class="woocommerce-order-overview__payment-card-number card-number">
-            <?php _e( 'Credit Card:', WCB_TEXTDOMAIN ); ?>
+            <?php esc_html_e( 'Credit Card:', WCB_TEXTDOMAIN ); ?>
             <strong>
                 <?php
-                    echo $payment['CreditCard']['CardNumber'];
+                    esc_html( $payment['CreditCard']['CardNumber'] );
 
-                    if ( ! empty( $payment['CreditCard']['Brand'] ) ) {
-                        echo ' (' . $payment['CreditCard']['Brand'] . ')';
-                    }
+                if ( ! empty( $payment['CreditCard']['Brand'] ) ) {
+                    esc_html( ' (' . $payment['CreditCard']['Brand'] . ')' );
+                }
                 ?>
             </strong>
         </li>
     <?php endif; ?>
 
     <li class="woocommerce-order-overview__payment-card-number card-number">
-        <?php _e( 'Status:', WCB_TEXTDOMAIN ); ?>
-        <strong><?php echo wc_get_order_status_name($status); ?></strong>
+        <?php esc_html_e( 'Status:', WCB_TEXTDOMAIN ); ?>
+        <strong><?php esc_html( wc_get_order_status_name( $status ) ); ?></strong>
         <br>
-        <?php if ( $status === 'pending' ): ?>
+        <?php if ( $status === 'pending' ) : ?>
             <div class="woocommerce-message">
-                Seu pagamento está aguardando a confirmação da operadora do cartão de crédito.
+                <?php esc_html__( 'Your payment is pending for confirmation.', VZR_TEXTDOMAIN ); ?>
             <span>
         <?php endif; ?>
     </li>

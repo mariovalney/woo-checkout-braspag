@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
 
@@ -30,22 +30,23 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
         public function populate( $order ) {
             parent::populate( $order );
 
-            if ( empty( $this->MerchantOrderId ) ) return;
+            if ( empty( $this->MerchantOrderId ) ) {
+                return;
+            }
 
             // Payment Data
             $data = $this->gateway->get_payment_method( $this::METHOD_CODE );
 
             $this->Payment = array(
-                'Provider'          => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
-                'Type'              => $data['code'],
-                'Amount'            => (int) $order->get_total() * 100,
-                'BoletoNumber'      => $order->get_order_number(),
-                'Assignor'          => '',
-                'Demonstrative'     => '',
-                'Identification'    => '',
-                'Instructions'      => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_bank_slip_instructions' ),
+                'Provider'       => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
+                'Type'           => $data['code'],
+                'Amount'         => (int) $order->get_total() * 100,
+                'BoletoNumber'   => $order->get_order_number(),
+                'Assignor'       => '',
+                'Demonstrative'  => '',
+                'Identification' => '',
+                'Instructions'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_bank_slip_instructions' ),
             );
-
 
             // Sanitization
             $this->Payment['BoletoNumber'] = $this->sanitize_numbers( $this->Payment['BoletoNumber'] );
@@ -53,7 +54,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             // Expiration Date
             $expiration_date = (int) $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_pay' );
             if ( $expiration_date ) {
-                $expiration_date = ( $expiration_date === 1 ) ? '+ 1 day' : '+ ' . $expiration_date . ' days';
+                $expiration_date                 = ( $expiration_date === 1 ) ? '+ 1 day' : '+ ' . $expiration_date . ' days';
                 $this->Payment['ExpirationDate'] = $this->sanitize_date( $expiration_date, 'Y-m-d' );
             }
 
@@ -64,16 +65,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
 
             // Santander Data
             if ( $this->Payment['Provider'] === 'Bradesco2' ) {
-                $this->Payment['DaysToFine'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_fine', 0 );
-                $this->Payment['FineRate'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_fine_rate', 0 );
+                $this->Payment['DaysToFine']     = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_fine', 0 );
+                $this->Payment['FineRate']       = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_fine_rate', 0 );
                 $this->Payment['DaysToInterest'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_interest', 0 );
-                $this->Payment['InterestRate'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_interest_rate', 0 );
+                $this->Payment['InterestRate']   = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_interest_rate', 0 );
 
                 // Sanitization
-                $this->Payment['DaysToFine'] = $this->sanitize_numbers( $this->Payment['DaysToFine'] );
+                $this->Payment['DaysToFine']     = $this->sanitize_numbers( $this->Payment['DaysToFine'] );
                 $this->Payment['DaysToInterest'] = $this->sanitize_numbers( $this->Payment['DaysToInterest'] );
-                $this->Payment['FineRate'] = $this->sanitize_number( $this->Payment['FineRate'], 5 );
-                $this->Payment['InterestRate'] = $this->sanitize_number( $this->Payment['InterestRate'], 5 );
+                $this->Payment['FineRate']       = $this->sanitize_number( $this->Payment['FineRate'], 5 );
+                $this->Payment['InterestRate']   = $this->sanitize_number( $this->Payment['InterestRate'], 5 );
 
                 if ( empty( $this->Payment['FineRate'] ) ) {
                     $this->Payment['FineAmount'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_fine_amount', 0 );
@@ -87,9 +88,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             }
 
             // DEBUG
-            $this->Payment['Assignor'] = "Empresa Teste";
-            $this->Payment['Demonstrative'] = "Desmonstrative Teste";
-            $this->Payment['ExpirationDate'] = "2019-02-25";
+            $this->Payment['Assignor']       = 'Empresa Teste';
+            $this->Payment['Demonstrative']  = 'Desmonstrative Teste';
+            $this->Payment['ExpirationDate'] = '2019-02-25';
 
             /**
              * Action allow developers to change Address object
@@ -121,7 +122,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             $payment = $transaction['Payment'] ?? [];
 
             $reason_code = $payment['ReasonCode'] ?? '';
-            $message = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
+            $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
 
             throw new Exception( $message );
         }
@@ -143,10 +144,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
          * @param    array  $payment_data
          */
         public function is_equal_payment( $payment_data ) {
-            if ( $payment_data['Type'] != $this->Payment['Type'] ) return false;
-            if ( $payment_data['Provider'] != $this->Payment['Provider'] ) return false;
-            if ( $payment_data['Amount'] != $this->Payment['Amount'] ) return false;
-            if ( $payment_data['BoletoNumber'] != $this->Payment['BoletoNumber'] ) return false;
+            if (
+                (string) $payment_data['Type'] !== (string) $this->Payment['Type']
+                || (string) $payment_data['Provider'] !== (string) $this->Payment['Provider']
+                || (string) $payment_data['Amount'] !== (string) $this->Payment['Amount']
+                || (string) $payment_data['BoletoNumber'] !== (string) $this->Payment['BoletoNumber']
+            ) {
+                return false;
+            }
 
             return true;
         }

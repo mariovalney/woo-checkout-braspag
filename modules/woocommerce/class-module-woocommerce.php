@@ -13,7 +13,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
@@ -67,8 +67,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @param    Woo_Checkout_Braspag      $core   The Core object
          */
         public function define_hooks() {
-            if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) return;
-            if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) return;
+            if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
+                return;
+            }
+            if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
+                return;
+            }
 
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
@@ -91,7 +95,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * Add Settings link to plugins dashboard
          */
         public function plugin_action_links( $links ) {
-            $url = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_checkout_braspag_gateway' );
+            $url          = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_checkout_braspag_gateway' );
             $plugin_links = [ '<a href="' . esc_url( $url ) . '">' . __( 'Settings', WCB_TEXTDOMAIN ) . '</a>' ];
 
             return array_merge( $plugin_links, $links );
@@ -142,9 +146,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          *
          * @return WC_Checkout_Braspag_Gateway|false
          */
-        private function get_gateway_object()
-        {
-            $gateways = WC()->payment_gateways();
+        private function get_gateway_object() {
+             $gateways = WC()->payment_gateways();
 
             foreach ( $gateways->get_available_payment_gateways() as $available_gateway ) {
                 if ( ! is_a( $available_gateway, 'WC_Checkout_Braspag_Gateway' ) ) {

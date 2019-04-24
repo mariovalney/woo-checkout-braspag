@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-echo wpautop( $description );
+echo wpautop( esc_html( $description ) );
 
 $methods = ( is_array( $methods ) ) ? $methods : [];
 
@@ -27,41 +27,41 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
         <?php
             $first_method = true;
 
-            foreach ( $methods as $code => $name ) :
-                $code = esc_attr( $code );
-                $name = esc_html( $name );
+        foreach ( $methods as $code => $name ) :
+            $code = esc_attr( $code );
+            $name = esc_html( $name );
 
-                $checked = checked( true, $first_method, false );
-                $active = ( $first_method ) ? ' active' : '';
-                $first_method = false;
-        ?>
+            $checked      = checked( true, $first_method, false );
+            $active       = ( $first_method ) ? ' active' : '';
+            $first_method = false;
+            ?>
 
             <li>
-                <label id="payment-method-<?php echo $code; ?>-label" class="braspag-method-label<?php echo $active; ?>">
-                    <input id="braspag-payment-method-<?php echo $code; ?>" type="radio" name="braspag_payment_method" value="<?php echo $code; ?>" <?php echo $checked; ?>>
-                    <span><?php echo $name; ?></span>
+                <label id="payment-method-<?php echo esc_attr( $code ); ?>-label" class="braspag-method-label<?php echo esc_attr( $active ); ?>">
+                    <input id="braspag-payment-method-<?php echo esc_attr( $code ); ?>" type="radio" name="braspag_payment_method" value="<?php echo esc_attr( $code ); ?>" <?php echo esc_html( $checked ); ?>>
+                    <span><?php echo esc_html( $name ); ?></span>
                 </label>
             </li>
 
         <?php endforeach; ?>
     </ul>
 
-    <?php
-        $first_method = true;
+<?php
+    $first_method = true;
 
-        foreach ( $methods as $code => $name ) {
-            $code = esc_attr( $code );
+foreach ( $methods as $code => $name ) {
+    $code = esc_attr( $code );
 
-            $active = ( $first_method ) ? ' active' : '';
-            $first_method = false;
+    $active       = ( $first_method ) ? ' active' : '';
+    $first_method = false;
 
-            echo '<div id="braspag-payment-method-' . $code . '-form" class="braspag-method-form' . $active . '">';
+    echo '<div id="braspag-payment-method-' . esc_attr( $code ) . '-form" class="braspag-method-form' . esc_attr( $active ) . '">';
 
-            // Payment Method Template
-            wc_get_template( 'payment-methods/' . $code . '-form.php', [], 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
+    // Payment Method Template
+    wc_get_template( 'payment-methods/' . $code . '-form.php', [], 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
 
-            echo '</div>';
-        }
-    ?>
+    echo '</div>';
+}
+?>
 </fieldset>
 

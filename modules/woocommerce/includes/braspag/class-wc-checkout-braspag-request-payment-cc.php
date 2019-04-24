@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
@@ -36,22 +36,24 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
         public function populate( $order ) {
             parent::populate( $order );
 
-            if ( empty( $this->MerchantOrderId ) ) return;
+            if ( empty( $this->MerchantOrderId ) ) {
+                return;
+            }
 
             // Payment Data
             $data = $this->gateway->get_payment_method( $this::METHOD_CODE );
 
             $this->Payment = array(
-                'Provider'          => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
-                'Type'              => $data['code'],
-                'Amount'            => (int) $order->get_total() * 100,
-                'ServiceTaxAmount'  => 0,
-                'Installments'      => (int) ( $_POST['braspag_payment_' . $this::METHOD_CODE . '_installments'] ?? 0 ),
-                'SoftDescriptor'    => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
-                'Capture'           => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
-                'Credentials'       => array(
-                    'Code'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
-                    'Key'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),
+                'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
+                'Type'             => $data['code'],
+                'Amount'           => (int) $order->get_total() * 100,
+                'ServiceTaxAmount' => 0,
+                'Installments'     => (int) ( $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_installments' ] ?? 0 ), // phpcs:ignore
+                'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
+                'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
+                'Credentials'      => array(
+                    'Code' => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
+                    'Key'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),
                 ),
             );
 
@@ -68,11 +70,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // CreditCard Data
             $this->Payment[ $this->card_node ] = array(
-                'CardNumber'        => $_POST['braspag_payment_' . $this::METHOD_CODE . '_number'] ?? '',
-                'Holder'            => $_POST['braspag_payment_' . $this::METHOD_CODE . '_holder'] ?? '',
-                'ExpirationDate'    => $_POST['braspag_payment_' . $this::METHOD_CODE . '_expiration_date'] ?? '',
-                'SecurityCode'      => $_POST['braspag_payment_' . $this::METHOD_CODE . '_security_code'] ?? '',
-                'Brand'             => $_POST['braspag_payment_' . $this::METHOD_CODE . '_brand'] ?? '',
+                'CardNumber'     => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_number' ] ?? '', // phpcs:ignore
+                'Holder'         => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_holder' ] ?? '', // phpcs:ignore
+                'ExpirationDate' => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_expiration_date' ] ?? '', // phpcs:ignore
+                'SecurityCode'   => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_security_code' ] ?? '', // phpcs:ignore
+                'Brand'          => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_brand' ] ?? '', // phpcs:ignore
             );
 
             // Try to convert any month/year format to Y-m-d before to try sanitize
@@ -80,8 +82,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $this->Payment[ $this->card_node ]['ExpirationDate'] = ( $this->Payment[ $this->card_node ]['ExpirationDate'][1] ?? '' ) . '-' . $this->Payment[ $this->card_node ]['ExpirationDate'][0] . '-01';
 
             // Sanitization
-            $this->Payment[ $this->card_node ]['CardNumber'] = $this->sanitize_numbers( $this->Payment[ $this->card_node ]['CardNumber'] );
-            $this->Payment[ $this->card_node ]['SecurityCode'] = $this->sanitize_numbers( $this->Payment[ $this->card_node ]['SecurityCode'] );
+            $this->Payment[ $this->card_node ]['CardNumber']     = $this->sanitize_numbers( $this->Payment[ $this->card_node ]['CardNumber'] );
+            $this->Payment[ $this->card_node ]['SecurityCode']   = $this->sanitize_numbers( $this->Payment[ $this->card_node ]['SecurityCode'] );
             $this->Payment[ $this->card_node ]['ExpirationDate'] = $this->sanitize_date( $this->Payment[ $this->card_node ]['ExpirationDate'], 'm/Y' );
 
             /**
@@ -111,15 +113,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // Card Data
             $card_data = array(
-                'CardNumber'        => __( 'Please fill the card number.', WCB_TEXTDOMAIN ),
-                'Holder'            => __( 'Please fill the card holder name.', WCB_TEXTDOMAIN ),
-                'ExpirationDate'    => __( 'Please fill the card expiration date.', WCB_TEXTDOMAIN ),
-                'SecurityCode'      => __( 'Please fill the card security code.', WCB_TEXTDOMAIN ),
-                'Brand'             => __( 'Please fill the card brand.', WCB_TEXTDOMAIN ),
+                'CardNumber'     => __( 'Please fill the card number.', WCB_TEXTDOMAIN ),
+                'Holder'         => __( 'Please fill the card holder name.', WCB_TEXTDOMAIN ),
+                'ExpirationDate' => __( 'Please fill the card expiration date.', WCB_TEXTDOMAIN ),
+                'SecurityCode'   => __( 'Please fill the card security code.', WCB_TEXTDOMAIN ),
+                'Brand'          => __( 'Please fill the card brand.', WCB_TEXTDOMAIN ),
             );
 
             foreach ( $card_data as $field => $error ) {
-                if ( ! empty( $this->Payment[ $this->card_node ][ $field ] ) ) continue;
+                if ( ! empty( $this->Payment[ $this->card_node ][ $field ] ) ) {
+                    continue;
+                }
 
                 $errors[] = $error;
             }
@@ -166,7 +170,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          */
         public function finish_request( $transaction ) {
             $payment = $transaction['Payment'] ?? [];
-            $status = $payment['Status'] ?? '';
+            $status  = $payment['Status'] ?? '';
 
             // Authorized should capture
             if ( (int) $status === WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED ) {
@@ -195,7 +199,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // Other cases we throw to create a notice
             $reason_code = $payment['ReasonCode'] ?? '';
-            $message = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
+            $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
 
             throw new Exception( $message );
         }
@@ -210,7 +214,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @return   void
          */
         public function capture_transaction( $transaction ) {
-            if ( empty( $transaction['Payment'] ) ) throw new Exception();
+            if ( empty( $transaction['Payment'] ) ) {
+                throw new Exception();
+            }
 
             // Get PaymentId
             $payment_id = $transaction['Payment']['PaymentId'];
@@ -282,16 +288,24 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @param    array  $payment_data
          */
         public function is_equal_payment( $payment_data ) {
-            if ( $payment_data['Type'] != $this->Payment['Type'] ) return false;
-            if ( $payment_data['Provider'] != $this->Payment['Provider'] ) return false;
-            if ( $payment_data['Amount'] != $this->Payment['Amount'] ) return false;
-            if ( $payment_data['Installments'] != $this->Payment['Installments'] ) return false;
+            if (
+                (string) $payment_data['Type'] !== (string) $this->Payment['Type']
+                || (string) $payment_data['Provider'] !== (string) $this->Payment['Provider']
+                || (string) $payment_data['Amount'] !== (string) $this->Payment['Amount']
+                || (string) $payment_data['Installments'] !== (string) $this->Payment['Installments']
+            ) {
+                return false;
+            }
 
-            $card_number = $payment_data[ $this->card_node ]['CardNumber'];
+            $card_number      = $payment_data[ $this->card_node ]['CardNumber'];
             $this_card_number = $this->Payment[ $this->card_node ]['CardNumber'];
 
-            if ( substr( $card_number, 0, 4 ) != substr( $this_card_number, 0, 4 ) ) return false;
-            if ( substr( $card_number, -3 ) != substr( $this_card_number, -3 ) ) return false;
+            if ( substr( $card_number, 0, 4 ) !== substr( $this_card_number, 0, 4 ) ) {
+                return false;
+            }
+            if ( substr( $card_number, -3 ) !== substr( $this_card_number, -3 ) ) {
+                return false;
+            }
 
             return true;
         }

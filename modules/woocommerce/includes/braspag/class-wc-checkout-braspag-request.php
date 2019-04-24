@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
@@ -58,10 +58,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * @param    WC_Order  $data
          */
         public function populate( $order ) {
-            if ( ! $order instanceof WC_Order ) return;
+            if ( ! $order instanceof WC_Order ) {
+                return;
+            }
 
-            $this->MerchantOrderId  = $order->get_id();
-            $this->Customer         = new WC_Checkout_Braspag_Customer( $order );
+            $this->MerchantOrderId = $order->get_id();
+            $this->Customer        = new WC_Checkout_Braspag_Customer( $order );
         }
 
         /**
@@ -73,7 +75,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * @param    array  $errors
          */
         public function validate() {
-            if ( ! empty( $this::METHOD_CODE ) && ! empty( $this::TRANSACTION_ENDPOINT ) ) return [];
+            if ( ! empty( $this::METHOD_CODE ) && ! empty( $this::TRANSACTION_ENDPOINT ) ) {
+                return [];
+            }
 
             return [ __( 'Invalid payment method.', WCB_TEXTDOMAIN ) ];
         }
@@ -137,9 +141,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             // Create WP Request
             $request = array(
-                'method'    => 'POST',
-                'headers'   => [ 'Content-Type'  => 'application/json' ],
-                'body'      => json_encode( $this ),
+                'method'  => 'POST',
+                'headers' => [ 'Content-Type' => 'application/json' ],
+                'body'    => json_encode( $this ),
             );
 
             /**
@@ -155,7 +159,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             // Check for success
             $response = $result['response'] ?? [];
-            $body = json_decode( ( $result['body'] ?? '' ), true );
+            $body     = json_decode( ( $result['body'] ?? '' ), true );
 
             // If the payment WAS CREATED
             if ( (int) $response['code'] === WC_Checkout_Braspag_Api::STATUS_RESPONSE_CREATED ) {
@@ -169,7 +173,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $body = (array) $body;
             $body = array_shift( $body );
 
-            $code = $body['Code'] ?? '';
+            $code    = $body['Code'] ?? '';
             $message = $body['Message'] ?? '';
 
             // Translate error message
@@ -211,13 +215,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
              * we can ignore others because they are not authorized
              */
             $api_query = new WC_Checkout_Braspag_Query( $this->gateway );
-            $payments = $api_query->get_sale_by_MerchantOrderId( $this->MerchantOrderId );
+            $payments  = $api_query->get_sale_by_MerchantOrderId( $this->MerchantOrderId );
+
+            // phpcs:disable
             usort( $payments, function( $payment_a, $payment_b ) {
                 $date_a = strtotime( $payment_a['ReceveidDate'] );
                 $date_b = strtotime( $payment_b['ReceveidDate'] );
 
                 return $date_b - $date_a;
             } );
+            // phpcs:enable
 
             // If not find any payment, alert error
             if ( empty( $payments[0]['PaymentId'] ) ) {

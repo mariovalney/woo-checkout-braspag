@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
 
@@ -36,7 +36,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
         public function populate( $order ) {
             parent::populate( $order );
 
-            if ( empty( $this->Payment ) ) return;
+            if ( empty( $this->Payment ) ) {
+                return;
+            }
 
             // Return URL
             $this->Payment['ReturnUrl'] = $this->gateway->get_api_return_url();
@@ -53,7 +55,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
          */
         public function finish_request( $transaction ) {
             $payment = $transaction['Payment'] ?? [];
-            $status = $payment['Status'] ?? '';
+            $status  = $payment['Status'] ?? '';
 
             // Authorized and not finished should redirect to payment
             if ( (int) $status === WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED ) {
@@ -67,12 +69,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
                 $payment_id = $transaction['Payment']['PaymentId'];
                 $this->gateway->log( 'Payment ' . $payment_id . ' was authorized and user was sent to authentication.' );
 
-                return [ 'url' => $payment['AuthenticationUrl'], 'transaction' => $transaction ];
+                return [
+                    'url'         => $payment['AuthenticationUrl'],
+                    'transaction' => $transaction,
+                ];
             }
 
             // Other cases we throw to create a notice
             $reason_code = $payment['ReasonCode'] ?? '';
-            $message = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, false );
+            $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, false );
 
             throw new Exception( $message );
         }

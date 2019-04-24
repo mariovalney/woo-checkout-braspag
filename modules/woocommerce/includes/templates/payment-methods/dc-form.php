@@ -16,42 +16,42 @@
 ?>
 
 <p class="form-row">
-    <label><?php _e( 'Debit Card Number', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Debit Card Number', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input type="text" name="braspag_payment_dc_number">
     </span>
 </p>
 
 <p class="form-row">
-    <label><?php _e( 'Holder Name', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Holder Name', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input type="text" name="braspag_payment_dc_holder">
     </span>
 </p>
 
 <p class="form-row">
-    <label><?php _e( 'Expiration Date', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Expiration Date', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input type="text" name="braspag_payment_dc_expiration_date">
     </span>
 </p>
 
 <p class="form-row">
-    <label><?php _e( 'Security Code', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Security Code', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input type="text" name="braspag_payment_dc_security_code">
     </span>
 </p>
 
 <p class="form-row">
-    <label><?php _e( 'Brand', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Brand', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input type="text" name="braspag_payment_dc_brand">
     </span>
 </p>
 
 <p class="form-row">
-    <label><?php _e( 'Installments', WCB_TEXTDOMAIN ); ?></label>
+    <label><?php esc_html_e( 'Installments', WCB_TEXTDOMAIN ); ?></label>
     <span class="woocommerce-input-wrapper">
         <select class="input-text" style="-webkit-appearance: menulist-button;" name="braspag_payment_dc_installments">
             <option value="1">1</option>

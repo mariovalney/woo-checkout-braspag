@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
 
@@ -48,16 +48,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
          * @param    WC_Order  $data
          */
         public function populate( $address_data ) {
-            $this->Street       = $address_data['address_1'] ?? '';
-            $this->Complement   = $address_data['address_2'] ?? '';
-            $this->ZipCode      = $address_data['postcode'] ?? '';
-            $this->City         = $address_data['city'] ?? '';
-            $this->State        = $address_data['state'] ?? '';
-            $this->Country      = $address_data['country'] ?? '';
+            $this->Street     = $address_data['address_1'] ?? '';
+            $this->Complement = $address_data['address_2'] ?? '';
+            $this->ZipCode    = $address_data['postcode'] ?? '';
+            $this->City       = $address_data['city'] ?? '';
+            $this->State      = $address_data['state'] ?? '';
+            $this->Country    = $address_data['country'] ?? '';
 
             // Data from Extra Fields (meta data)
-            $this->Number = $_POST['billing_number'] ?? '';
-            $this->District = $_POST['billing_neighborhood'] ?? '';
+            $this->Number   = $_POST['billing_number'] ?? ''; // phpcs:ignore
+            $this->District = $_POST['billing_neighborhood'] ?? ''; // phpcs:ignore
 
             // Sanitization
             $this->ZipCode = $this->sanitize_numbers( $this->ZipCode );

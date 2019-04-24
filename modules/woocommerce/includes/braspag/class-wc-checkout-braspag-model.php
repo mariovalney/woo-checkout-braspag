@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
 
@@ -76,7 +76,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
          * @since    1.0.0
          */
         public function sanitize_number( $string, $decimals = 0 ) {
-            $number = preg_replace('/[^\d.]*/', '', $string);
+            $number = preg_replace( '/[^\d.]*/', '', $string );
             $number = (float) $string;
 
             return number_format( $number, (int) $decimals, '.', '' );
@@ -88,7 +88,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
          * @since    1.0.0
          */
         public function sanitize_date( $string, $format = 'Y-m-d' ) {
-            if ( empty( $string ) ) return $string;
+            if ( empty( $string ) ) {
+                return $string;
+            }
 
             return date( $format, strtotime( $string ) );
         }

@@ -11,7 +11,7 @@
  */
 
 // If this file is called directly, call the cops.
-defined( 'ABSPATH' ) or die( 'No script kiddies please!' );
+defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
 if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
 
@@ -61,38 +61,41 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
         public static function payment_error_message( $reason_code, $is_credit_card = true ) {
             $card_type = $is_credit_card ? _x( 'credit card', 'To payment error messages.', WCB_TEXTDOMAIN ) : _x( 'debit card', 'To payment error messages.', WCB_TEXTDOMAIN );
 
+            $message = '';
             switch ( $reason_code ) {
                 case 7:
-                    return __( 'Your payment was denied. Please try again with another method.', WCB_TEXTDOMAIN );
+                    $message = __( 'Your payment was denied. Please try again with another method.', WCB_TEXTDOMAIN );
                     break;
 
                 case 12:
                 case 13:
                 case 14:
                 case 15:
-                    return sprintf(
+                    // translators: card type (credit or debit)
+                    $message = sprintf(
                         _x( 'There was a problem with your %s. Please try again with another one.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
                         $card_type
                     );
                     break;
 
                 case 18:
-                    return __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN );
+                    $message = __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN );
                     break;
 
                 case 21:
-                    return sprintf(
+                    // translators: card type (credit or debit)
+                    $message = sprintf(
                         _x( 'Your %s number is invalid. Please check it and try again.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
                         $card_type
                     );
                     break;
 
                 default:
-                    return __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );
+                    $message = __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );
                     break;
             }
 
-            return '';
+            return $message;
         }
 
     }
