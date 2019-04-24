@@ -170,13 +170,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // Authorized should capture
             if ( (int) $status === WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED ) {
-
                 // Capture
-                $this->capture_transaction( $transaction );
+                $response = $this->capture_transaction( $transaction );
 
                 // Log Capture
                 $payment_id = $transaction['Payment']['PaymentId'];
                 $this->gateway->log( 'Payment ' . $payment_id . ' was captured.' );
+
+                // Update Payment from Capture
+                $response = json_decode( $response );
+                foreach ( $response as $key => $value ) {
+                    if ( isset( $transaction['Payment'][ $key ] ) ) {
+                        $transaction['Payment'][ $key ] = $value;
+                    }
+                }
 
                 return $transaction;
             }
@@ -222,11 +229,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // If Captured, return
             $response_code = (int) $result['response']['code'];
-            if ( $response_code === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK ) return;
+            if ( $response_code === WC_Checkout_Braspag_Api::STATUS_RESPONSE_OK ) {
+                return $result['body'];
+            }
 
             // Log
             $error = $response_code . ' ' . ( $result['response']['message'] ?? '' );
-            $this->gateway->log( 'Payment ' . $payment_id . ' was not captured: ' . $error );
+            $error = 'Payment ' . $payment_id . ' was not captured: ' . $error;
+            $this->gateway->log( $error );
 
             /**
              * Action after try to capture the transaction
@@ -238,7 +248,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // If there's no action, we throw the standard message
             if ( has_action( $not_captured_action ) ) {
-                throw new Exception();
+                throw new Exception( $error );
             }
         }
 
