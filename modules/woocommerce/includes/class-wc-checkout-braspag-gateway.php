@@ -738,7 +738,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             if ( empty( $order->get_id() ) ) return;
 
             // Add Payment Info
-            $args = [];
+            $method = $order->get_meta('_wc_braspag_payment_method');
+
+            $args = [
+                'status'  => $order->get_status(),
+                'payment' => $order->get_meta('_wc_braspag_payment_data'),
+                'method'  => $this->get_payment_method( $method ),
+            ];
+
             wc_get_template( 'order-received.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
         }
 
