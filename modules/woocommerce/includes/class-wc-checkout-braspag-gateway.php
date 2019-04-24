@@ -641,6 +641,32 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
+         * Update a order status and data with Braspag data
+         *
+         * @param  string $payment_id
+         * @return boolean
+         */
+        public function update_payment_from_braspag( $payment_id ) {
+            $api_query = new WC_Checkout_Braspag_Query( $this );
+            $transaction = $api_query->get_transaction( $payment_id );
+
+            // Check payment
+            $merchant_order_id = (int) ( $transaction['MerchantOrderId'] ?? 0 );
+
+            // Check for Order
+            $order = wc_get_order( $merchant_order_id );
+
+            if ( empty( $merchant_order_id ) || empty( $order->get_id() ) ) {
+                // Log
+                $this->log( 'Error on checkout_braspag_debit_card: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
+
+                throw new Exception( __( 'There was a problem processing your payment. Please try again.', WCB_TEXTDOMAIN ) );
+            }
+
+            return $this->update_order_status( $transaction );
+        }
+
+        /**
          * Create Log
          * Write to WC Logger with context
          *
@@ -734,24 +760,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Get transaction
             try {
-                $api_query = new WC_Checkout_Braspag_Query( $this );
-                $transaction = $api_query->get_transaction( $payment_id );
-
-                // Check payment
-                $merchant_order_id = (int) ( $transaction['MerchantOrderId'] ?? 0 );
-
-                // Check for Order
-                $order = wc_get_order( $merchant_order_id );
-
-                if ( empty( $merchant_order_id ) || empty( $order->get_id() ) ) {
-                    throw new Exception( __( 'There was a problem processing your payment. Please try again.', WCB_TEXTDOMAIN ) );
-
-                    // Log
-                    $this->log( 'Error on checkout_braspag_debit_card: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
-                }
-
                 // Update data
-                if ( $this->update_order_status( $transaction ) ) {
+                if ( $this->update_payment_from_braspag( $payment_id ) ) {
                     wc_clear_notices();
                 }
 

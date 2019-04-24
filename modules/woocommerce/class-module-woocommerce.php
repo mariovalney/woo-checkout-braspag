@@ -72,6 +72,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
+            $this->core->add_filter( 'woocommerce_order_actions', array( $this, 'woocommerce_order_actions' ) );
+            $this->core->add_action( 'woocommerce_order_action_checkout_braspag_update', array( $this, 'checkout_braspag_update' ) );
         }
 
         /**
@@ -95,5 +97,66 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             return array_merge( $plugin_links, $links );
         }
 
+        /**
+         * Filter 'woocommerce_order_actions'
+         * Add actions to order dashboard
+         *
+         * @return array
+         */
+        public function woocommerce_order_actions( $actions ) {
+            global $theorder;
+
+            $gateway = $this->get_gateway_object();
+
+            if ( ! empty( $gateway ) && ! empty( $theorder ) && $theorder->get_payment_method() === $gateway->id ) {
+                $actions['checkout_braspag_update'] = __( 'Update payment info from Braspag', WCB_TEXTDOMAIN );
+            }
+
+            return $actions;
+        }
+
+        /**
+         * Action 'woocommerce_order_action_checkout_braspag_update'
+         * Process the action order on dashboard
+         *
+         * @return array
+         */
+        public function checkout_braspag_update( $order ) {
+            $gateway = $this->get_gateway_object();
+
+            if ( empty( $gateway ) || $order->get_payment_method() !== $gateway->id ) {
+                return;
+            }
+
+            $payment = $order->get_meta( '_wc_braspag_payment_data' );
+
+            if ( empty( $payment['PaymentId'] ) ) {
+                return;
+            }
+
+            $gateway->update_payment_from_braspag( $payment['PaymentId'] );
+        }
+
+        /**
+         * Return the 'WC_Checkout_Braspag_Gateway' object if available
+         *
+         * @return WC_Checkout_Braspag_Gateway|false
+         */
+        private function get_gateway_object()
+        {
+            $gateways = WC()->payment_gateways();
+
+            foreach ( $gateways->get_available_payment_gateways() as $available_gateway ) {
+                if ( ! is_a( $available_gateway, 'WC_Checkout_Braspag_Gateway' ) ) {
+                    continue;
+                }
+
+                return $available_gateway;
+            }
+
+            return false;
+        }
+
     }
+
 }
