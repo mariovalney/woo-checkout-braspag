@@ -5,8 +5,14 @@
     "wp-coding-standards/wpcs": "^2.0"
   },
   "scripts"    : {
-    "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs",
-    "post-update-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs",
+    "post-install-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs",
+      "\"vendor/bin/phpcs\" --config-set minimum_supported_wp_version 5.1"
+    ],
+    "post-update-cmd": [
+      "\"vendor/bin/phpcs\" --config-set installed_paths vendor/wp-coding-standards/wpcs",
+      "\"vendor/bin/phpcs\" --config-set minimum_supported_wp_version 5.1"
+    ],
     "lint": "vendor/bin/phpcs",
     "phpcbf": "vendor/bin/phpcbf",
     "precommit": "cp pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit"
