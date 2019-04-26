@@ -1,0 +1,12 @@
+image: phpunit/phpunit:latest
+
+pipelines:
+  default:
+    - step:
+        name: Checking Coding Standards
+        caches:
+          - composer
+        script:
+          - composer install --prefer-source --no-interaction --dev
+          - vendor/bin/phpcs --config-set installed_paths vendor/wp-coding-standards/wpcs
+          - vendor/bin/phpcs
