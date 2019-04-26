@@ -243,11 +243,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
             if ( ! is_wp_error( $result ) ) {
                 // Log request
-                $this->gateway->log( array(
-                    'url'      => $url,
-                    'response' => ( $result['response'] ?? '' ),
-                    'body'     => ( $result['body'] ?? '' ),
-                ) );
+                $this->gateway->log(
+                    array(
+                        'url'      => $url,
+                        'response' => ( $result['response'] ?? '' ),
+                        'body'     => ( $result['body'] ?? '' ),
+                    )
+                );
 
                 return $result;
             }

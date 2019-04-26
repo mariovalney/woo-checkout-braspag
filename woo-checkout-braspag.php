@@ -95,23 +95,31 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
             $modules = array();
 
             $path = plugin_dir_path( __FILE__ ) . 'modules' . DIRECTORY_SEPARATOR;
-            if ( ! is_dir( $path ) ) return;
+            if ( ! is_dir( $path ) ) {
+                return;
+            }
 
             $results = scandir( $path );
 
             foreach ( $results as $result ) {
-                if ( $result[0] == '.' ) continue;
-                if ( ! is_dir( $path . $result ) ) continue;
+                if ( $result[0] == '.' ) {
+                    continue;
+                }
+                if ( ! is_dir( $path . $result ) ) {
+                    continue;
+                }
 
                 $classfile = $path . $result . DIRECTORY_SEPARATOR . 'class-module-' . $result . '.php';
-                if ( ! file_exists( $classfile ) ) continue;
+                if ( ! file_exists( $classfile ) ) {
+                    continue;
+                }
 
                 $classname = str_replace( '-', ' ', $result );
                 $classname = ucfirst( $classname );
                 $classname = str_replace( ' ', '_', $classname );
                 $classname = 'WCB_Module_' . $classname;
 
-                $module_data = get_file_data( $classfile, [ 'dependencies' => 'Depends' ] );
+                $module_data  = get_file_data( $classfile, [ 'dependencies' => 'Depends' ] );
                 $dependencies = $module_data['dependencies'];
 
                 if ( ! empty( $dependencies ) ) {
@@ -146,7 +154,9 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
 
                 require_once $module_data[0];
 
-                if ( ! class_exists( $module_data[1] ) ) continue;
+                if ( ! class_exists( $module_data[1] ) ) {
+                    continue;
+                }
 
                 $this->modules[ $module ]       = new $module_data[1]();
                 $this->modules[ $module ]->core = $this;
@@ -184,7 +194,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 'hook'          => $hook,
                 'callback'      => $callback,
                 'priority'      => $priority,
-                'accepted_args' => $accepted_args
+                'accepted_args' => $accepted_args,
             );
 
             return $hooks;
@@ -271,7 +281,9 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 if ( property_exists( $module, 'includes' ) ) {
                     foreach ( (array) $module->includes as $class ) {
                         $file = WCB_PLUGIN_PATH . '/modules/' . $module_slug . '/includes/' . $class . '.php';
-                        if ( file_exists( $file ) ) require_once $file;
+                        if ( file_exists( $file ) ) {
+                            require_once $file;
+                        }
                     }
                 }
 
