@@ -844,7 +844,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     wc_clear_notices();
                 }
 
-                $redirect_url = $this->get_return_url( $order );
+                // Get order
+                $order = (int) ( $transaction['MerchantOrderId'] ?? 0 );
+                $order = wc_get_order( $order );
+
+                if ( ! empty( $order ) ) {
+                    $redirect_url = $this->get_return_url( $order );
+                }
             } catch ( Exception $e ) {
                 wc_add_notice( $e->getMessage(), 'error' );
 
