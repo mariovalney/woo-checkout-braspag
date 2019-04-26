@@ -119,21 +119,25 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function init_form_fields() {
             // Descriptions
             $merchant_id_description = sprintf(
+                // translators: link to documentation
                 __( 'Please enter your Merchant ID. You can find it in %s.', WCB_TEXTDOMAIN ),
                 '<a href="https://admin.braspag.com.br/Account/MyMerchants" target="_blank">' . __( 'Braspag Admin > My Merchants', WCB_TEXTDOMAIN ) . '</a>'
             );
 
             $merchant_key_description = sprintf(
+                // translators: link to support email
                 __( 'Please enter your Merchant Key. You received it after your register or you can enter in contact at %s.', WCB_TEXTDOMAIN ),
                 '<a href="mailto:suporte@braspag.com.br" target="_blank">suporte@braspag.com.br</a>'
             );
 
             $use_extra_fields_description = sprintf(
+                // translators: link to plugin
                 __( 'The %s is a popular plugin to add customer fields and masks. If you do not want to add this fields or create your own implementation, unmark this and use or filters to add customer data.', WCB_TEXTDOMAIN ),
                 '<a href="https://wordpress.org/plugins/' . self::EXTRA_FIELDS_PLUGIN_SLUG . '" target="_blank">' . self::EXTRA_FIELDS_PLUGIN_NAME . '</a>'
             );
 
             $debug_description = sprintf(
+                // translators: link to debug
                 __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
                 '<a href="' . esc_url( admin_url( 'admin.php?page=wc-status&tab=logs&log_file=' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log' ) ) . '" target="_blank">' . __( 'System Status &gt; Logs', WCB_TEXTDOMAIN ) . '</a>'
             );
@@ -200,7 +204,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 $this->form_fields[ 'method_' . $code . '_enabled' ] = array(
                     'type'        => 'checkbox',
                     'title'       => $data['name'],
-                    'label'       => sprintf( __( 'Enable payment using %s', WCB_TEXTDOMAIN ), mb_strtolower( $data['name'] ) ),
+                    'label'       => sprintf(
+                        // translators: payment method name
+                        __( 'Enable payment using %s', WCB_TEXTDOMAIN ),
+                        mb_strtolower( $data['name'] )
+                    ),
                     'desc_tip'    => true,
                     'default'     => 'no',
                     'description' => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
@@ -215,7 +223,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     $this->form_fields[ 'method_' . $code . '_provider' ] = array(
                         'type'              => 'select',
                         'title'             => $sub_option_preffix . __( 'Provider', WCB_TEXTDOMAIN ),
-                        'description'       => sprintf( __( 'Your %s provider', WCB_TEXTDOMAIN ), mb_strtolower( $data['name'] ) ),
+                        'description'       => sprintf(
+                            // translators: provider name
+                            __( 'Your %s provider', WCB_TEXTDOMAIN ),
+                            mb_strtolower( $data['name'] )
+                        ),
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
                         'default'           => '',
                         'options'           => $providers_as_option,
@@ -425,7 +437,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'use_extra_fields' => array(
                         'type'        => 'checkbox',
                         'title'       => __( 'Customer Fields', WCB_TEXTDOMAIN ),
-                        'label'       => sprintf( __( 'Use "%s"', WCB_TEXTDOMAIN ), self::EXTRA_FIELDS_PLUGIN_NAME ),
+                        'label'       => sprintf(
+                            // translators: extra fields plugin name
+                            __( 'Use "%s"', WCB_TEXTDOMAIN ),
+                            self::EXTRA_FIELDS_PLUGIN_NAME
+                        ),
                         'description' => $use_extra_fields_description,
                         'default'     => 'yes',
                     ),
@@ -550,7 +566,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
 
-            $method   = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : '';
+            $method   = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : ''; // phpcs:ignore
+            $method   = sanitize_text_field( $_POST['braspag_payment_method'] ); // phpcs:ignore
             $response = $this->api->do_payment_request( $method, $order, $this );
 
             // Update Order after gateway response
@@ -805,13 +822,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Process payments
          *
          * @return void
+         *
+         * @SuppressWarnings("exit")
          */
         public function wc_api_callback() {
             // Redirect Url
             $redirect_url = $this->get_return_url();
 
             // Check for PaymentId
-            $payment_id = $_POST['PaymentId'] ?? '';
+            $payment_id = $_POST['PaymentId'] ?? ''; // phpcs:ignore
             $payment_id = sanitize_text_field( $payment_id );
 
             if ( empty( $payment_id ) ) {
@@ -848,7 +867,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $description = $this->get_option( 'method_bs_description' );
             $description = apply_filters( 'wc_checkout_braspag_bank_slip_description', $description );
 
-            echo wpautop( $description );
+            echo wpautop( esc_html( $description ) ); //phpcs:ignore
         }
 
         /**

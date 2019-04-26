@@ -9,24 +9,25 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 $is_installed = false;
 
 if ( function_exists( 'get_plugins' ) ) {
-    $plugins      = get_plugins();
-    $is_installed = ( ! empty( $plugins[ WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE ] ) );
+    $the_plugins  = get_plugins();
+    $is_installed = ( ! empty( $the_plugins[ WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE ] ) );
 }
 
 if ( $is_installed ) {
-    $url    = wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE . '&plugin_status=active' ), 'activate-plugin_' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE );
-    $action = 'Activate the plugin';
+    $url   = wp_nonce_url( self_admin_url( 'plugins.php?action=activate&plugin=' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE . '&plugin_status=active' ), 'activate-plugin_' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_FILE );
+    $label = 'Activate the plugin';
 } else {
-    $url    = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_SLUG ), 'install-plugin_' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_SLUG );
-    $action = 'Install the plugin';
+    $url   = wp_nonce_url( self_admin_url( 'update.php?action=install-plugin&plugin=' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_SLUG ), 'install-plugin_' . WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_SLUG );
+    $label = 'Install the plugin';
 }
 ?>
 
 <div class="notice notice-error">
     <p>
     <?php
-        printf(
-            __( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
+        sprintf(
+            // translators: Plugins name and "EXTRA_FIELDS_PLUGIN_NAME"
+            esc_html__( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
             '<strong>WooCommerce Checkout Braspag</strong>',
             WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME
         );
@@ -36,7 +37,7 @@ if ( $is_installed ) {
     <?php if ( current_user_can( 'install_plugins' ) ) : ?>
         <p>
             <a href="<?php echo esc_url( $url ); ?>" class="button button-primary">
-                <?php _e( $action, WCB_TEXTDOMAIN ); ?>
+                <?php esc_html_e( $label, WCB_TEXTDOMAIN ); ?>
             </a>
         </p>
     <?php endif; ?>
