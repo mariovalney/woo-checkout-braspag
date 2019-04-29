@@ -75,7 +75,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
              *
              * @var array $args
              */
-            $args  = apply_filters( 'wc_checkout_braspag_query_request', [], $endpoint );
+            $args = apply_filters( 'wc_checkout_braspag_query_request', [], $endpoint );
 
             // Send the request
             $result = $this->gateway->api->make_request( $url, $args );
