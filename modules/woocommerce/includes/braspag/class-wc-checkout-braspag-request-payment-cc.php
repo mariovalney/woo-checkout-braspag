@@ -48,7 +48,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'Type'             => $data['code'],
                 'Amount'           => (int) $order->get_total() * 100,
                 'ServiceTaxAmount' => 0,
-                'Installments'     => (int) ( $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_installments' ] ?? 0 ), // phpcs:ignore
+                'Installments'     => (int) ( $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_installments' ] ?? 0 ), // phpcs:ignore WordPress.Security.NonceVerification.Missing
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
                 'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
                 'Credentials'      => array(
@@ -70,11 +70,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // CreditCard Data
             $this->Payment[ $this->card_node ] = array(
-                'CardNumber'     => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_number' ] ?? '', // phpcs:ignore
-                'Holder'         => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_holder' ] ?? '', // phpcs:ignore
-                'ExpirationDate' => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_expiration_date' ] ?? '', // phpcs:ignore
-                'SecurityCode'   => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_security_code' ] ?? '', // phpcs:ignore
-                'Brand'          => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_brand' ] ?? '', // phpcs:ignore
+                'CardNumber'     => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_number' ] ?? '',          // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                'Holder'         => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_holder' ] ?? '',          // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                'ExpirationDate' => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_expiration_date' ] ?? '', // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                'SecurityCode'   => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_security_code' ] ?? '',   // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                'Brand'          => $_POST[ 'braspag_payment_' . $this::METHOD_CODE . '_brand' ] ?? '',           // phpcs:ignore WordPress.Security.NonceVerification.Missing
             );
 
             // Try to convert any month/year format to Y-m-d before to try sanitize

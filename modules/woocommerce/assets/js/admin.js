@@ -12,11 +12,12 @@ jQuery( document ).ready(
                     return;
                 }
 
-                var checks          = [],
-                conditions          = condition_attr.split( '|' ),
-                elements_to_observe = [];
+                var checks              = [],
+                    conditions          = condition_attr.split( '|' ),
+                    conditions_length   = conditions.length,
+                    elements_to_observe = [];
 
-                for (var i = 0; i < conditions.length; i++) {
+                for (var i = 0; i < conditions_length; i++) {
 
                     var truth = ( conditions[i].indexOf( '!' ) !== 0 ) ? true : false,
                     option    = ( truth ) ? conditions[i] : conditions[i].substring( 1 );
@@ -45,43 +46,43 @@ jQuery( document ).ready(
                 }
 
                 // Refresh conditions on change
-                for (var j = 0; j < elements_to_observe.length; j++) {
-                    elements_to_observe[j].on(
-                        'change',
-                        function(event) {
-                            var show = true,
-                            value    = '';
+                var elements_to_observe_length = elements_to_observe.length;
+                for (var j = 0; j < elements_to_observe_length; j++) {
 
-                            for (var i = 0; i < checks.length; i++) {
-                                // Get checked element value
-                                value = checks[i].element.val();
-                                if ( checks[i].element.prop( 'type' ) === 'checkbox' ) {
-                                    value = checks[i].element.prop( 'checked' );
-                                }
+                    elements_to_observe[j].on( 'change', function(event) {
+                        var show = true,
+                        value    = '';
 
-                                // If value is equal and we want this
-                                if ( value == checks[i].value && checks[i].truth ) {
-                                    continue;
-                                }
-
-                                // If value is different and we want this
-                                if ( value != checks[i].value && ! checks[i].truth ) {
-                                    continue;
-                                }
-
-                                // Nope: we should hide
-                                show = false;
-                                break;
+                        var checks_length = checks.length;
+                        for (var i = 0; i < checks_length; i++) {
+                            // Get checked element value
+                            value = checks[i].element.val();
+                            if ( checks[i].element.prop( 'type' ) === 'checkbox' ) {
+                                value = checks[i].element.prop( 'checked' );
                             }
 
-                            if ( show ) {
-                                $( el ).parents( 'tr' ).fadeIn( 200 );
-                                return;
+                            // If value is equal and we want this
+                            if ( value == checks[i].value && checks[i].truth ) {
+                                continue;
                             }
 
-                            $( el ).parents( 'tr' ).hide();
+                            // If value is different and we want this
+                            if ( value != checks[i].value && ! checks[i].truth ) {
+                                continue;
+                            }
+
+                            // Nope: we should hide
+                            show = false;
+                            break;
                         }
-                    );
+
+                        if ( show ) {
+                            $( el ).parents( 'tr' ).fadeIn( 200 );
+                            return;
+                        }
+
+                        $( el ).parents( 'tr' ).hide();
+                    } );
                 }
             }
         );

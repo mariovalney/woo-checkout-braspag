@@ -73,6 +73,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                 case 15:
                     // translators: card type (credit or debit)
                     $message = sprintf(
+                        // translators: "debit card" or "credit card"
                         _x( 'There was a problem with your %s. Please try again with another one.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
                         $card_type
                     );
@@ -83,8 +84,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     break;
 
                 case 21:
-                    // translators: card type (credit or debit)
                     $message = sprintf(
+                        // translators: "debit card" or "credit card"
                         _x( 'Your %s number is invalid. Please check it and try again.', 'Credit or debit card.', WCB_TEXTDOMAIN ),
                         $card_type
                     );

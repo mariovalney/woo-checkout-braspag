@@ -40,12 +40,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
             $this->DeliveryAddress = new WC_Checkout_Braspag_Address( $order, 'shipping' );
 
             // Data from Extra Fields (meta data)
-            if ( ! empty( $_POST['billing_persontype'] ) ) {
-                $this->Identity     = $_POST['billing_cpf'] ?? '';
+            if ( ! empty( $_POST['billing_persontype'] ) ) {                        // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                $this->Identity     = $_POST['billing_cpf'] ?? '';                  // phpcs:ignore WordPress.Security.NonceVerification.Missing
                 $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
 
-                if ( (string) $_POST['billing_persontype'] === '2' ) {
-                    $this->Identity     = $_POST['billing_cnpj'] ?? '';
+                if ( (string) $_POST['billing_persontype'] === '2' ) {              // phpcs:ignore WordPress.Security.NonceVerification.Missing
+                    $this->Identity     = $_POST['billing_cnpj'] ?? '';             // phpcs:ignore WordPress.Security.NonceVerification.Missing
                     $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CNPJ' : '';
                 }
             }

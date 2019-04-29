@@ -16,7 +16,7 @@
 
 defined( 'ABSPATH' ) || exit;
 
-echo wpautop( esc_html( $description ) );
+echo wpautop( esc_html( $description ) ); // phpcs:ignore
 
 $methods = ( is_array( $methods ) ) ? $methods : [];
 

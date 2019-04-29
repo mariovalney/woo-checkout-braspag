@@ -95,7 +95,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->debug                = $this->get_option( 'debug' );
 
             // Is Sandbox?
-            $this->is_sandbox = ( 'yes' == $this->sandbox ) ? true : false;
+            $this->is_sandbox = ( 'yes' === $this->sandbox ) ? true : false;
 
             // Start API
             $merchant_key = ( $this->is_sandbox ) ? $this->sandbox_merchant_key : $this->merchant_key;
@@ -241,7 +241,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 }
 
                 // Cards Options
-                if ( $code == 'cc' || $code == 'dc' ) {
+                if ( $code === 'cc' || $code === 'dc' ) {
                     $this->form_fields[ 'method_' . $code . '_soft_description' ] = array(
                         'type'              => 'text',
                         'title'             => $sub_option_preffix . __( 'Invoice Text', WCB_TEXTDOMAIN ),
@@ -310,7 +310,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 }
 
                 // Bank Slip Options
-                if ( $code == 'bs' ) {
+                if ( $code === 'bs' ) {
                     $bs_description_default  = __( 'The order will be confirmed only after the payment approval. It can take 2 or 3 days.', WCB_TEXTDOMAIN );
                     $bs_description_default .= "\n\n" . __( 'After clicking "Proceed to payment" you will receive your bank slip and will be able to print and pay in your internet banking or in a lottery retailer.', WCB_TEXTDOMAIN );
 
@@ -483,14 +483,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return bool
          */
         public function is_available() {
-            if ( $this->enabled != 'yes' ) {
+            if ( $this->enabled !== 'yes' ) {
                 return false;
             }
+
             if ( ! $this->api->is_valid() ) {
                 return false;
             }
 
-            return apply_filters( 'wc_checkout_braspag_using_supported_currency', ( get_woocommerce_currency() == 'BRL' ) );
+            return apply_filters( 'wc_checkout_braspag_using_supported_currency', ( get_woocommerce_currency() === 'BRL' ) );
         }
 
         /**
@@ -509,7 +510,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          */
         public function get_payment_method_by_code( $code ) {
             foreach ( $this->payment_methods as $method => $data ) {
-                if ( $data['code'] == $code ) {
+                if ( $data['code'] === $code ) {
                     return $method;
                 }
             }
@@ -572,8 +573,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
 
-            $method   = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : ''; // phpcs:ignore
-            $method   = sanitize_text_field( $_POST['braspag_payment_method'] ); // phpcs:ignore
+            $method   = ( ! empty( $_POST['braspag_payment_method'] ) ) ? $_POST['braspag_payment_method'] : ''; // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $method   = sanitize_text_field( $_POST['braspag_payment_method'] );                                 // phpcs:ignore WordPress.Security.NonceVerification.Missing
             $response = $this->api->do_payment_request( $method, $order, $this );
 
             // Update Order after gateway response
@@ -757,7 +758,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Format Message
             if ( ! is_string( $message ) ) {
-                $message = print_r( $message, true );
+                $message = print_r( $message, true ); // phpcs:ignore
             }
 
             // Call it
@@ -771,7 +772,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function add_notices() {
-            $using_extra_fields = ( $this->get_option( 'use_extra_fields', 'yes' ) == 'yes' );
+            $using_extra_fields = ( $this->get_option( 'use_extra_fields', 'yes' ) === 'yes' );
 
             if ( $using_extra_fields && ! class_exists( self::EXTRA_FIELDS_PLUGIN_CLASS ) ) {
                 include_once WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/html-notice-extra-fields-missing.php';

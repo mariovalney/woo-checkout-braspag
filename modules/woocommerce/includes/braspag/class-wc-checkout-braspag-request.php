@@ -147,7 +147,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $request = array(
                 'method'  => 'POST',
                 'headers' => [ 'Content-Type' => 'application/json' ],
-                'body'    => json_encode( $this ),
+                'body'    => wp_json_encode( $this ),
             );
 
             /**

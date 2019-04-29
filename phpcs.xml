@@ -6,6 +6,7 @@
 
     <arg value="s"/>
 
+    <!-- Rules from WordPress -->
     <rule ref="WordPress-Extra">
         <exclude name="Generic.WhiteSpace.DisallowSpaceIndent" />
 
@@ -20,10 +21,7 @@
         <exclude name="WordPress.NamingConventions.ValidVariableName" />
     </rule>
 
-    <rule ref="WordPress.NamingConventions.ValidVariableName">
-        <exclude-pattern>modules/woocommerce/includes/braspag/*</exclude-pattern>
-    </rule>
-
+    <!-- We use spaces not tabs -->
     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
@@ -31,8 +29,28 @@
         </properties>
     </rule>
 
+    <!-- We format Braspag JSON, so we cannot agree with ValidVariableName -->
+    <rule ref="WordPress.NamingConventions.ValidVariableName">
+        <exclude-pattern>modules/woocommerce/includes/braspag/*</exclude-pattern>
+    </rule>
+
+    <!-- Ignoring FunctionCallSignature to keep jQuery events more readable -->
+    <rule ref="PEAR.Functions.FunctionCallSignature.CloseBracketLine">
+        <exclude-pattern>*.js</exclude-pattern>
+    </rule>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket">
+        <exclude-pattern>*.js</exclude-pattern>
+    </rule>
+
+    <rule ref="PEAR.Functions.FunctionCallSignature.MultipleArguments">
+        <exclude-pattern>*.js</exclude-pattern>
+    </rule>
+
+    <!-- Excluding git, min and vendors -->
     <exclude-pattern>\.git/*</exclude-pattern>
     <exclude-pattern>*\.min\.js</exclude-pattern>
+    <exclude-pattern>*\.min\.css</exclude-pattern>
     <exclude-pattern>vendor/*</exclude-pattern>
     <exclude-pattern>node_modules/*</exclude-pattern>
 </ruleset>

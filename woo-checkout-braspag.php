@@ -105,9 +105,10 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
             $results = scandir( $path );
 
             foreach ( $results as $result ) {
-                if ( $result[0] == '.' ) {
+                if ( $result[0] === '.' ) {
                     continue;
                 }
+
                 if ( ! is_dir( $path . $result ) ) {
                     continue;
                 }
