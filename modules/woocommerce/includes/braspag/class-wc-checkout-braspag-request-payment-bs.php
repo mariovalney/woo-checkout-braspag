@@ -102,32 +102,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
         }
 
         /**
-         * Send payment request to API
-         *
-         * @since    1.0.0
-         *
-         * @param    array  $data
-         * @return   array  $transaction A array with 'errors' key if some problem
-         *                               happend or a "transaction" from Braspag if success.
-         */
-        public function do_request() {
-            $transaction = parent::do_request();
-
-            // If errors, return
-            if ( ! empty( $transaction['errors'] ) ) {
-                return $transaction;
-            }
-
-            // Add notice about error
-            $payment = $transaction['Payment'] ?? [];
-
-            $reason_code = $payment['ReasonCode'] ?? '';
-            $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
-
-            throw new Exception( $message );
-        }
-
-        /**
          * Cancel the transaction
          *
          * @param  string $payment_id
