@@ -8,6 +8,10 @@
  * @subpackage      WC_Checkout_Braspag_Gateway
  * @since           1.0.0
  *
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
+ * @SuppressWarnings(PHPMD.LongVariable)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  */
 
 // If this file is called directly, call the cops.
@@ -115,6 +119,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Initialise Gateway Settings Form Fields.
          *
          * @return void
+         *
+         * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
          */
         public function init_form_fields() {
             // Descriptions
@@ -733,6 +739,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Write to WC Logger with context
          *
          * @link https://woocommerce.wordpress.com/2017/01/26/improved-logging-in-woocommerce-2-7/
+         *
+         * @SuppressWarnings(PHPMD.DevelopmentCodeFragment)
          */
         public function log( $message, $level = 'debug', $source = '', array $context = [] ) {
             if ( 'yes' !== $this->debug ) {
