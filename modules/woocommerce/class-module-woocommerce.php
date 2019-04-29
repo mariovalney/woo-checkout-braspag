@@ -138,7 +138,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 return;
             }
 
-            $gateway->update_payment_from_braspag( $payment['PaymentId'] );
+            // Update Order from Payment
+            $gateway->update_order_from_payment( $payment['PaymentId'] );
         }
 
         /**
@@ -147,7 +148,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @return WC_Checkout_Braspag_Gateway|false
          */
         private function get_gateway_object() {
-             $gateways = WC()->payment_gateways();
+            $gateways = WC()->payment_gateways();
 
             foreach ( $gateways->get_available_payment_gateways() as $available_gateway ) {
                 if ( ! is_a( $available_gateway, 'WC_Checkout_Braspag_Gateway' ) ) {

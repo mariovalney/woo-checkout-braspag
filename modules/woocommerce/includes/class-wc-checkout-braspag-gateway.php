@@ -576,7 +576,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
                 // Success if a URL is returned
                 if ( $updated ) {
-                    $url = $response['url'] ?? $this->gateway->get_return_url( $order );
+                    $url = ( ! empty( $response['url'] ) ) ? $response['url'] : $this->get_return_url( $order );
 
                     return array(
                         'result'   => 'success',
@@ -652,7 +652,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
                 default:
                     $this->log( 'Braspag Status for order ' . $order->get_order_number() . ' is invalid: ' . $status );
-                    return;
+                    return false;
             }
 
             // Log Status
@@ -703,12 +703,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
-         * Update a order status and data with Braspag data
+         * Update a order status and data from Braspag
          *
          * @param  string $payment_id
          * @return boolean
          */
-        public function update_payment_from_braspag( $payment_id ) {
+        public function update_order_from_payment( $payment_id ) {
             $api_query   = new WC_Checkout_Braspag_Query( $this );
             $transaction = $api_query->get_transaction( $payment_id );
 
@@ -822,45 +822,27 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Process payments
          *
          * @return void
-         *
-         * @SuppressWarnings("exit")
          */
         public function wc_api_callback() {
-            // Redirect Url
-            $redirect_url = $this->get_return_url();
-
             // Check for PaymentId
             $payment_id = $_POST['PaymentId'] ?? ''; // phpcs:ignore
             $payment_id = sanitize_text_field( $payment_id );
 
             if ( empty( $payment_id ) ) {
-                return;
+                wp_die(
+                    esc_html__( 'Braspag Request Unauthorized', WCB_TEXTDOMAIN ),
+                    esc_html__( 'Braspag Request Unauthorized', WCB_TEXTDOMAIN ),
+                    [ 'response' => 401 ]
+                );
             }
 
             // Get transaction
             try {
-                // Update data
-                if ( $this->update_payment_from_braspag( $payment_id ) ) {
-                    wc_clear_notices();
-                }
-
-                // Get order
-                $order = (int) ( $transaction['MerchantOrderId'] ?? 0 );
-                $order = wc_get_order( $order );
-
-                if ( ! empty( $order ) ) {
-                    $redirect_url = $this->get_return_url( $order );
-                }
+                $this->update_order_from_payment( $payment_id );
             } catch ( Exception $e ) {
-                wc_add_notice( $e->getMessage(), 'error' );
-
                 // Log
-                $this->log( 'Error on checkout_braspag_debit_card: ' . $e->getMessage() );
+                $this->log( 'Error on wc_api_callback: ' . $e->getMessage() );
             }
-
-            // Redirect
-            wp_redirect( $redirect_url );
-            exit;
         }
 
         /**
