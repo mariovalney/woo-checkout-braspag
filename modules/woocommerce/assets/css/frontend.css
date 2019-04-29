@@ -1,3 +1,7 @@
+/**
+ * Checkout Page
+ */
+
 #braspag-payment-methods {
     margin: 0;
     display: block;
@@ -37,4 +41,24 @@
 
 .braspag-method-form.active {
     display: block;
+}
+
+/**
+ * Thank You Page
+ */
+
+.woocommerce-thankyou-payment-details .digitable-line {
+    display: block;
+    margin: 15px 0 0;
+}
+
+.woocommerce-thankyou-payment-details .digitable-line input {
+    display: inline-block;
+    box-shadow: none;
+    background: none;
+    padding: 0;
+    width: 350px;
+    max-width: 100%;
+    border: none !important;
+    outline: none !important;
 }
