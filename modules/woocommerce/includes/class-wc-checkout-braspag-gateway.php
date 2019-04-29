@@ -818,7 +818,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $method = $order->get_meta( '_wc_braspag_payment_method' );
 
             $args = [
-                'status'  => $order->get_status(),
                 'payment' => $order->get_meta( '_wc_braspag_payment_data' ),
                 'method'  => $this->get_payment_method( $method ),
             ];
