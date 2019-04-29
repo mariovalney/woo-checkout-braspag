@@ -716,6 +716,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return boolean
          */
         public function update_order_from_payment( $payment_id ) {
+            if ( empty( $payment_id ) ) {
+                return false;
+            }
+
             $api_query   = new WC_Checkout_Braspag_Query( $this );
             $transaction = $api_query->get_transaction( $payment_id );
 
@@ -830,27 +834,37 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * Process payments
          *
          * @return void
+         *
+         * @SuppressWarnings(PHPMD.ExitExpression)
          */
         public function wc_api_callback() {
+            $error = esc_html__( 'Braspag Request Unauthorized', WCB_TEXTDOMAIN );
+
+            // Body
+            $body = file_get_contents( 'php://input' );
+            $body = json_decode( $body, true );
+
             // Check for PaymentId
-            $payment_id = $_POST['PaymentId'] ?? ''; // phpcs:ignore
+            $payment_id = $body['PaymentId'] ?? '';
             $payment_id = sanitize_text_field( $payment_id );
 
             if ( empty( $payment_id ) ) {
-                wp_die(
-                    esc_html__( 'Braspag Request Unauthorized', WCB_TEXTDOMAIN ),
-                    esc_html__( 'Braspag Request Unauthorized', WCB_TEXTDOMAIN ),
-                    [ 'response' => 401 ]
-                );
+                wp_die( $error, 401 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
 
-            // Get transaction
             try {
-                $this->update_order_from_payment( $payment_id );
+                if ( $this->update_order_from_payment( $payment_id ) ) {
+                    header( 'HTTP/1.1 200 OK' );
+                    exit;
+                }
             } catch ( Exception $e ) {
+                $error = $e->getMessage();
+
                 // Log
-                $this->log( 'Error on wc_api_callback: ' . $e->getMessage() );
+                $this->log( 'Error on wc_api_callback: ' . $error );
             }
+
+            wp_die( $error, 401 ); // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
         }
 
         /**

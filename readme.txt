@@ -51,6 +51,18 @@ Yes. WooCommerce supports WordPress 5+ and we too.
 
 Nope. This is a WooCommerce extension.
 
+= My orders are not being updated automatically =
+
+You should configure a URL to receive notification from Braspag.
+
+It should be: "example.com/?wc-api=WC_Checkout_Braspag_Gateway"
+
+Do not forget to change "example.com" to your home url.
+
+= Which URL I should inform to receive Braspag POST Notifications? =
+
+Check the previous FAQ.
+
 = What is PHP? =
 
 It is a programming language for web development. PHP as like any software it has versions. And we just support 7 (and above).
