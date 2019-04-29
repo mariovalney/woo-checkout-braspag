@@ -1,13 +1,20 @@
 <?php
 /**
- * Payment instructions.
+ * The Template for thank you page
  *
- * @version 2.7.0
+ * This template can be overridden by copying it to yourtheme/woocommerce/braspag/order-received.php.
+ *
+ * HOWEVER, on occasion Woo Checkout Braspag will need to update template files and you
+ * (the theme developer) will need to copy the new files to your theme to
+ * maintain compatibility. Just like WooCommerce.
+ *
+ * @var $payment    array  The payment data
+ * @var $method     array  Payment Method data
+ *
+ * @version 1.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
@@ -26,17 +33,24 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php esc_html_e( 'Installments:', WCB_TEXTDOMAIN ); ?>
             <strong>
             <?php
-            if ( ! empty( $payment['Amount'] ) ) {
-                $installment = $payment['Amount'] / $payment['Installments'] / 100;
-                $installment = number_format( $installment, 2, ',', '' );
+                if ( ! empty( $payment['Amount'] ) ) {
+                    $installment = $payment['Amount'] / $payment['Installments'] / 100;
+                    $installment = number_format( $installment, 2, ',', '' );
 
-                // translators: First is installments count and second is amount by installment
-                echo esc_html( sprintf( __( '%1$s x R$%2$s' ), $payment['Installments'], $installment ) );
-            } else {
-                echo esc_html( $payment['Installments'] );
-            }
+                    // translators: First is installments count and second is amount by installment
+                    echo esc_html( sprintf( __( '%1$s x R$%2$s' ), $payment['Installments'], $installment ) );
+                } else {
+                    echo esc_html( $payment['Installments'] );
+                }
             ?>
             </strong>
+        </li>
+    <?php endif; ?>
+
+    <?php if ( ! empty( $payment['Status'] ) ) : ?>
+        <li class="woocommerce-order-overview__payment-card-number card-number">
+            <?php esc_html_e( 'Status:', WCB_TEXTDOMAIN ); ?>
+            <strong><?php esc_html_e( WC_Checkout_Braspag_Messages::payment_status( $payment['Status'] ) ); ?></strong>
         </li>
     <?php endif; ?>
 
@@ -45,26 +59,17 @@ if ( ! defined( 'ABSPATH' ) ) {
             <?php esc_html_e( 'Credit Card:', WCB_TEXTDOMAIN ); ?>
             <strong>
             <?php
-                esc_html( $payment['CreditCard']['CardNumber'] );
+                echo esc_html( $payment['CreditCard']['CardNumber'] );
 
-            if ( ! empty( $payment['CreditCard']['Brand'] ) ) {
-                esc_html( ' (' . $payment['CreditCard']['Brand'] . ')' );
-            }
+                if ( ! empty( $payment['CreditCard']['Brand'] ) ) {
+                    echo esc_html( ' (' . $payment['CreditCard']['Brand'] . ')' );
+                }
             ?>
             </strong>
         </li>
     <?php endif; ?>
 
-    <li class="woocommerce-order-overview__payment-card-number card-number">
-        <?php esc_html_e( 'Status:', WCB_TEXTDOMAIN ); ?>
-        <strong><?php esc_html_e( wc_get_order_status_name( $status ) ); ?></strong>
-        <br>
-        <?php if ( $status === 'on-hold' || $status === 'pending' ) : ?>
-            <?php esc_html_e( 'Your payment is pending for confirmation.', WCB_TEXTDOMAIN ); ?>
-        <?php endif; ?>
-    </li>
-
-    <?php if ( ! empty( $payment['Url'] ) && ! empty( $payment['BoletoNumber'] ) ) : ?>
+    <?php if ( ! empty( $payment['Url'] ) && ! empty( $payment['BoletoNumber'] ) && ( empty( $payment['Status'] ) || (string) $payment['Status'] !== '2' ) ) : ?>
         <li class="woocommerce-order-overview__payment-bank-slip-url bank-slip-url">
             <?php esc_html_e( 'Bank Slip:', WCB_TEXTDOMAIN ); ?>
             <br>

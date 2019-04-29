@@ -21,12 +21,14 @@
         <exclude name="WordPress.NamingConventions.ValidVariableName" />
     </rule>
 
-    <!-- We use spaces not tabs -->
+    <!-- We use spaces not tabs and do not need PHPCBF indent templates -->
     <rule ref="Generic.WhiteSpace.DisallowTabIndent" />
     <rule ref="Generic.WhiteSpace.ScopeIndent">
         <properties>
             <property name="tabIndent" value="false"/>
         </properties>
+
+        <exclude-pattern>modules/woocommerce/includes/templates/*</exclude-pattern>
     </rule>
 
     <!-- We format Braspag JSON, so we cannot agree with ValidVariableName -->
