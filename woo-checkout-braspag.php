@@ -1,9 +1,6 @@
 <?php
 
 /**
- * @package         Woo_Checkout_Braspag
- * @since           1.0.0
- *
  * Plugin Name:     WooCommerce Checkout Braspag
  * Plugin URI:      https://github.com/Vizir/woo-checkout-braspag
  * Description:     Braspag payment gateway for WooCommerce.
@@ -13,6 +10,12 @@
  * Author URI:      http://vizir.com.br/en
  * Text Domain:     woo-checkout-braspag
  * Domain Path:     /languages
+ *
+ * @package         Woo_Checkout_Braspag
+ * @since           1.0.0
+ *
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.NPathComplexity)
  */
 
 // If this file is called directly, call the cops.

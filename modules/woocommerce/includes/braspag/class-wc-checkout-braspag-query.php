@@ -68,16 +68,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
          * @param    string  $endpoint
          */
         private function query( $endpoint, $decode_json = true ) {
+            $url = $this->gateway->api->get_endpoint_api_query() . $endpoint;
+
             /**
-             * Filter request
+             * Filter Braspag Query request
              *
-             * @var obj     $endpoint
+             * @var array $args
              */
-            $endpoint = $this->gateway->api->get_endpoint_api_query() . $endpoint;
-            $request  = apply_filters( 'wc_checkout_braspag_query_request', $endpoint );
+            $args  = apply_filters( 'wc_checkout_braspag_query_request', [], $endpoint );
 
             // Send the request
-            $result = $this->gateway->api->make_request( $endpoint );
+            $result = $this->gateway->api->make_request( $url, $args );
 
             $body = $result['body'] ?? '';
             return ( $decode_json ) ? json_decode( $body, true ) : $body;

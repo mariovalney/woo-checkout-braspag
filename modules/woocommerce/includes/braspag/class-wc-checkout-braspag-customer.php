@@ -41,12 +41,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
 
             // Data from Extra Fields (meta data)
             if ( ! empty( $_POST['billing_persontype'] ) ) {
+                $this->Identity     = $_POST['billing_cpf'] ?? '';
+                $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
+
                 if ( (string) $_POST['billing_persontype'] === '2' ) {
                     $this->Identity     = $_POST['billing_cnpj'] ?? '';
                     $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CNPJ' : '';
-                } else {
-                    $this->Identity     = $_POST['billing_cpf'] ?? '';
-                    $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
                 }
             }
 

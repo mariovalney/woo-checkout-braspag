@@ -196,7 +196,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
         /**
          * Get Credit Card provider as option
          *
-         * @return bool
+         * @return array
          */
         public static function get_provider_as_option( $providers ) {
             $options = array(

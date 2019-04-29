@@ -86,6 +86,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * Check a $transaction->Payment node is equal to the current request
          *
          * @param    array  $payment_data
+         *
+         * @SuppressWarnings(PHPMD.ExitExpression)
          */
         public function is_equal_payment( $payment_data ) {
             die( 'All payment methods should override this method' );
@@ -118,6 +120,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * @param  string $payment_id
          * @param  string $amount
          * @return bool If cancelled.
+         *
+         * @SuppressWarnings(PHPMD.ExitExpression)
          */
         public function cancel_transaction( $payment_id, $amount ) {
             die( 'All payment methods should override this method' );

@@ -8,10 +8,10 @@
  * @subpackage      WC_Checkout_Braspag_Gateway
  * @since           1.0.0
  *
- * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
  * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.LongVariable)
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
  */
 
 // If this file is called directly, call the cops.
