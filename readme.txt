@@ -3,7 +3,8 @@ Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
 Requires at least: 4.7
-Tested up to: 5.0.3
+Tested up to: 5.1
+Requires PHP: 7.0
 Stable tag: 1.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -49,6 +50,12 @@ Yes. WooCommerce supports WordPress 5+ and we too.
 = Does it works for another e-commerce plugin? =
 
 Nope. This is a WooCommerce extension.
+
+= What is PHP? =
+
+It is a programming language for web development. PHP as like any software it has versions. And we just support 7 (and above).
+
+If you are using PHP in version below 7, please contact your host to update your environment.
 
 = Who are the developers? =
 
