@@ -1,13 +1,20 @@
 <?php
 /**
- * Payment instructions.
+ * The Template for thank you page
  *
- * @version 2.7.0
+ * This template can be overridden by copying it to yourtheme/woocommerce/braspag/order-received.php.
+ *
+ * HOWEVER, on occasion Woo Checkout Braspag will need to update template files and you
+ * (the theme developer) will need to copy the new files to your theme to
+ * maintain compatibility. Just like WooCommerce.
+ *
+ * @var $payment    array  The payment data
+ * @var $method     array  Payment Method data
+ *
+ * @version 1.0.0
  */
 
-if ( ! defined( 'ABSPATH' ) ) {
-    exit; // Exit if accessed directly.
-}
+defined( 'ABSPATH' ) || exit;
 
 ?>
 
