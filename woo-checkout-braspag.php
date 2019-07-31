@@ -11,6 +11,9 @@
  * Text Domain:     woo-checkout-braspag
  * Domain Path:     /languages
  *
+ * WC requires at least: 3.6.5
+ * WC tested up to: 3.6.5
+ *
  * @package         Woo_Checkout_Braspag
  * @since           1.0.0
  *
