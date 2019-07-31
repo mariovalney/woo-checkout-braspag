@@ -3,7 +3,7 @@ Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
 Requires at least: 4.7
-Tested up to: 5.1
+Tested up to: 5.2
 Requires PHP: 7.0
 Stable tag: 1.0.0
 License: GPLv2 or later
@@ -13,21 +13,45 @@ Add Braspag payment to your WooCommerce e-commerce!
 
 == Description ==
 
-= How to Use =
+Add Braspag gateway to WooCommerce.
 
-= Configuration =
+[Braspag](https://www.braspag.com.br) is a Brazilian payment gateway so we will focus on pt_BR documentation.
+
+### Desenvolvimento ###
+
+Este plugin foi desenvolvido a partir da [documentação oficial](https://braspag.github.io) do Pagador, sem nenhum apoio oficial.
+
+Nenhum dos desenvolvedores deste plugin possuem vínculos com estas duas empresas.
+
+### Formas de Pagamento ###
+
+Até o momento estão disponíveis:
+
+- Cartão de Crédito
+- Boleto Bancário
+
+### Compatibilidade ###
+
+Esse plugin foi desenvolvido e testado na versão 3.5+ do WooCommerce.
+
+Este plugin é compatível com o [WooCommerce Extra Checkout Fields for Brazil](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/).
+
+### Configuração ###
+
+Após instalar o plugin, ative a forma de pagamento normalmente e vá para a página de configuração.
+
+- Ative a forma de pagamento.
+- Dê um título e descrição para essa forma de pagamento.
+- Adicione o "Merchant ID" fornecido pela Braspag.
+- Marque a opção "Sandbox" se a loja não estiver em Produção (disponível para venda real).
+- Adicione a "Secret Merchant Key" fornecida pela Braspag (observe que ela é diferente para Sandbox).
+
+Após isso basta ativar as formas de pagamento que deseja disponibilizar.
+Todas elas necessitam de um "Provider" fornecido pela Braspag, bem como algumas configurações particulares: leia as dicas (ícone com a interrogação) para mais informações.
 
 = Translations =
 
 You can [translate WooCommerce Checkout Braspag](https://translate.wordpress.org/projects/wp-plugins/woo-checkout-braspag) to your language.
-
-= Review =
-
-We would be grateful for a [review here](https://wordpress.org/support/plugin/woo-checkout-braspag/reviews/).
-
-= Support =
-
-* WooCommerce - 3.5.3
 
 == Installation ==
 
