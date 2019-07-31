@@ -6,6 +6,7 @@ var minifyCSS    = require( 'gulp-minify-css' );
 var rename       = require( 'gulp-rename' );
 var uglifyEs     = require( 'gulp-uglify-es' ).default;
 var watch        = require( 'gulp-watch' );
+var zip          = require( 'gulp-zip' );
 
 // Directories
 var dir_assets = 'modules/*/assets/',
@@ -29,14 +30,7 @@ function styles() {
                 }
             )
         )
-        .pipe(
-            autoprefixer(
-                {
-                    browsers: ['last 2 versions'],
-                    cascade: false
-                }
-            )
-        )
+        .pipe( autoprefixer( {cascade: false} ) )
         .pipe( minifyCSS( {compatibility: 'ie8'} ) )
         .pipe( gulp.dest( 'modules/' ) );
 }
@@ -81,5 +75,24 @@ gulp.task( 'watch', watch_changes );
 
 /**
  * TASK: default
+ *
+ * Run style, script and generate a ZIP to be published
  */
-gulp.task( 'default', gulp.parallel( styles, scripts ) );
+var trunk_files = [
+    '**/*',
+    '!node_modules/**/*',
+    '!vendor/**/*',
+    '!*',
+    'index.php',
+    'LICENSE.txt',
+    'readme.txt',
+    'woo-checkout-braspag.php'
+];
+
+function build() {
+    return gulp.src(trunk_files)
+        .pipe(zip('trunk.zip'))
+        .pipe(gulp.dest('.'));
+}
+
+gulp.task( 'default', gulp.parallel( styles, scripts, build ) );
