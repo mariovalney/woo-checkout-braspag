@@ -119,7 +119,7 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
 
             return sprintf(
                 /* translators: %1$s is the plugin name and %2%s is the action of click. */
-                __( '<strong>WooCommerce Checkout Braspag</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
+                __( '<strong>Pagador (Braspag) Checkout for WooCommerce</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
                 $plugin->name,
                 '<a href="' . esc_url( $url ) . '">' . __( 'install the plugin', WCB_TEXTDOMAIN ) . '</a>'
             );
@@ -139,7 +139,7 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
 
             return sprintf(
                 /* translators: %1$s is the plugin name and %2%s is the action of click. */
-                __( '<strong>WooCommerce Checkout Braspag</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
+                __( '<strong>Pagador (Braspag) Checkout for WooCommerce</strong> depends of %1$s to work. Click to %2$s.', WCB_TEXTDOMAIN ),
                 $plugin->name,
                 '<a href="' . esc_url( $url ) . '">' . __( 'activate the plugin', WCB_TEXTDOMAIN ) . '</a>'
             );

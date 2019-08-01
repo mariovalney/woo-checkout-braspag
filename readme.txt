@@ -1,4 +1,4 @@
-=== WooCommerce Checkout Braspag ===
+=== Pagador (Braspag) Checkout for WooCommerce ===
 Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
@@ -51,11 +51,11 @@ Todas elas necessitam de um "Provider" fornecido pela Braspag, bem como algumas 
 
 = Translations =
 
-You can [translate WooCommerce Checkout Braspag](https://translate.wordpress.org/projects/wp-plugins/woo-checkout-braspag) to your language.
+You can [translate Pagador (Braspag) Checkout for WooCommerce](https://translate.wordpress.org/projects/wp-plugins/woo-checkout-braspag) to your language.
 
 == Installation ==
 
-* Install "WooCommerce Checkout Braspag" by plugins dashboard.
+* Install "Pagador (Braspag) Checkout for WooCommerce" by plugins dashboard.
 
 Or
 
