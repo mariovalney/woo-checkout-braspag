@@ -95,6 +95,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
             return date( $format, strtotime( $string ) );
         }
 
+        /**
+         * Retrieve data from POST sanitizing
+         *
+         * @param  string $key
+         * @param  string $default [description]
+         * @return string
+         */
+        public function sanitize_post_text_field( $key, $default = '' ) {
+            return sanitize_text_field( $_POST[ $key ] ?? $default ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+        }
+
     }
 
 }
