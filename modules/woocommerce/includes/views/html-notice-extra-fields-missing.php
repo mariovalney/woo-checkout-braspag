@@ -25,11 +25,13 @@ if ( $is_installed ) {
 <div class="notice notice-error">
     <p>
     <?php
-        sprintf(
-            // translators: Plugins name and "EXTRA_FIELDS_PLUGIN_NAME"
-            esc_html__( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
-            '<strong>Pagador (Braspag) Checkout for WooCommerce</strong>',
-            WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME
+        echo esc_html(
+            sprintf(
+                // translators: Plugins name and "EXTRA_FIELDS_PLUGIN_NAME"
+                __( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
+                '<strong>Pagador (Braspag) Checkout for WooCommerce</strong>',
+                WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME
+            )
         );
         ?>
     </p>
