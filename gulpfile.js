@@ -2,7 +2,7 @@ var gulp = require( 'gulp' );
 
 // Plugins
 var autoprefixer = require( 'gulp-autoprefixer' );
-var minifyCSS    = require( 'gulp-minify-css' );
+var cleanCSS     = require( 'gulp-clean-css' );
 var rename       = require( 'gulp-rename' );
 var uglifyEs     = require( 'gulp-uglify-es' ).default;
 var watch        = require( 'gulp-watch' );
@@ -31,7 +31,7 @@ function styles() {
             )
         )
         .pipe( autoprefixer( {cascade: false} ) )
-        .pipe( minifyCSS( {compatibility: 'ie8'} ) )
+        .pipe( cleanCSS( {compatibility: 'ie8'} ) )
         .pipe( gulp.dest( 'modules/' ) );
 }
 

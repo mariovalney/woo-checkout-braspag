@@ -19,16 +19,17 @@
   ],
   "license": "GPLv2 or later",
   "homepage": "https://github.com/Vizir/woo-checkout-braspag",
-  "browserslist": ["last 2 versions"],
+  "browserslist": [
+    "last 2 versions"
+  ],
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^6.1.0",
-    "gulp-minify-css": "^1.2.4",
     "gulp-rename": "^1.4.0",
     "gulp-uglify-es": "^1.0.4",
-    "gulp-watch": "^5.0.1"
-  },
-  "dependencies": {
+    "gulp-watch": "^5.0.1",
+    "gulp-clean-css": "^4.2.0",
     "gulp-zip": "^5.0.0"
-  }
+  },
+  "dependencies": {}
 }
