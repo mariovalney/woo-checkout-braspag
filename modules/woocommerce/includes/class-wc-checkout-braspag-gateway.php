@@ -37,36 +37,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * This is the only data you need to change to manage payment options.
          *
+         * @see init_payment_options()
+         *
          * @var array
          */
-        private $payment_methods = array(
-            'cc' => array(
-                'enabled'   => false,
-                'name'      => 'Credit Card',
-                'code'      => 'CreditCard',
-                'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
-            ),
-            'dc' => array(
-                'enabled'   => false,
-                'name'      => 'Debit Card',
-                'code'      => 'DebitCard',
-                'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
-            ),
-            'bs' => array(
-                'enabled'   => false,
-                'name'      => 'Bank Slip',
-                'code'      => 'Boleto',
-                'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
-            ),
-            // TODO: Still waiting Braspag Support
-            // 'et' => array(
-            //     'enabled'   => false,
-            //     'name'      => 'Eletronic Transfer',
-            //     'code'      => 'EletronicTransfer',
-            //     'providers' => WC_Checkout_Braspag_Providers::ELETRONIC_TRANSFER,
-            // ),
-        );
+        private $payment_methods = [];
 
+        /**
+         * The Constructor
+         */
         public function __construct() {
             // Required infos
             $this->id                 = 'checkout-braspag';
@@ -77,12 +56,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             // Has fields on Checkout
             $this->has_fields = true;
 
+            /**
+             * Load Payment Options
+             * NOTE: Should be called before init_form_fields
+             */
+            $this->init_payment_options();
+
             // Load the form fields and settings
             $this->init_form_fields();
             $this->init_settings();
-
-            // Load Payment Options
-            $this->init_payment_options();
 
             // Options
             $this->enabled              = $this->get_option( 'enabled' );
@@ -211,7 +193,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'type'        => 'checkbox',
                     'title'       => $data['name'],
                     'label'       => sprintf(
-                        // translators: payment method name
+                        // translators: payment method name (already translated and strtolower)
                         __( 'Enable payment using %s', WCB_TEXTDOMAIN ),
                         mb_strtolower( $data['name'] )
                     ),
@@ -466,21 +448,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     ),
                 )
             );
-        }
-
-        /**
-         * Init payment methods data
-         *
-         * @return void
-         */
-        public function init_payment_options() {
-            foreach ( $this->payment_methods as $code => $data ) {
-                $enabled = ( $this->get_option( 'method_' . $code . '_enabled', 'no' ) === 'yes' );
-                $enabled = apply_filters( 'wc_checkout_braspag_method_' . $code . '_enabled', $enabled );
-
-                $this->payment_methods[ $code ]['name']    = __( $data['name'], WCB_TEXTDOMAIN );
-                $this->payment_methods[ $code ]['enabled'] = $enabled;
-            }
         }
 
         /**
@@ -883,6 +850,48 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $description = apply_filters( 'wc_checkout_braspag_bank_slip_description', $description );
 
             echo wpautop( esc_html( $description ) ); //phpcs:ignore
+        }
+
+        /**
+         * Init payment methods data
+         *
+         * @return void
+         */
+        private function init_payment_options() {
+            $this->payment_methods = [
+                'cc' => [
+                    'enabled'   => false,
+                    'code'      => 'CreditCard',
+                    'name'      => __( 'Credit Card', WCB_TEXTDOMAIN ),
+                    'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
+                ],
+                'dc' => [
+                    'enabled'   => false,
+                    'code'      => 'DebitCard',
+                    'name'      => __( 'Debit Card', WCB_TEXTDOMAIN ),
+                    'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
+                ],
+                'bs' => [
+                    'enabled'   => false,
+                    'code'      => 'Boleto',
+                    'name'      => __( 'Bank Slip', WCB_TEXTDOMAIN ),
+                    'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
+                ],
+                // TODO: Still waiting Braspag Support
+                // 'et' => [
+                //     'enabled'   => false,
+                //     'code'      => 'EletronicTransfer',
+                //     'name'      => __( 'Eletronic Transfer', WCB_TEXTDOMAIN ),
+                //     'providers' => WC_Checkout_Braspag_Providers::ELETRONIC_TRANSFER,
+                // ],
+            ];
+
+            foreach ( array_keys( $this->payment_methods ) as $code ) {
+                $enabled = ( $this->get_option( 'method_' . $code . '_enabled', 'no' ) === 'yes' );
+                $enabled = apply_filters( 'wc_checkout_braspag_method_' . $code . '_enabled', $enabled );
+
+                $this->payment_methods[ $code ]['enabled'] = $enabled;
+            }
         }
 
         /**
