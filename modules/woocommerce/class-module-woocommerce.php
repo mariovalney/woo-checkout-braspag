@@ -49,14 +49,15 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 'class-wc-checkout-braspag-api',
                 'class-wc-checkout-braspag-providers',
                 'braspag/class-wc-checkout-braspag-model',
-                'braspag/class-wc-checkout-braspag-customer',
-                'braspag/class-wc-checkout-braspag-address',
                 'braspag/class-wc-checkout-braspag-messages',
-                'braspag/class-wc-checkout-braspag-query',
-                'braspag/class-wc-checkout-braspag-request',
-                'braspag/class-wc-checkout-braspag-request-payment-cc',
-                'braspag/class-wc-checkout-braspag-request-payment-dc',
-                'braspag/class-wc-checkout-braspag-request-payment-bs',
+                'braspag/traits/class-wc-checkout-braspag-extradata',
+                'braspag/models/class-wc-checkout-braspag-customer',
+                'braspag/models/class-wc-checkout-braspag-address',
+                'braspag/models/class-wc-checkout-braspag-query',
+                'braspag/models/class-wc-checkout-braspag-request',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
             );
         }
 

@@ -26,18 +26,22 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
          * @since    1.0.0
          *
          * @param    WC_Order  $data
+         *
+         * @SuppressWarnings(PHPMD.NPathComplexity)
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
          */
         public function populate( $order ) {
             parent::populate( $order );
 
-            if ( empty( $this->MerchantOrderId ) ) {
-                return;
+            // Check for order
+            if ( empty( $order->get_id() ) ) {
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
             }
 
             // Payment Data
             $data = $this->gateway->get_payment_method( $this::METHOD_CODE );
 
-            $this->Payment = array(
+            $payment = [
                 'Provider'       => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
                 'Type'           => $data['code'],
                 'Amount'         => (int) $order->get_total() * 100,
@@ -46,7 +50,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
                 'Demonstrative'  => '',
                 'Identification' => '',
                 'Instructions'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_bank_slip_instructions' ),
-            );
+            ];
+
+            $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
 
             // Sanitization
             $this->Payment['BoletoNumber'] = $this->sanitize_numbers( $this->Payment['BoletoNumber'] );
@@ -93,7 +99,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             $this->Payment['ExpirationDate'] = '2019-02-25';
 
             /**
-             * Action allow developers to change Address object
+             * Action allow developers to change request data
              *
              * @param obj  $this
              * @param obj  $order  WC_Order

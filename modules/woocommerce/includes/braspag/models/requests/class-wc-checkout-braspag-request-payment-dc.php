@@ -37,11 +37,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
             parent::populate( $order );
 
             if ( empty( $this->Payment ) ) {
-                return;
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
             }
 
             // Return URL
             $this->Payment['ReturnUrl'] = $this->gateway->get_api_return_url();
+
+            /**
+             * Action allow developers to change request data
+             *
+             * @param obj  $this
+             * @param obj  $order  WC_Order
+             */
+            do_action( 'wc_checkout_braspag_populate_payment_' . $this::METHOD_CODE, $this, $order );
         }
 
         /**

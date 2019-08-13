@@ -16,6 +16,7 @@ defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
     class WC_Checkout_Braspag_Request extends WC_Checkout_Braspag_Model {
+        use WC_Checkout_Braspag_Traits_Extradata;
 
         /**
          * Method Code
@@ -59,11 +60,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          */
         public function populate( $order ) {
             if ( ! $order instanceof WC_Order ) {
-                return;
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
             }
 
             $this->MerchantOrderId = $order->get_id();
             $this->Customer        = new WC_Checkout_Braspag_Customer( $order );
+
+            /**
+             * Action allow developers to change request data
+             *
+             * @param obj  $this
+             * @param obj  $order  WC_Order
+             */
+            do_action( 'wc_checkout_braspag_populate_payment', $this, $order );
         }
 
         /**

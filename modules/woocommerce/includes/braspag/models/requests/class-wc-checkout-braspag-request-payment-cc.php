@@ -36,14 +36,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
         public function populate( $order ) {
             parent::populate( $order );
 
-            if ( empty( $this->MerchantOrderId ) ) {
-                return;
+            // Check for order
+            if ( empty( $order->get_id() ) ) {
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
             }
 
             // Payment Data
             $data = $this->gateway->get_payment_method( $this::METHOD_CODE );
 
-            $this->Payment = array(
+            $payment = [
                 'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
                 'Type'             => $data['code'],
                 'Amount'           => (int) $order->get_total() * 100,
@@ -51,11 +52,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'Installments'     => (int) $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_installments', 0 ),
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
                 'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
-                'Credentials'      => array(
+                'Credentials'      => [
                     'Code' => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
                     'Key'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),
-                ),
-            );
+                ],
+            ];
+
+            $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
 
             // Getnet require Credentials Username and Password
             if ( $this->Payment['Provider'] === 'Getnet' ) {
@@ -87,7 +90,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $this->Payment[ $this->card_node ]['ExpirationDate'] = $this->sanitize_date( $this->Payment[ $this->card_node ]['ExpirationDate'], 'm/Y' );
 
             /**
-             * Action allow developers to change Address object
+             * Action allow developers to change request data
              *
              * @param obj  $this
              * @param obj  $order  WC_Order
