@@ -911,11 +911,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $file_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.' . $ext : '.min.' . $ext;
 
             if ( $is_script ) {
-                wp_enqueue_script( $this->id . '-' . $handle . '-script', $file_url, $dependencies, WCB_VERSION, true );
+                wp_enqueue_script( $this->id . '-' . $handle . '-script', $file_url, $dependencies, WCB_TEXTDOMAIN, true );
                 return;
             }
 
-            wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, WCB_VERSION );
+            wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, WCB_TEXTDOMAIN );
         }
 
     }

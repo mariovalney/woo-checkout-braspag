@@ -177,13 +177,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         public function do_payment_request( $method, $order, $gateway ) {
             // Check Payment Method
             if ( empty( $method ) ) {
-                return $this->return_error( __( 'Please, select a payment method.', WCB_VERSION ) );
+                return $this->return_error( __( 'Please, select a payment method.', WCB_TEXTDOMAIN ) );
             }
 
             // Search for request class
             $class = WC_Checkout_Braspag_Request::get_request_class( 'payment_' . $method );
             if ( ! is_callable( array( $class, 'do_request' ) ) ) {
-                return $this->return_error( __( 'Please, select a valid payment method.', WCB_VERSION ) );
+                return $this->return_error( __( 'Please, select a valid payment method.', WCB_TEXTDOMAIN ) );
             }
 
             // Request
@@ -215,7 +215,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 }
             }
 
-            return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds.', WCB_VERSION ) );
+            return $this->return_error( __( 'Ops... Some problem happened. Please, try again in a few seconds.', WCB_TEXTDOMAIN ) );
         }
 
         /**
