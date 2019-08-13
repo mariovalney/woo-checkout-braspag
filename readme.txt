@@ -110,6 +110,11 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 1.1.0 =
+
+* Best file organization
+* Added methods to work with ExtraDataCollection on Payment info
+
 = 1.0 =
 
 * It's alive!
@@ -117,6 +122,6 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 1.0 =
+= 1.0.0 =
 
-* Receive payments with Braspag!
+Added methods to work with ExtraDataCollection on Payment info.
