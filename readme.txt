@@ -110,6 +110,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 1.2.0 =
+
+* Support to Safra
+
 = 1.1.0 =
 
 * Best file organization
