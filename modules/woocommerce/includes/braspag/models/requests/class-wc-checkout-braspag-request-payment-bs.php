@@ -69,7 +69,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
                 $this->Payment['NullifyDays'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_nullify_days' );
             }
 
-            // Santander Data
+            // Bradesco Data
             if ( $this->Payment['Provider'] === 'Bradesco2' ) {
                 $this->Payment['DaysToFine']     = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_fine', 0 );
                 $this->Payment['FineRate']       = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_fine_rate', 0 );
@@ -94,9 +94,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             }
 
             // DEBUG
-            $this->Payment['Assignor']       = 'Empresa Teste';
-            $this->Payment['Demonstrative']  = 'Desmonstrative Teste';
-            $this->Payment['ExpirationDate'] = '2019-02-25';
+            // $this->Payment['Assignor']       = 'Empresa Teste';
+            // $this->Payment['Demonstrative']  = 'Desmonstrative Teste';
+            // $this->Payment['ExpirationDate'] = '2019-02-25';
 
             /**
              * Action allow developers to change request data
