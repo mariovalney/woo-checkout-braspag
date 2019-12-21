@@ -25,13 +25,15 @@ if ( $is_installed ) {
 <div class="notice notice-error">
     <p>
     <?php
-        printf( // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
-            // translators: Plugins name and "EXTRA_FIELDS_PLUGIN_NAME"
-            __( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
-            '<strong>Pagador (Braspag) Checkout for WooCommerce</strong>',
-            WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME
-        );
-        ?>
+    // phpcs:disable WordPress.Security.EscapeOutput.OutputNotEscaped
+    printf(
+        // translators: Plugins name and "EXTRA_FIELDS_PLUGIN_NAME"
+        __( '%1$s depends on the last version of %2$s to work!', WCB_TEXTDOMAIN ),
+        '<strong>Pagador (Braspag) Checkout for WooCommerce</strong>',
+        WC_Checkout_Braspag_Gateway::EXTRA_FIELDS_PLUGIN_NAME
+    );
+    // phpcs:enable
+    ?>
     </p>
 
     <?php if ( current_user_can( 'install_plugins' ) ) : ?>

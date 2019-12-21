@@ -57,7 +57,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
 
             // Add item
             $collection[] = (object) [
-                'Name' => $name,
+                'Name'  => $name,
                 'Value' => $value,
             ];
 
