@@ -284,7 +284,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     );
 
                     // GlobalPayments
-                    $this->form_fields[ 'method_' . $code . '_credential_signature' ] = array(
+                    $this->form_fields[ 'method_' . $code . '_credential_signature_for_global_payments' ] = array(
                         'type'              => 'password',
                         'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
                         'description'       => __( 'TerminalID (required for Global Payments).', WCB_TEXTDOMAIN ),
@@ -292,6 +292,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'custom_attributes' => [
                             'autocomplete' => 'new-password',
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=GlobalPayments',
+                        ],
+                        'default'           => '',
+                    );
+
+                    // Safra
+                    $this->form_fields[ 'method_' . $code . '_credential_signature_for_safra' ] = array(
+                        'type'              => 'password',
+                        'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Fill with "Safrapay;Cidade;Estado" (required for Safra).', WCB_TEXTDOMAIN ),
+                        'desc_tip'          => true,
+                        'custom_attributes' => [
+                            'autocomplete' => 'new-password',
+                            'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Safra',
                         ],
                         'default'           => '',
                     );

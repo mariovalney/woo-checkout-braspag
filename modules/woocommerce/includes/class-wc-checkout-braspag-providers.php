@@ -105,6 +105,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 'brands'      => [],
                 'description' => 'DMCard',
             ),
+            'Safra'         => array(
+                'brands'      => [],
+                'description' => 'Safra',
+            ),
         );
 
         /**

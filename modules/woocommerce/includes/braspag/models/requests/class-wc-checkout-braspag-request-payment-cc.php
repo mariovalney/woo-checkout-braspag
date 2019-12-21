@@ -68,7 +68,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // GlobalPayments require Credentials Signature
             if ( $this->Payment['Provider'] === 'GlobalPayments' ) {
-                $this->Payment['Provider']['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature' );
+                $this->Payment['Provider']['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_global_payments' );
+            }
+
+            // Safra require Credentials Signature
+            if ( $this->Payment['Provider'] === 'Safra' ) {
+                $this->Payment['Provider']['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra' );
             }
 
             // CreditCard Data
