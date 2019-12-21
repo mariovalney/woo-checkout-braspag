@@ -95,4 +95,4 @@ function build() {
         .pipe(gulp.dest('.'));
 }
 
-gulp.task( 'default', gulp.parallel( styles, scripts, build ) );
+gulp.task( 'default', gulp.series( gulp.parallel( styles, scripts ), build ) );
