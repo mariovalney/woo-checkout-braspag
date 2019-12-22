@@ -84,11 +84,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          * @param    array  $errors
          */
         public function validate() {
-            if ( ! empty( $this::METHOD_CODE ) && ! empty( $this::TRANSACTION_ENDPOINT ) ) {
-                return [];
+            if ( empty( $this::METHOD_CODE ) || empty( $this::TRANSACTION_ENDPOINT ) ) {
+                return [ __( 'Invalid payment method.', WCB_TEXTDOMAIN ) ];
             }
 
-            return [ __( 'Invalid payment method.', WCB_TEXTDOMAIN ) ];
+            if ( empty( $this->Payment['Amount'] ) ) {
+                return [ __( 'Invalid amount: your order is empty.', WCB_TEXTDOMAIN ) ];
+            }
+
+            return [];
         }
 
         /**

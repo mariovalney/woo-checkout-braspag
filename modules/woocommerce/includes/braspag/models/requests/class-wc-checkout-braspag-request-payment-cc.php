@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $payment = [
                 'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
                 'Type'             => $data['code'],
-                'Amount'           => (int) $order->get_total() * 100,
+                'Amount'           => ( (float) $order->get_total() ) * 100,
                 'ServiceTaxAmount' => 0,
                 'Installments'     => (int) $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_installments', 0 ),
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
@@ -112,7 +112,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @param    array  $errors
          */
         public function validate() {
-            $errors = [];
+            $errors = parent::validate();
 
             // Installments
             if ( empty( $this->Payment['Installments'] ) ) {
