@@ -52,6 +52,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'Installments'     => (int) $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_installments', 0 ),
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
                 'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
+                'Interest'         => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_interest' ),
                 'Credentials'      => [
                     'Code' => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
                     'Key'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),
@@ -59,6 +60,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             ];
 
             $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
+
+            // Make Interest ByMerchant default and validate
+            if ( $this->Payment['Interest'] !== 'ByIssuer' ) {
+                $this->Payment['Interest'] = 'ByMerchant';
+            }
 
             // Getnet require Credentials Username and Password
             if ( $this->Payment['Provider'] === 'Getnet' ) {

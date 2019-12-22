@@ -243,6 +243,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'default'           => 'no',
                     );
 
+                    $this->form_fields[ 'method_' . $code . '_interest' ] = array(
+                        'type'              => 'checkbox',
+                        'title'             => $sub_option_preffix . __( 'Interest', WCB_TEXTDOMAIN ),
+                        'label'             => __( 'Installments Type', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Installments Type: by merchant or by issuer.', WCB_TEXTDOMAIN ),
+                        'desc_tip'          => true,
+                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'default'           => 'ByMerchant',
+                        'options'           => [
+                            'ByMerchant' => __( 'By Merchant', WCB_TEXTDOMAIN ),
+                            'ByIssuer'   => __( 'By Issuer', WCB_TEXTDOMAIN ),
+                        ],
+                    );
+
                     $this->form_fields[ 'method_' . $code . '_credential_code' ] = array(
                         'type'              => 'text',
                         'title'             => $sub_option_preffix . __( 'Credential Code', WCB_TEXTDOMAIN ),
