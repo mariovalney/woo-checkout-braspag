@@ -21,7 +21,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
     class WC_Checkout_Braspag_Gateway extends WC_Payment_Gateway {
 
-        const EXTRA_FIELDS_PLUGIN_NAME  = 'WooCommerce Extra Checkout Fields for Brazil';
+        const EXTRA_FIELDS_PLUGIN_NAME  = 'Brazilian Market on WooCommerce';
         const EXTRA_FIELDS_PLUGIN_SLUG  = 'woocommerce-extra-checkout-fields-for-brazil';
         const EXTRA_FIELDS_PLUGIN_FILE  = 'woocommerce-extra-checkout-fields-for-brazil/woocommerce-extra-checkout-fields-for-brazil.php';
         const EXTRA_FIELDS_PLUGIN_CLASS = 'Extra_Checkout_Fields_For_Brazil';

@@ -27,14 +27,15 @@ Nenhum dos desenvolvedores deste plugin possuem vínculos com estas duas empresa
 
 Até o momento estão disponíveis:
 
-- Cartão de Crédito
 - Boleto Bancário
+- Cartão de Crédito
+- Cartão de Débito (ainda em testes)
 
 ### Compatibilidade ###
 
-Esse plugin foi desenvolvido e testado na versão 3.5+ do WooCommerce.
+Esse plugin foi desenvolvido e testado na versão 3.8+ do WooCommerce.
 
-Este plugin é compatível com o [WooCommerce Extra Checkout Fields for Brazil](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/).
+Este plugin é compatível com o [Brazilian Market on WooCommerce](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/).
 
 ### Configuração ###
 
@@ -110,6 +111,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 1.3.0 =
+
+* Fix cents on order amount and improve order validation
+
 = 1.2.0 =
 
 * Support to Safra
@@ -126,6 +131,6 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 1.0.0 =
+= 1.3.0 =
 
-Added methods to work with ExtraDataCollection on Payment info.
+Update to the new version!
