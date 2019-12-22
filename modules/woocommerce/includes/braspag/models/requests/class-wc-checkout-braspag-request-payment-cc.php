@@ -62,18 +62,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // Getnet require Credentials Username and Password
             if ( $this->Payment['Provider'] === 'Getnet' ) {
-                $this->Payment['Provider']['Credentials']['Username'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_username' );
-                $this->Payment['Provider']['Credentials']['Password'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_password' );
+                $this->Payment['Credentials']['Username'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_username' );
+                $this->Payment['Credentials']['Password'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_password' );
             }
 
             // GlobalPayments require Credentials Signature
             if ( $this->Payment['Provider'] === 'GlobalPayments' ) {
-                $this->Payment['Provider']['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_global_payments' );
+                $this->Payment['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_global_payments' );
             }
 
             // Safra require Credentials Signature
             if ( $this->Payment['Provider'] === 'Safra' ) {
-                $this->Payment['Provider']['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra' );
+                $this->Payment['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra' );
             }
 
             // CreditCard Data
