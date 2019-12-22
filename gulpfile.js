@@ -79,14 +79,14 @@ gulp.task( 'watch', watch_changes );
  * Run style, script and generate a ZIP to be published
  */
 var trunk_files = [
-    '**/*',
+    './**/*',
     '!node_modules/**/*',
     '!vendor/**/*',
     '!*',
-    'index.php',
-    'LICENSE.txt',
-    'readme.txt',
-    'woo-checkout-braspag.php'
+    './index.php',
+    './LICENSE.txt',
+    './readme.txt',
+    './woo-checkout-braspag.php'
 ];
 
 function build() {
