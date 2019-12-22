@@ -242,14 +242,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $result = wp_remote_request( $url, $args );
 
             if ( ! is_wp_error( $result ) ) {
-                // Log request
-                $this->gateway->log(
-                    array(
-                        'url'      => $url,
-                        'response' => ( $result['response'] ?? '' ),
-                        'body'     => ( $result['body'] ?? '' ),
-                    )
+                // Log response
+                $response_log = array(
+                    'url'      => $url,
+                    'response' => ( $result['response'] ?? '' ),
+                    'body'     => ( $result['body'] ?? '' ),
                 );
+
+                // Add request if it's not success
+                if ( ! empty( $response_log['response']['code'] ) && ! in_array( (int) $response_log['response']['code'], [ 200, 201 ], true ) ) {
+                    $response_log['request'] = $args;
+                }
+
+                $this->gateway->log( $response_log );
 
                 return $result;
             }
