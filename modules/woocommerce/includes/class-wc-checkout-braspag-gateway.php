@@ -244,9 +244,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     );
 
                     $this->form_fields[ 'method_' . $code . '_interest' ] = array(
-                        'type'              => 'checkbox',
+                        'type'              => 'select',
                         'title'             => $sub_option_preffix . __( 'Interest', WCB_TEXTDOMAIN ),
-                        'label'             => __( 'Installments Type', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Installments Type: by merchant or by issuer.', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
