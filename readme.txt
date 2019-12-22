@@ -111,6 +111,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 1.3.1 =
+
+* Support to Issuer
+
 = 1.3.0 =
 
 * Fix cents on order amount and improve order validation
