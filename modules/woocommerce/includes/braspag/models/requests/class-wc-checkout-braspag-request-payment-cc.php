@@ -32,6 +32,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @since    1.0.0
          *
          * @param    WC_Order  $data
+         *
+         * @SuppressWarnings(PHPMD.NPathComplexity)
+         * @SuppressWarnings(PHPMD.CyclomaticComplexity)
          */
         public function populate( $order ) {
             parent::populate( $order );
@@ -80,6 +83,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             // Safra require Credentials Signature
             if ( $this->Payment['Provider'] === 'Safra' ) {
                 $this->Payment['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra' );
+            }
+
+            // Braspag accept empty credentials if it's configured on merchant
+            if ( empty( $this->Payment['Credentials']['Code'] ) && empty( $this->Payment['Credentials']['Key'] ) ) {
+                unset( $this->Payment['Credentials'] );
             }
 
             // CreditCard Data
