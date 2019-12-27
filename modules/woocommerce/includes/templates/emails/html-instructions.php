@@ -61,7 +61,7 @@ if ( ! empty( $payment['CreditCard'] ) ) {
     }
 
     $data[] = [
-        __( 'Cartão de Crédito:', WCB_TEXTDOMAIN ),
+        __( 'Credit Card:', WCB_TEXTDOMAIN ),
         $card_number,
     ];
 }
@@ -84,7 +84,7 @@ if ( ! empty( $payment['Url'] ) && ! empty( $payment['BoletoNumber'] ) && ( empt
 ?>
 
 <h2>
-    <?php _e( 'Payment data', WCB_TEXTDOMAIN ); ?>
+    <?php esc_html_e( 'Payment data', WCB_TEXTDOMAIN ); ?>
 </h2>
 
 <div style="margin-bottom: 40px;">
