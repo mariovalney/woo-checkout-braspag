@@ -24,7 +24,7 @@ defined( 'ABSPATH' ) || exit;
 
 <ul class="woocommerce-thankyou-payment-details order_details">
     <li class="woocommerce-order-overview__payment-method-name method-name">
-        <?php esc_html_e( 'Method name:', WCB_TEXTDOMAIN ); ?>
+        <?php esc_html_e( 'Payment method:', WCB_TEXTDOMAIN ); ?>
         <strong><?php echo esc_html( $method['name'] ); ?></strong>
     </li>
 

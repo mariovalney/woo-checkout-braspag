@@ -91,6 +91,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             // Register Hooks - WooCommerce
             add_action( 'woocommerce_update_options_payment_gateways_' . $this->id, array( $this, 'process_admin_options' ) );
             add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
+            add_action( 'woocommerce_email_after_order_table', array( $this, 'email_instructions' ), 10, 3 );
             add_action( 'woocommerce_api_wc_checkout_braspag_gateway', array( $this, 'wc_api_callback' ) );
 
             // Register Hooks - Custom Actions
@@ -822,6 +823,30 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             ];
 
             wc_get_template( 'order-received.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
+        }
+
+        /**
+         * Action 'woocommerce_email_after_order_table'
+         * Run on receipt order page
+         *
+         * @return void
+         */
+        public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
+            // Add Payment Info
+            $payment_data = $order->get_meta( '_wc_braspag_payment_data' );
+            $method = $order->get_meta( '_wc_braspag_payment_method' );
+
+            if ( empty( $payment_data ) ) {
+                return;
+            }
+
+            $args = [
+                'payment' => $payment_data,
+                'method'  => $this->get_payment_method( $method ),
+            ];
+
+            $template = ( $plain_text ) ? 'emails/plain-instructions.php' : 'emails/html-instructions.php';
+            wc_get_template( $template, $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
         }
 
         /**
