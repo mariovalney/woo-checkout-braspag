@@ -68,7 +68,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Options
             $this->enabled              = $this->get_option( 'enabled' );
-            $this->title                = $this->get_option( 'title' );
+            $this->title                = $this->get_option( 'title', 'Braspag' );
             $this->description          = $this->get_option( 'description' );
             $this->merchant_id          = $this->get_option( 'merchant_id' );
             $this->sandbox              = $this->get_option( 'sandbox' );
@@ -140,10 +140,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'default' => 'no',
                 ),
                 'title'                => array(
-                    'type'        => 'text',
-                    'title'       => __( 'Title', WCB_TEXTDOMAIN ),
-                    'description' => __( 'Title of payment method to user.', WCB_TEXTDOMAIN ),
-                    'default'     => __( 'Braspag', WCB_TEXTDOMAIN ),
+                    'type'              => 'text',
+                    'title'             => __( 'Title', WCB_TEXTDOMAIN ),
+                    'description'       => __( 'Title of payment method to user.', WCB_TEXTDOMAIN ),
+                    'default'           => __( 'Braspag', WCB_TEXTDOMAIN ),
+                    'custom_attributes' => [ 'required' => 'required' ],
                 ),
                 'description'          => array(
                     'type'        => 'textarea',
