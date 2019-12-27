@@ -111,6 +111,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 1.3.3 =
+
+* Added payment info on mails
+
 = 1.3.2 =
 
 * Support to empty Credentials if already configured on Braspag
@@ -139,6 +143,6 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 1.3.2 =
+= 1.3.3 =
 
 Update to the new version!
