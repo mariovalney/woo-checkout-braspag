@@ -249,8 +249,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                     'body'     => ( $result['body'] ?? '' ),
                 );
 
-                // Add request if it's not success
-                if ( ! empty( $response_log['response']['code'] ) && ! in_array( (int) $response_log['response']['code'], [ 200, 201 ], true ) ) {
+                // Add request if it's debugging
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
                     $response_log['request'] = $args;
                 }
 
