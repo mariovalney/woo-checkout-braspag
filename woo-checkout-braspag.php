@@ -12,7 +12,7 @@
  * Domain Path:     /languages
  *
  * WC requires at least: 3.6.5
- * WC tested up to: 3.6.5
+ * WC tested up to: 3.9
  *
  * @package         Woo_Checkout_Braspag
  * @since           1.0.0
@@ -293,22 +293,19 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                         }
                     }
                 }
+            }
 
-                // Define Hooks: after include everything
-                if ( method_exists( $module, 'define_hooks' ) ) {
-                    $module->define_hooks();
-                }
-
-                // After Run Method: last method
+            // After Run for everyone
+            foreach ( $this->modules as $module_slug => $module ) {
                 if ( method_exists( $module, 'after_run' ) ) {
                     $module->after_run();
                 }
             }
 
-            // After Running Modules
+            // Define Hooks for everyone
             foreach ( $this->modules as $module_slug => $module ) {
-                if ( method_exists( $module, 'after_run' ) ) {
-                    $module->after_run();
+                if ( method_exists( $module, 'define_hooks' ) ) {
+                    $module->define_hooks();
                 }
             }
 

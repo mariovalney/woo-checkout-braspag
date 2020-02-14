@@ -30,16 +30,6 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
         private $notices = [];
 
         /**
-         * Define Hooks Run
-         *
-         * @since    1.0.0
-         * @return  void
-         */
-        public function define_hooks() {
-            $this->core->add_action( 'admin_notices', array( $this, 'admin_notices' ) );
-        }
-
-        /**
          * After Run
          *
          * @since    1.0.0
@@ -67,6 +57,16 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
                 $notice = $this->create_install_plugin_notice( $plugin );
                 $this->add_dependence_notice( $notice );
             }
+        }
+
+        /**
+         * Define Hooks
+         *
+         * @since    1.0.0
+         * @return  void
+         */
+        public function define_hooks() {
+            $this->core->add_action( 'admin_notices', array( $this, 'admin_notices' ) );
         }
 
         /**
