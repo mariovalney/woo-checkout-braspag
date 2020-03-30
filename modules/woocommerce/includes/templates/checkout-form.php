@@ -23,6 +23,14 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
 ?>
 
 <fieldset id="braspag-payment-form">
+
+    <?php
+        /**
+         * Action before payment methods list
+         */
+        do_action( 'wc_checkout_braspag_checkout_form_before_payment_methods' );
+    ?>
+
     <ul id="braspag-payment-methods">
         <?php
             $first_method = true;
@@ -46,6 +54,13 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
         <?php endforeach; ?>
     </ul>
 
+    <?php
+        /**
+         * Action before payment methods list
+         */
+        do_action( 'wc_checkout_braspag_checkout_form_after_payment_methods' );
+    ?>
+
 <?php
     $first_method = true;
 
@@ -64,4 +79,3 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
     }
 ?>
 </fieldset>
-
