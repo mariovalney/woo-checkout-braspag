@@ -99,6 +99,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'Brand'          => $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_brand' ),
             );
 
+            if ( empty( $this->Payment[ $this->card_node ]['Brand'] ) && $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_find_brand' ) === 'yes' ) {
+                $this->Payment[ $this->card_node ]['Brand'] = $this->find_brand_by_card_number( $this->Payment[ $this->card_node ]['CardNumber'] );
+            }
+
             // Try to convert any month/year format to Y-m-d before to try sanitize
             $this->Payment[ $this->card_node ]['ExpirationDate'] = explode( '/', $this->Payment[ $this->card_node ]['ExpirationDate'] );
             $this->Payment[ $this->card_node ]['ExpirationDate'] = ( $this->Payment[ $this->card_node ]['ExpirationDate'][1] ?? '' ) . '-' . $this->Payment[ $this->card_node ]['ExpirationDate'][0] . '-01';
@@ -330,6 +334,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             }
 
             return true;
+        }
+
+        /**
+         * Finds a brand by card number.
+         *
+         * @param      string  $number
+         * @return     string
+         */
+        public function find_brand_by_card_number( $number ) {
+            if ( $this->gateway->is_sandbox ) {
+                return WC_Checkout_Braspag_Credit_Card_Brand::SANDBOX;
+            }
+
+            return WC_Checkout_Braspag_Credit_Card_Brand::find_brand( $number );
         }
 
     }

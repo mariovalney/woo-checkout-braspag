@@ -48,6 +48,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 'class-wc-checkout-braspag-gateway',
                 'class-wc-checkout-braspag-api',
                 'class-wc-checkout-braspag-providers',
+                'class-wc-checkout-braspag-credit-card-brand',
                 'braspag/class-wc-checkout-braspag-model',
                 'braspag/class-wc-checkout-braspag-messages',
                 'braspag/traits/class-wc-checkout-braspag-extradata',

@@ -322,6 +322,21 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     );
                 }
 
+                // Credit Card Only
+                if ( $code === 'cc' ) {
+                    $this->form_fields[ 'method_' . $code . '_find_brand' ] = array(
+                        'type'              => 'checkbox',
+                        'title'             => $sub_option_preffix . __( 'Find brand', WCB_TEXTDOMAIN ),
+                        'label'             => __( 'Find brand by credit card number', WCB_TEXTDOMAIN ),
+                        'description'       => __( "Will check credit card number to find brand if it's not presented", WCB_TEXTDOMAIN ),
+                        'desc_tip'          => true,
+                        'custom_attributes' => [
+                            'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled',
+                        ],
+                        'default'           => 'no',
+                    );
+                }
+
                 // Bank Slip Options
                 if ( $code === 'bs' ) {
                     $bs_description_default  = __( 'The order will be confirmed only after the payment approval. It can take 2 or 3 days.', WCB_TEXTDOMAIN );
@@ -529,6 +544,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          */
         public function payment_fields() {
+            global $braspag_gateway;
+            $braspag_gateway = $this;
+
             $payment_methods = [];
 
             foreach ( $this->payment_methods as $code => $data ) {
