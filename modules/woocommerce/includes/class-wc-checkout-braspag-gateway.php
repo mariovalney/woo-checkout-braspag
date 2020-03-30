@@ -914,12 +914,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'name'      => __( 'Credit Card', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
                 ],
-                'dc' => [
-                    'enabled'   => false,
-                    'code'      => 'DebitCard',
-                    'name'      => __( 'Debit Card', WCB_TEXTDOMAIN ),
-                    'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
-                ],
+                // TODO: Still waiting Braspag Support
+                // 'dc' => [
+                //     'enabled'   => false,
+                //     'code'      => 'DebitCard',
+                //     'name'      => __( 'Debit Card', WCB_TEXTDOMAIN ),
+                //     'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
+                // ],
                 'bs' => [
                     'enabled'   => false,
                     'code'      => 'Boleto',
