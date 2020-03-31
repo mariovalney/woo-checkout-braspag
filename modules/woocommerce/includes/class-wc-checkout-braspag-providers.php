@@ -15,12 +15,6 @@
 // If this file is called directly, call the cops.
 defined( 'ABSPATH' ) || die( 'No script kiddies please!' );
 
-use Braspag\API\Merchant;
-use Braspag\API\Environment;
-use Braspag\API\Sale;
-use Braspag\API\Braspag;
-use Braspag\API\Payment;
-
 if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
 
     class WC_Checkout_Braspag_Providers {
