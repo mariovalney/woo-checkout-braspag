@@ -137,10 +137,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $payment = $order->get_meta( '_wc_braspag_payment_data' );
 
             if ( empty( $payment['PaymentId'] ) ) {
+                $order->add_order_note( __( 'Payment info updated failed: not able to find "PaymentId".', WCB_TEXTDOMAIN ) );
                 return;
             }
 
             // Update Order from Payment
+            $order->add_order_note( __( 'Braspag: updating payment info.', WCB_TEXTDOMAIN ), 0, get_current_user_id() );
             $gateway->update_order_from_payment( $payment['PaymentId'] );
         }
 
