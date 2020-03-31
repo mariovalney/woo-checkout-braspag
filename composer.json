@@ -15,9 +15,15 @@
     ],
     "lint": "vendor/bin/phpcs",
     "phpcbf": "vendor/bin/phpcbf",
+    "phpunit": "vendor/bin/phpunit tests/",
     "precommit": "cp pre-commit.sh .git/hooks/pre-commit && chmod +x .git/hooks/pre-commit"
   },
   "require-dev": {
     "phpunit/phpunit": "^8.5"
+  },
+  "autoload": {
+    "classmap": [
+      "modules/woocommerce/includes/class-wc-checkout-braspag-credit-card-brand.php"
+    ]
   }
 }

@@ -31,6 +31,15 @@ if [ ! -x $PHPMD_BIN ]; then
     exit 1
 fi
 
+PHPUNIT_BIN=./vendor/bin/phpunit
+
+# Check for PHPUNIT
+if [ ! -x $PHPUNIT_BIN ]; then
+    echo "[Vizir] PHPUnit is not installed locally."
+    echo "[Vizir] Please run 'composer install' or check the path: $PHPUNIT_BIN"
+    exit 1
+fi
+
 #########################
 #                       #
 #       Starting        #
@@ -45,6 +54,18 @@ FILES=$(git diff --cached --name-only --diff-filter=ACMR HEAD | grep .php)
 
 if [ "$FILES" != "" ]
 then
+    # Testing
+
+    echo "[Vizir] Running tests with PHPUNIT..."
+
+    $PHPUNIT_BIN ./tests
+
+    if [ $? != 0 ]
+    then
+        echo "[Vizir] Fix errors before commit."
+        exit 1
+    fi
+
     # Coding Standards
 
     echo "[Vizir] Checking PHPCS..."
