@@ -72,6 +72,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 return;
             }
+
             if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 return;
             }
