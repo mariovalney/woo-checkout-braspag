@@ -81,6 +81,9 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
             $this->core->add_filter( 'woocommerce_order_actions', array( $this, 'woocommerce_order_actions' ) );
             $this->core->add_action( 'woocommerce_order_action_checkout_braspag_update', array( $this, 'checkout_braspag_update' ) );
+
+            $this->core->add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'woocommerce_admin_order_data_after_shipping_address' ) );
+            $this->core->add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'woocommerce_admin_order_data_after_billing_address' ) );
         }
 
         /**
@@ -136,8 +139,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             $payment = $order->get_meta( '_wc_braspag_payment_data' );
-
-            if ( empty( $payment['PaymentId'] ) ) {
+            if ( empty( $payment ) || empty( $payment['PaymentId'] ) ) {
                 $order->add_order_note( __( 'Payment info updated failed: not able to find "PaymentId".', WCB_TEXTDOMAIN ) );
                 return;
             }
@@ -145,6 +147,68 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             // Update Order from Payment
             $order->add_order_note( __( 'Braspag: updating payment info.', WCB_TEXTDOMAIN ), 0, get_current_user_id() );
             $gateway->update_order_from_payment( $payment['PaymentId'] );
+        }
+
+        /**
+         * Action: 'woocommerce_admin_order_data_after_billing_address'
+         * Payment data on dashboard
+         *
+         * @return void
+         */
+        public function woocommerce_admin_order_data_after_billing_address( $order ) {
+            if ( class_exists( 'Extra_Checkout_Fields_For_Brazil_Order' ) ) {
+                return;
+            }
+
+            $this->woocommerce_admin_order_payment_data( $order );
+        }
+
+        /**
+         * Action: 'woocommerce_admin_order_data_after_shipping_address'
+         * Payment data on dashboard
+         *
+         * @return void
+         */
+        public function woocommerce_admin_order_data_after_shipping_address( $order ) {
+            if ( ! class_exists( 'Extra_Checkout_Fields_For_Brazil_Order' ) ) {
+                return;
+            }
+
+            $this->woocommerce_admin_order_payment_data( $order );
+        }
+
+        /**
+         * Payment data on dashboard
+         *
+         * @return void
+         */
+        private function woocommerce_admin_order_payment_data( $order ) {
+            $gateway = $this->get_gateway_object();
+
+            if ( empty( $gateway ) || $order->get_payment_method() !== $gateway->id ) {
+                return;
+            }
+
+            $payment = $order->get_meta( '_wc_braspag_payment_data' );
+            if ( empty( $payment ) ) {
+                return;
+            }
+
+            echo '<div class="clear"></div>';
+            echo '<h3>' . esc_html__( 'Payment', WCB_TEXTDOMAIN ) . '</h3>';
+            echo '<div class="braspag-payment"><p>';
+
+            /**
+             * Filter payment info on dashboard
+             *
+             * @var array
+             */
+            $fields = apply_filters( 'wc_checkout_braspag_admin_order_payment_data', $this->get_payment_info( $payment ), $payment );
+            foreach ( $fields as $field ) {
+                echo '<strong>' . esc_html( $field['label'] ) . '</strong>: ' . $field['value'] . '<br>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
+            }
+
+            echo '</p></div>';
         }
 
         /**
@@ -164,6 +228,100 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             return false;
+        }
+
+        /**
+         * Get payment info from braspag data
+         *
+         * @param  array $payment
+         * @return array
+         */
+        private function get_payment_info( $payment ) {
+            $payment_type = $payment['Type'] ?? '-';
+
+            $fields = $this->payment_fields( $payment );
+
+            $methods = array();
+            $gateway = $this->get_gateway_object();
+            if ( ! empty( $gateway ) ) {
+                $methods = $gateway->get_payment_methods();
+            }
+
+            // Payment Type
+            foreach ( $methods as $method ) {
+                if ( ( $method['code'] ?? '' ) !== $payment_type ) {
+                    continue;
+                }
+
+                $payment_type = $method['name'];
+                break;
+            }
+
+            return array_merge(
+                array(
+                    array(
+                        'label' => __( 'Payment ID', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $payment['PaymentId'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Type', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $payment_type ),
+                    ),
+                ),
+                $fields
+            );
+        }
+
+        /**
+         * Get payment fields info from braspag data
+         *
+         * @param  array $payment
+         * @return array
+         */
+        private function payment_fields( $payment ) {
+            $type = $payment['Type'] ?? '';
+
+            if ( $type === 'Boleto' ) {
+                return array(
+                    array(
+                        'label' => __( 'Number', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $payment['BoletoNumber'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Print bank slip', WCB_TEXTDOMAIN ),
+                        'value' => '<a href="' . esc_url( $payment['Url'] ?? '#' ) . '" target="_blank">' . __( 'Link', WCB_TEXTDOMAIN ) . '</a>',
+                    ),
+                );
+            }
+
+            if ( $type === 'CreditCard' ) {
+                $creditcard = $payment['CreditCard'] ?? [];
+
+                return array(
+                    array(
+                        'label' => __( 'Installments', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $payment['Installments'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Card Number', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $creditcard['CardNumber'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Card Holder', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $creditcard['Holder'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Card Expiration Date', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $creditcard['ExpirationDate'] ?? '-' ),
+                    ),
+                    array(
+                        'label' => __( 'Card Brand', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $creditcard['Brand'] ?? '-' ),
+                    ),
+                );
+            }
+
+            return array();
         }
 
     }

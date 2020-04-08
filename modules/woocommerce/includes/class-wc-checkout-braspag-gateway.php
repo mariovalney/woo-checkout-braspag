@@ -517,6 +517,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
+         * Get payment methods
+         *
+         * @return array
+         */
+        public function get_payment_methods() {
+            return $this->payment_methods;
+        }
+
+        /**
          * Get payment method data
          *
          * @return string

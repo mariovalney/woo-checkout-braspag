@@ -270,6 +270,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
         /**
          * Get a class name based on identifier type
+         *
+         * @param  string
+         * @return  string
          */
         public static function get_request_class( $identifier ) {
             $identifier = str_replace( ' ', '_', ucwords( str_replace( '_', ' ', $identifier ) ) );

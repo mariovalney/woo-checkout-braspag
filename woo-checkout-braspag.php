@@ -10,6 +10,7 @@
  * Author URI:      http://vizir.com.br/en
  * Text Domain:     woo-checkout-braspag
  * Domain Path:     /languages
+ * Requires PHP:    7.2
  *
  * WC requires at least: 3.6.5
  * WC tested up to: 3.9
