@@ -3,7 +3,7 @@ Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
 Requires at least: 4.7
-Tested up to: 5.2
+Tested up to: 5.4
 Requires PHP: 7.0
 Stable tag: trunk
 License: GPLv2 or later
@@ -111,6 +111,13 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+
+= 1.4.0 =
+
+* Added payment info on order
+* Added autofind for credit card brands
+* Removing Debit Card as it's not tested
+
 = 1.3.3 =
 
 * Added payment info on mails
@@ -143,6 +150,6 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 1.3.3 =
+= 1.4.0 =
 
 Update to the new version!
