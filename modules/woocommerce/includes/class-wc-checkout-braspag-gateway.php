@@ -623,16 +623,40 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Update Order after gateway response
             if ( ! empty( $response['transaction'] ) ) {
-                $updated = $this->update_order_status( $response['transaction'] );
+                /**
+                 * WooCommerce stuff
+                 *
+                 * @see WC_Order::payment_complete
+                 */
+                try {
+                    // Our Stuff
+                    $updated = $this->update_order_status( $response['transaction'] );
+                    if ( empty( $updated ) ) {
+                        throw new Exception( __( 'There was a problem updating your payment.', WCB_TEXTDOMAIN ) );
+                    }
 
-                // Success if a URL is returned
-                if ( $updated ) {
-                    $url = ( ! empty( $response['url'] ) ) ? $response['url'] : $this->get_return_url( $order );
+                    // WooCommerce Stuff (without order status)
+                    do_action( 'woocommerce_pre_payment_complete', $order->get_id() );
 
+                    if ( WC()->session ) {
+                        WC()->session->set( 'order_awaiting_payment', false );
+                    }
+
+                    if ( ! $order->get_date_paid( 'edit' ) ) {
+                        $order->set_date_paid( time() );
+                    }
+
+                    $order->save();
+
+                    do_action( 'woocommerce_payment_complete', $order->get_id() );
+
+                    // Redirect
                     return array(
                         'result'   => 'success',
-                        'redirect' => $url,
+                        'redirect' => ( ! empty( $response['url'] ) ) ? $response['url'] : $this->get_return_url( $order ),
                     );
+                } catch ( Exception $e ) {
+                    $response['errors'] = [ $e->getMessage() ];
                 }
             }
 
@@ -743,7 +767,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             // Payment ID
             $payment_id = $payment_data['PaymentId'] ?? '';
-            $order->update_meta_data( '_wc_braspag_payment_id', $payment_id );
+            $order->set_transaction_id( $payment_id );
+            $order->update_meta_data( '_wc_braspag_payment_id', $payment_id ); // backward compatibility
 
             // Payment Method
             $payment_method = $payment_data['Type'] ?? '';
