@@ -318,6 +318,10 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                         'label' => __( 'Card Brand', WCB_TEXTDOMAIN ),
                         'value' => esc_html( $creditcard['Brand'] ?? '-' ),
                     ),
+                    array(
+                        'label' => __( 'Card Token', WCB_TEXTDOMAIN ),
+                        'value' => esc_html( $creditcard['CardToken'] ?? '-' ),
+                    ),
                 );
             }
 

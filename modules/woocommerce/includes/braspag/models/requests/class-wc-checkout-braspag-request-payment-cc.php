@@ -99,8 +99,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'Brand'          => $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_brand' ),
             );
 
+            // Try to find Brand
             if ( empty( $this->Payment[ $this->card_node ]['Brand'] ) && $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_find_brand' ) === 'yes' ) {
                 $this->Payment[ $this->card_node ]['Brand'] = $this->find_brand_by_card_number( $this->Payment[ $this->card_node ]['CardNumber'] );
+            }
+
+            // Save card
+            if ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_save_card', 'no' ) === 'yes' ) {
+                $alias = 'saved-on-order-' . $order->get_id();
+                $alias = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_save_card_alias', $alias, $order, $this );
+
+                $this->Payment[ $this->card_node ]['SaveCard'] = true;
+                $this->Payment[ $this->card_node ]['Alias'] = $alias;
             }
 
             // Try to convert any month/year format to Y-m-d before to try sanitize

@@ -108,7 +108,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function init_form_fields() {
             // Descriptions
             $merchant_id_description = sprintf(
-                // translators: link to documentation
+                // translators: link to documentation (portuguese only)
                 __( 'Please enter your Merchant ID. You can find it in %s.', WCB_TEXTDOMAIN ),
                 '<a href="https://admin.braspag.com.br/Account/MyMerchants" target="_blank">' . __( 'Braspag Admin > My Merchants', WCB_TEXTDOMAIN ) . '</a>'
             );
@@ -119,6 +119,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 '<a href="mailto:suporte@braspag.com.br" target="_blank">suporte@braspag.com.br</a>'
             );
 
+            $auto_capture_description = sprintf(
+                // translators: link to documentation (portuguese only)
+                __( 'Ask your acquirer about this feature. If false we will try to capture the transaction right after authorization. Check %s for more details.', WCB_TEXTDOMAIN ),
+                '<a href="https://braspag.github.io/manual/braspag-pagador#capturando-uma-transa%C3%A7%C3%A3o" target="_blank">Capturando uma transação</a>'
+            );
+
+            $save_card_description = sprintf(
+                // translators: link to documentation (portuguese only)
+                __( 'If true Braspag will return a token to be used in future. Check %s for more details.', WCB_TEXTDOMAIN ),
+                '<a href="https://braspag.github.io/manual/braspag-pagador#salvando-e-reutilizando-cart%C3%B5es" target="_blank">Cartão Protegido</a>'
+            );
+
             $use_extra_fields_description = sprintf(
                 // translators: link to plugin
                 __( 'The %s is a popular plugin to add customer fields and masks. If you do not want to add this fields or create your own implementation, unmark this and use or filters to add customer data.', WCB_TEXTDOMAIN ),
@@ -126,7 +138,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             );
 
             $debug_description = sprintf(
-                // translators: link to debug
+                // translators: link to debug page
                 __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
                 '<a href="' . esc_url( admin_url( 'admin.php?page=wc-status&tab=logs&log_file=' . esc_attr( $this->id ) . '-' . sanitize_file_name( wp_hash( $this->id ) ) . '.log' ) ) . '" target="_blank">' . __( 'System Status &gt; Logs', WCB_TEXTDOMAIN ) . '</a>'
             );
@@ -239,11 +251,34 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'checkbox',
                         'title'             => $sub_option_preffix . __( 'Auto Capture', WCB_TEXTDOMAIN ),
                         'label'             => __( 'Enable Auto Capture', WCB_TEXTDOMAIN ),
-                        'description'       => __( 'Check with your acquirer. If false we try to capture the transaction after authorization.', WCB_TEXTDOMAIN ),
-                        'desc_tip'          => true,
+                        'description'       => $auto_capture_description,
+                        'desc_tip'          => false,
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
                         'default'           => 'no',
                     );
+
+                    // Credit Card Only
+                    if ( $code === 'cc' ) {
+                        $this->form_fields[ 'method_' . $code . '_save_card' ] = array(
+                            'type'              => 'checkbox',
+                            'title'             => $sub_option_preffix . __( 'Save Card', WCB_TEXTDOMAIN ),
+                            'label'             => __( 'Enable Save Card', WCB_TEXTDOMAIN ),
+                            'description'       => $save_card_description,
+                            'desc_tip'          => false,
+                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                            'default'           => 'no',
+                        );
+
+                        $this->form_fields[ 'method_' . $code . '_find_brand' ] = array(
+                            'type'              => 'checkbox',
+                            'title'             => $sub_option_preffix . __( 'Find brand', WCB_TEXTDOMAIN ),
+                            'label'             => __( 'Find brand by credit card number', WCB_TEXTDOMAIN ),
+                            'description'       => __( "Will check credit card number to find brand if it's not presented", WCB_TEXTDOMAIN ),
+                            'desc_tip'          => true,
+                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                            'default'           => 'no',
+                        );
+                    }
 
                     $this->form_fields[ 'method_' . $code . '_interest' ] = array(
                         'type'              => 'select',
@@ -319,21 +354,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Safra',
                         ],
                         'default'           => '',
-                    );
-                }
-
-                // Credit Card Only
-                if ( $code === 'cc' ) {
-                    $this->form_fields[ 'method_' . $code . '_find_brand' ] = array(
-                        'type'              => 'checkbox',
-                        'title'             => $sub_option_preffix . __( 'Find brand', WCB_TEXTDOMAIN ),
-                        'label'             => __( 'Find brand by credit card number', WCB_TEXTDOMAIN ),
-                        'description'       => __( "Will check credit card number to find brand if it's not presented", WCB_TEXTDOMAIN ),
-                        'desc_tip'          => true,
-                        'custom_attributes' => [
-                            'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled',
-                        ],
-                        'default'           => 'no',
                     );
                 }
 
