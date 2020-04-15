@@ -642,10 +642,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         WC()->session->set( 'order_awaiting_payment', false );
                     }
 
-                    if ( ! $order->get_date_paid( 'edit' ) ) {
-                        $order->set_date_paid( time() );
-                    }
-
                     $order->save();
 
                     do_action( 'woocommerce_payment_complete', $order->get_id() );
@@ -709,7 +705,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED:
-                    $order_status = 'processing';
+                    // Do not change status if it's already paid
+                    $order_status = $order->is_paid() ? '' : 'processing';
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED:
@@ -727,6 +724,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
                 default:
                     $this->log( 'Braspag Status for order ' . $order->get_order_number() . ' is invalid: ' . $status );
+
+                    /**
+                     * Action allow developers to do something if status is invalid
+                     *
+                     * @param string  $status
+                     * @param obj     $order  WC_Order
+                     * @param array   $transaction
+                     * @param obj     $this
+                     */
+                    do_action( 'wc_checkout_braspag_update_order_status_invalid', $status, $order, $transaction, $this );
+
                     return false;
             }
 
@@ -744,6 +752,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 $order->update_status( $order_status, $note );
             }
 
+            /**
+             * Action allow developers to do something after updated order status
+             *
+             * @param string  $status
+             * @param obj     $order  WC_Order
+             * @param array   $transaction
+             * @param obj     $this
+             */
+            do_action( 'wc_checkout_braspag_update_order_status', $status, $order, $transaction, $this );
+
             return true;
         }
 
@@ -760,6 +778,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             // Payment Data
             $payment_data = $transaction['Payment'] ?? [];
             $order->update_meta_data( '_wc_braspag_payment_data', $payment_data );
+            if ( ! empty( $payment_data['CapturedDate'] ) ) {
+                $order->set_date_paid( $payment_data['CapturedDate'] . ' GMT' );
+            }
+
 
             // Customer Data
             $customer_data = $transaction['Customer'] ?? [];
@@ -776,6 +798,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $order->update_meta_data( '_wc_braspag_payment_method', $payment_method );
 
             $order->save();
+
+            /**
+             * Action allow developers to do something after updated order data
+             *
+             * @param obj     $order  WC_Order
+             * @param array   $transaction
+             * @param obj     $this
+             */
+            do_action( 'wc_checkout_braspag_update_order_transaction_data', $order, $transaction, $this );
         }
 
         /**
