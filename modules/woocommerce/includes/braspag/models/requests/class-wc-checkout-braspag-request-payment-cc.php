@@ -353,11 +353,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @return     string
          */
         public function find_brand_by_card_number( $number ) {
-            if ( $this->gateway->is_sandbox ) {
-                return WC_Checkout_Braspag_Credit_Card_Brand::SANDBOX;
+            $brand = WC_Checkout_Braspag_Credit_Card_Brand::find_brand( $number );
+
+            if ( empty( $brand ) && $this->gateway->is_sandbox ) {
+                $brand = WC_Checkout_Braspag_Credit_Card_Brand::SANDBOX;
             }
 
-            return WC_Checkout_Braspag_Credit_Card_Brand::find_brand( $number );
+            return $brand;
         }
 
     }
