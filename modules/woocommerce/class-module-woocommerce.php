@@ -84,6 +84,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $this->core->add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'woocommerce_admin_order_data_after_shipping_address' ) );
             $this->core->add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'woocommerce_admin_order_data_after_billing_address' ) );
+
+            $this->core->add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
         }
 
         /**
@@ -150,12 +152,49 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
         }
 
         /**
+         * Action: 'admin_enqueue_scripts'
+         * Scripts for administration
+         *
+         * @return void
+         */
+        public function admin_enqueue_scripts( $page ) {
+            if ( $page !== 'post-new.php' && $page !== 'post.php' ) {
+                return;
+            }
+
+            $post_type = '';
+            if ( ! empty( $_GET['post_type'] ) ) {
+                $post_type = sanitize_text_field( $_GET['post_type'] );
+            }
+
+            if ( ! $post_type && ! empty( $_GET['post'] ) ) {
+                $post = sanitize_text_field( $_GET['post'] );
+                $post = get_post( $post );
+                $post_type = $post ? $post->post_type : '';
+            }
+
+            if ( $post_type !== 'shop_order' ) {
+                return;
+            }
+
+            // Shop Order JS
+            $js = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
+            $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/shop-order.' . $js;
+
+            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url, [ 'jquery' ], WCB_TEXTDOMAIN, true );
+        }
+
+        /**
          * Action: 'woocommerce_admin_order_data_after_billing_address'
          * Payment data on dashboard
          *
          * @return void
          */
         public function woocommerce_admin_order_data_after_billing_address( $order ) {
+            /**
+             * If we have Extra_Checkout_Fields_For_Brazil_Order we are going to add to right side
+             * @see woocommerce_admin_order_data_after_shipping_address
+             */
             if ( class_exists( 'Extra_Checkout_Fields_For_Brazil_Order' ) ) {
                 return;
             }
@@ -170,6 +209,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @return void
          */
         public function woocommerce_admin_order_data_after_shipping_address( $order ) {
+            require WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/shop-order/create-payment.php';
+
+            /**
+             * If we haven't Extra_Checkout_Fields_For_Brazil_Order we already added to left side
+             * @see woocommerce_admin_order_data_after_billing_address
+             */
             if ( ! class_exists( 'Extra_Checkout_Fields_For_Brazil_Order' ) ) {
                 return;
             }
@@ -189,14 +234,19 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 return;
             }
 
-            $payment = $order->get_meta( '_wc_braspag_payment_data' );
-            if ( empty( $payment ) ) {
-                return;
-            }
-
             echo '<div class="clear"></div>';
             echo '<h3>' . esc_html__( 'Payment', WCB_TEXTDOMAIN ) . '</h3>';
             echo '<div class="braspag-payment"><p>';
+
+            // Payment Info
+            $payment = $order->get_meta( '_wc_braspag_payment_data' );
+
+            if ( empty( $payment ) ) {
+                esc_html_e( 'No payment info.', WCB_TEXTDOMAIN );
+                echo '</p></div>';
+
+                return;
+            }
 
             /**
              * Filter payment info on dashboard
@@ -259,10 +309,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             return array_merge(
                 array(
-                    array(
-                        'label' => __( 'Payment ID', WCB_TEXTDOMAIN ),
-                        'value' => esc_html( $payment['PaymentId'] ?? '-' ),
-                    ),
                     array(
                         'label' => __( 'Type', WCB_TEXTDOMAIN ),
                         'value' => esc_html( $payment_type ),
