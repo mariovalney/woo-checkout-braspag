@@ -32,7 +32,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
                 return;
             }
 
-            $this->Name            = $order->get_billing_first_name() . ' ' . $order->get_billing_last_name();
+            $this->Name            = trim( $order->get_billing_first_name() . ' ' . $order->get_billing_last_name() );
             $this->Email           = $order->get_billing_email();
             $this->Birthdate       = '';
             $this->Identity        = '';
@@ -62,6 +62,32 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
              * @param obj  $order WC_Order
              */
             do_action( 'wc_checkout_braspag_populate_customer', $this, $order );
+        }
+
+        /**
+         * Validate data.
+         * Return errors
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $errors
+         */
+        public function validate() {
+            $errors = [];
+
+            $fields = array(
+                'Name' => __( 'Please fill the customer name.', WCB_TEXTDOMAIN ),
+            );
+
+            foreach ( $fields as $field => $error ) {
+                if ( ! empty( $this->$field ) ) {
+                    continue;
+                }
+
+                $errors[] = $error;
+            }
+
+            return $errors;
         }
 
     }

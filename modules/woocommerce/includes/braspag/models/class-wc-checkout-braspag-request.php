@@ -92,7 +92,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
                 return [ __( 'Invalid amount: your order is empty.', WCB_TEXTDOMAIN ) ];
             }
 
-            return [];
+            // Validate Customer
+            return $this->Customer->validate();
         }
 
         /**
