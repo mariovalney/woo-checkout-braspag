@@ -37,6 +37,11 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
 
             foreach ( $methods as $code => $name ) :
                 $code = esc_attr( $code );
+
+                if ( apply_filters( 'wc_checkout_braspag_checkout_form_skip_' . $code, false ) ) {
+                    continue;
+                }
+
                 $name = esc_html( $name );
 
                 $checked      = checked( true, $first_method, false );
@@ -44,12 +49,12 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
                 $first_method = false;
         ?>
 
-                <li>
-                    <label id="payment-method-<?php echo esc_attr( $code ); ?>-label" class="braspag-method-label<?php echo esc_attr( $active ); ?>">
-                        <input id="braspag-payment-method-<?php echo esc_attr( $code ); ?>" type="radio" name="braspag_payment_method" value="<?php echo esc_attr( $code ); ?>" <?php echo esc_html( $checked ); ?>>
-                        <span><?php echo esc_html( $name ); ?></span>
-                    </label>
-                </li>
+            <li>
+                <label id="payment-method-<?php echo esc_attr( $code ); ?>-label" class="braspag-method-label<?php echo esc_attr( $active ); ?>">
+                    <input id="braspag-payment-method-<?php echo esc_attr( $code ); ?>" type="radio" name="braspag_payment_method" value="<?php echo esc_attr( $code ); ?>" <?php echo esc_html( $checked ); ?>>
+                    <span><?php echo esc_html( $name ); ?></span>
+                </label>
+            </li>
 
         <?php endforeach; ?>
     </ul>
@@ -67,8 +72,13 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
     foreach ( $methods as $code => $name ) {
         $code = esc_attr( $code );
 
+        if ( apply_filters( 'wc_checkout_braspag_checkout_form_skip_' . $code, false ) ) {
+            continue;
+        }
+
         $active       = ( $first_method ) ? ' active' : '';
         $first_method = false;
+
 
         echo '<div id="braspag-payment-method-' . esc_attr( $code ) . '-form" class="braspag-method-form' . esc_attr( $active ) . '">';
 
