@@ -79,8 +79,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
+
             $this->core->add_filter( 'woocommerce_order_actions', array( $this, 'woocommerce_order_actions' ) );
             $this->core->add_action( 'woocommerce_order_action_checkout_braspag_update', array( $this, 'checkout_braspag_update' ) );
+
+            $this->core->add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
+            $this->core->add_action( 'woocommerce_process_shop_order_meta', array( $this, 'woocommerce_process_shop_order_meta' ), 99, 2 );
 
             $this->core->add_action( 'woocommerce_admin_order_data_after_shipping_address', array( $this, 'woocommerce_admin_order_data_after_shipping_address' ) );
             $this->core->add_action( 'woocommerce_admin_order_data_after_billing_address', array( $this, 'woocommerce_admin_order_data_after_billing_address' ) );
@@ -178,10 +182,15 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             // Shop Order JS
-            $js = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
-            $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/shop-order.' . $js;
+            $version = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? uniqid() : WCB_VERSION;
 
-            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url, [ 'jquery' ], WCB_TEXTDOMAIN, true );
+            $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/shop-order.';
+            $js = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
+            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url . $js, [ 'jquery' ], $version, true );
+
+            $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/css/shop-order.';
+            $css = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'css' : 'min.css';
+            wp_enqueue_style( 'wc-checkout-braspag-shop-order-style', $file_url . $css, [], $version );
         }
 
         /**
@@ -209,7 +218,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @return void
          */
         public function woocommerce_admin_order_data_after_shipping_address( $order ) {
-            require WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/shop-order/create-payment.php';
+
 
             /**
              * If we haven't Extra_Checkout_Fields_For_Brazil_Order we already added to left side
@@ -220,6 +229,95 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             $this->woocommerce_admin_order_payment_data( $order );
+        }
+
+        /**
+         * Action: 'add_meta_boxes'
+         * Add metaboxed
+         *
+         * @return void
+         */
+        public function add_meta_boxes( $post_type, $post ) {
+            if ( $post_type !== 'shop_order' || ! $this->can_create_payment_on_admin( $post ) ) {
+                return;
+            }
+
+            add_meta_box( 'braspag-create-payment-meta-box', __( 'Create Payment', WCB_TEXTDOMAIN ), array( $this, 'render_payment_meta_box' ), 'shop_order', 'side' );
+        }
+
+        /**
+         * Action: 'woocommerce_process_shop_order_meta'
+         * After saved all metaboxes
+         *
+         * @see WC_Admin_Meta_Boxes::__construct()
+         * @see WC_Admin_Meta_Boxes::save_meta_boxes
+         *
+         * @return void
+         */
+        public function woocommerce_process_shop_order_meta( $post_id, $post ) {
+            // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            if ( empty( $_POST['braspag_payment_method'] ) ) {
+                return;
+            }
+
+            if ( ! $this->can_create_payment_on_admin( $post ) ) {
+                return;
+            }
+
+            /**
+             * Let's fake the
+             */
+            if ( ! function_exists( 'wc_add_notice' ) ) {
+                function wc_add_notice( $message, $notice_type = 'success', $data = array() ) {
+                    $message = sprintf( __( 'There was a problem creating your payment: %s.', WCB_TEXTDOMAIN ), $message );
+                    WC_Admin_Meta_Boxes::add_error( $message );
+                }
+            }
+
+            $order = wc_get_order( $post );
+
+            try {
+                $gateway = $this->get_gateway_object();
+                $gateway->process_payment( $order->get_id() );
+
+                $order->save();
+            } catch (Exception $e) {
+                error_log( '[WCB Create Payment Error] ' . $e->getMessage() );
+            }
+        }
+
+        /**
+         * Check we can create payment on Admin
+         *
+         * @param  WP_Post $post
+         * @return boolean
+         */
+        private function can_create_payment_on_admin( $post ) {
+            $order = wc_get_order( $post );
+            $gateway = $this->get_gateway_object();
+            if ( ! $order->needs_payment() || $order->get_payment_method() !== $gateway->id ) {
+                return false;
+            }
+
+            $braspag_customer = new WC_Checkout_Braspag_Customer( $order );
+            if ( ! empty( $braspag_customer->validate() ) ) {
+                return false;
+            }
+
+            return true;
+        }
+
+        /**
+         * Callback for create payment metabox
+         *
+         * @param  WP_Post $post
+         * @return void
+         */
+        public function render_payment_meta_box( $post ) {
+            $order = wc_get_order( $post );
+            $gateway = $this->get_gateway_object();
+
+            require WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/meta-box/create-payment.php';
         }
 
         /**

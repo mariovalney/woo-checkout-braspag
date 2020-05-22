@@ -1060,15 +1060,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         private function enqueue_asset( $handle, $dependencies = [], $is_script = true ) {
             $ext = ( $is_script ) ? 'js' : 'css';
 
+            $version = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? uniqid() : WCB_VERSION;
+
             $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/' . $ext . '/' . $handle;
             $file_url .= ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? '.' . $ext : '.min.' . $ext;
 
             if ( $is_script ) {
-                wp_enqueue_script( $this->id . '-' . $handle . '-script', $file_url, $dependencies, WCB_TEXTDOMAIN, true );
+                wp_enqueue_script( $this->id . '-' . $handle . '-script', $file_url, $dependencies, $version, true );
                 return;
             }
 
-            wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, WCB_TEXTDOMAIN );
+            wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, $version );
         }
 
     }
