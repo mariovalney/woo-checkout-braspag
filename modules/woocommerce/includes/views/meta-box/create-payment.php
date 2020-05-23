@@ -22,7 +22,7 @@ if ( $order->get_transaction_id() ) {
 $options = array(
     'none' => __( 'Choose a payment method', WCB_TEXTDOMAIN ),
 );
-foreach ( $gateway->get_payment_methods() as $code => $data ) {
+foreach ( $braspag_gateway->get_payment_methods() as $code => $data ) {
     $options[ $code ] = $data['name'];
 }
 
@@ -41,6 +41,7 @@ echo '<p>' . esc_html( 'When saving the order we will try to create your payment
 echo '</div>';
 
 echo '<div class="payment-method-wrapper payment-method-cc">';
+require_once WCB_PLUGIN_PATH . '/modules/woocommerce/includes/templates/payment-methods/cc-form.php';
 echo '</div>';
 
 echo '</div>';

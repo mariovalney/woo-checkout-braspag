@@ -242,7 +242,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 return;
             }
 
-            add_meta_box( 'braspag-create-payment-meta-box', __( 'Create Payment', WCB_TEXTDOMAIN ), array( $this, 'render_payment_meta_box' ), 'shop_order', 'side' );
+            add_meta_box( 'braspag-create-payment-meta-box', __( 'Create Payment', WCB_TEXTDOMAIN ), array( $this, 'render_create_payment_meta_box' ), 'shop_order', 'side' );
         }
 
         /**
@@ -313,9 +313,14 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @param  WP_Post $post
          * @return void
          */
-        public function render_payment_meta_box( $post ) {
+        public function render_create_payment_meta_box( $post ) {
+            global $braspag_gateway;
+
+            if ( empty( $braspag_gateway ) ) {
+                $braspag_gateway = $this->get_gateway_object();
+            }
+
             $order = wc_get_order( $post );
-            $gateway = $this->get_gateway_object();
 
             require WCB_PLUGIN_PATH . '/modules/woocommerce/includes/views/meta-box/create-payment.php';
         }
