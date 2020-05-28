@@ -125,6 +125,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 2.0.1 =
+
+* Translation fix
+
 = 2.0.0 =
 
 * Improved payment info on order
