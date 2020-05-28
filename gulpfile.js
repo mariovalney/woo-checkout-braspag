@@ -82,6 +82,7 @@ var trunk_files = [
     './**/*',
     '!node_modules/**/*',
     '!vendor/**/*',
+    '!tests/**/*',
     '!*',
     './index.php',
     './LICENSE.txt',
