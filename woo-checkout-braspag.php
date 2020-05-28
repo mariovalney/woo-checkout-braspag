@@ -85,9 +85,6 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
          * @access   private
          */
         private function define_hooks() {
-            // Internationalization
-            $this->add_action( 'plugins_loaded', array( $this, 'load_plugin_textdomain' ) );
-
             // Activation Hook
             register_activation_hook( __FILE__, array( $this, 'on_activation' ) );
         }
@@ -246,17 +243,6 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
          */
         public function add_filter( $hook, $callback, $priority = 10, $accepted_args = 1 ) {
             $this->filters = $this->add_hook( $this->filters, $hook, $callback, $priority, $accepted_args );
-        }
-
-        /**
-         * Define the locale for this plugin for internationalization.
-         *
-         *
-         * @since    1.0.0
-         * @access   private
-         */
-        public function load_plugin_textdomain() {
-            load_plugin_textdomain( WCB_TEXTDOMAIN, false, basename( dirname( __FILE__ ) ) . '/languages/' );
         }
 
         /**

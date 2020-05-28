@@ -18,28 +18,28 @@ global $braspag_gateway;
 ?>
 
 <p class="form-row form-row-braspag_payment_cc_number">
-    <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_number_label', 'Credit Card Number' ), WCB_TEXTDOMAIN ); ?></label>
+    <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_number_label', __( 'Credit Card Number', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_number_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_number" required autocomplete="cc-number">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_holder">
-    <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_holder_label', 'Holder Name' ), WCB_TEXTDOMAIN ); ?></label>
+    <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_holder_label', __( 'Holder Name', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_holder_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_holder" required autocomplete="cc-name">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_expiration_date">
-    <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_label', 'Expiration Date' ), WCB_TEXTDOMAIN ); ?></label>
+    <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_label', __( 'Expiration Date', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_expiration_date" required autocomplete="cc-exp">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_security_code">
-    <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_label', 'Security Code' ), WCB_TEXTDOMAIN ); ?></label>
+    <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_label', __( 'Security Code', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
         <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_security_code" required autocomplete="cc-csc">
     </span>
@@ -48,7 +48,7 @@ global $braspag_gateway;
 <?php if ( apply_filters( 'wc_checkout_braspag_payment_cc_show_brand_input', $braspag_gateway->get_option( 'method_cc_find_brand' ) !== 'yes' ) ) : ?>
 
     <p class="form-row form-row-braspag_payment_cc_brand">
-        <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_brand_label', 'Brand' ), WCB_TEXTDOMAIN ); ?></label>
+        <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_brand_label', __( 'Brand', WCB_TEXTDOMAIN ) ) ); ?></label>
         <span class="woocommerce-input-wrapper">
             <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_brand_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_brand">
         </span>
@@ -57,7 +57,7 @@ global $braspag_gateway;
 <?php endif; ?>
 
 <p class="form-row form-row-braspag_payment_cc_installments">
-    <label><?php esc_html_e( apply_filters( 'wc_checkout_braspag_payment_cc_installments_label', 'Installments' ), WCB_TEXTDOMAIN ); ?></label>
+    <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_installments_label', __( 'Installments', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
         <select class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_installments_html_class', 'input-text' ) ); ?>" style="-webkit-appearance: menulist-button;" name="braspag_payment_cc_installments">
             <?php
