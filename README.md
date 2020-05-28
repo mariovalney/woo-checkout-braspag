@@ -4,7 +4,7 @@
 **Tags:** woocommerce, payment, braspag, vizir, mariovalney  
 **Requires at least:** 4.7  
 **Tested up to:** 5.4  
-**Requires PHP:** 7.0  
+**Requires PHP:** 7.2  
 **Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
@@ -15,40 +15,40 @@ Add Braspag payment to your WooCommerce e-commerce!
 
 Add Braspag gateway to WooCommerce.
 
-[Braspag](https://www.braspag.com.br) is a Brazilian payment gateway so we will focus on pt_BR documentation.
+[Braspag](https://www.braspag.com.br) is a Brazilian payment gateway.
 
-### Desenvolvimento ###
+### Development ###
 
-Este plugin foi desenvolvido a partir da [documentação oficial](https://braspag.github.io) do Pagador, sem nenhum apoio oficial.
+This plugin was developer using the [official docs](https://braspag.github.io) of gateway, without any support.
 
-Nenhum dos desenvolvedores deste plugin possuem vínculos com estas duas empresas.
+None of developers have link with Braspag or WooCommerce.
 
-### Formas de Pagamento ###
+### Payment Methods ###
 
-Até o momento estão disponíveis:
+- Bank Slip
+- Credit Card
 
-- Boleto Bancário
-- Cartão de Crédito
-- Cartão de Débito (ainda em testes)
+### Compatibility ###
 
-### Compatibilidade ###
+We tested this plugin against version 4.1+ of WooCommerce.
 
-Esse plugin foi desenvolvido e testado na versão 4.1+ do WooCommerce.
+This plugin do not require [Brazilian Market on WooCommerce](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/) but suggest your use.
 
-Este plugin é compatível com o [Brazilian Market on WooCommerce](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/).
+Braspag only requires customer name, but more fields are need for anti fraud or other gateway features.
 
-### Configuração ###
+### Configuration ###
 
-Após instalar o plugin, ative a forma de pagamento normalmente e vá para a página de configuração.
+After installing the plugin, activate the payment method and go to the configuration page.
 
-- Ative a forma de pagamento.
-- Dê um título e descrição para essa forma de pagamento.
-- Adicione o "Merchant ID" fornecido pela Braspag.
-- Marque a opção "Sandbox" se a loja não estiver em Produção (disponível para venda real).
-- Adicione a "Secret Merchant Key" fornecida pela Braspag (observe que ela é diferente para Sandbox).
+- Activate the payment method.
+- Fill the title and description for this payment method.
+- Add the "Merchant ID" provided by Braspag.
+- Check the option "Sandbox" if the store is not in Production (available for real sale).
+- Add the "Secret Merchant Key" provided by Braspag (note that it is different for Sandbox).
 
-Após isso basta ativar as formas de pagamento que deseja disponibilizar.
-Todas elas necessitam de um "Provider" fornecido pela Braspag, bem como algumas configurações particulares: leia as dicas (ícone com a interrogação) para mais informações.
+After that, just activate the available payment methods.
+
+All of them require a "Provider" provided by Braspag and some settings: read the tips (icon with the question mark) for more information.
 
 ### Translations ###
 
@@ -176,6 +176,8 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 ## Upgrade Notice ##
 
-### 1.4.0 ###
+### 2.0.0 ###
 
-Update to the new version!
+It's a MAJOR update!
+We do not found any break changes, but a entire feature was added to admin.
+Make a backup of files and database before update.
