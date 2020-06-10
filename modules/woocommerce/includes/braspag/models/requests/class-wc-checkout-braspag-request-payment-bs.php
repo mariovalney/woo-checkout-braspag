@@ -45,7 +45,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
                 'Provider'       => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
                 'Type'           => $data['code'],
                 'Amount'         => ( (float) $order->get_total() ) * 100,
-                'BoletoNumber'   => $order->get_order_number(),
                 'Assignor'       => '',
                 'Demonstrative'  => '',
                 'Identification' => '',
@@ -54,8 +53,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
 
             $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
 
-            // Sanitization
-            $this->Payment['BoletoNumber'] = $this->sanitize_numbers( $this->Payment['BoletoNumber'] );
+            /**
+             * Filter bank slip number
+             *
+             * @param string $bank_slip_number
+             * @param WC_Order $order
+             * @param WC_Checkout_Braspag_Request_Payment_Bs $this
+             *
+             * @var string
+             */
+            $bank_slip_number = apply_filters( 'wc_checkout_braspag_bank_slip_number', '', $order, $this );
+            if ( $bank_slip_number ) {
+                $this->Payment['BoletoNumber'] = $this->sanitize_numbers( $this->Payment['BoletoNumber'] );
+            }
 
             // Expiration Date
             $expiration_date = (int) $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_days_to_pay' );

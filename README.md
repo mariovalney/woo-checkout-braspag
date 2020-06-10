@@ -102,6 +102,14 @@ Do not forget to change "example.com" to your home url.
 
 Check the previous FAQ.
 
+### My bank slip number changed ###
+
+We used to sent the "BoletoNumber" to Braspag but it's not required and can cause problems for some providers.
+
+By now we decided to remove this field and alow you to add/change it if "wc_checkout_braspag_bank_slip_number" filter.
+
+This will not change nothing on WordPress dashboard.
+
 ### What is PHP? ###
 
 It is a programming language for web development. PHP as like any software it has versions. And we just support 7 (and above).
@@ -130,6 +138,11 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 
 ## Changelog ##
+
+### 2.1.0 ###
+
+* Removed "BoletoNumber" field
+* Added filters
 
 ### 2.0.1 ###
 
@@ -180,8 +193,7 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 ## Upgrade Notice ##
 
-### 2.0.0 ###
+### 2.1.0 ###
 
-It's a MAJOR update!
-We do not found any break changes, but a entire feature was added to admin.
+We changed the "BoletoNumber" field to avoid issues with some providers.
 Make a backup of files and database before update.
