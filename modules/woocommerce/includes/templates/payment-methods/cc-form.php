@@ -20,28 +20,28 @@ global $braspag_gateway;
 <p class="form-row form-row-braspag_payment_cc_number">
     <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_number_label', __( 'Credit Card Number', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_number_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_number" required autocomplete="cc-number">
+        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_number_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_number" autocomplete="cc-number">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_holder">
     <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_holder_label', __( 'Holder Name', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_holder_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_holder" required autocomplete="cc-name">
+        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_holder_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_holder" autocomplete="cc-name">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_expiration_date">
     <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_label', __( 'Expiration Date', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_expiration_date" required autocomplete="cc-exp">
+        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_expiration_date_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_expiration_date" autocomplete="cc-exp">
     </span>
 </p>
 
 <p class="form-row form-row-braspag_payment_cc_security_code">
     <label><?php echo esc_html( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_label', __( 'Security Code', WCB_TEXTDOMAIN ) ) ); ?></label>
     <span class="woocommerce-input-wrapper">
-        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_security_code" required autocomplete="cc-csc">
+        <input class="<?php esc_attr( apply_filters( 'wc_checkout_braspag_payment_cc_security_code_html_class', 'input-text' ) ); ?>" type="text" name="braspag_payment_cc_security_code" autocomplete="cc-csc">
     </span>
 </p>
 
@@ -71,7 +71,7 @@ global $braspag_gateway;
                      * Filter for installment text
                      */
                     $label = apply_filters( 'wc_checkout_braspag_cc_installment_text', esc_html( $installment ) );
-                    echo '<option value="' . (int) esc_attr( $installment ) . '">' . $label . '</option>';
+                    echo '<option value="' . (int) esc_attr( $installment ) . '">' . $label . '</option>'; // phpcs:ignore
                 }
             ?>
         </select>
