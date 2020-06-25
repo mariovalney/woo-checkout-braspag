@@ -263,7 +263,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $this->gateway->log( [ 'url' => $url, 'result' => $result ], 'error' ); // phpcs:ignore
 
             // Create a default connection message
-            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.' ) );
+            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.', WCB_TEXTDOMAIN ) );
         }
 
         /**
