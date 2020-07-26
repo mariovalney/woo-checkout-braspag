@@ -40,15 +40,23 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
             $this->DeliveryAddress = new WC_Checkout_Braspag_Address( $order, 'shipping' );
 
             // Data from Extra Fields (meta data)
-            $person_type = $this->sanitize_post_text_field( 'billing_persontype' );
-            if ( ! empty( $person_type ) ) {
-                $this->Identity     = $this->sanitize_post_text_field( 'billing_cpf' );
-                $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
+            $person_type  = $this->sanitize_post_text_field( 'billing_persontype' );
+            $billing_cpf  = $this->sanitize_post_text_field( 'billing_cpf' );
+            $billing_cnpj = $this->sanitize_post_text_field( 'billing_cnpj' );
 
-                if ( (string) $person_type === '2' ) {
-                    $this->Identity     = $this->sanitize_post_text_field( 'billing_cnpj' );
-                    $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CNPJ' : '';
-                }
+            // If "person type" is not selectable
+            if ( empty( $person_type ) || ! in_array( $person_type, [ '1', '2' ], true ) ) {
+                $person_type = ! empty( $billing_cpf ) ? '1' : '2';
+            }
+
+            if ( (string) $person_type === '1' ) {
+                $this->Identity     = $billing_cpf;
+                $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
+            }
+
+            if ( (string) $person_type === '2' ) {
+                $this->Identity     = $billing_cnpj;
+                $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CNPJ' : '';
             }
 
             // Sanitization
