@@ -3,7 +3,7 @@ Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
 Requires at least: 4.7
-Tested up to: 5.4
+Tested up to: 5.4.2
 Requires PHP: 7.2
 Stable tag: trunk
 License: GPLv2 or later
@@ -30,7 +30,7 @@ None of developers have link with Braspag or WooCommerce.
 
 ### Compatibility ###
 
-We tested this plugin against version 4.1+ of WooCommerce.
+We tested this plugin against version 4.3+ of WooCommerce.
 
 This plugin do not require [Brazilian Market on WooCommerce](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/) but suggest your use.
 
@@ -133,6 +133,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 2.1.1 =
+
+* Fixed customer identity if person type is not provided
+
 = 2.1.0 =
 
 * Removed "BoletoNumber" field
@@ -187,7 +191,7 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 2.1.0 =
+= 2.1.1 =
 
-We changed the "BoletoNumber" field to avoid issues with some providers.
-Make a backup of files and database before update.
+We fixed customer identity (CPF or CNPJ) not being sent to Braspag if persontype is not provided.
+Please, update!
