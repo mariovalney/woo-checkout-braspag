@@ -103,6 +103,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
          * @return string
          */
         public function sanitize_post_text_field( $key, $default = '' ) {
+            global $wccb_posted_data;
+
+            if ( isset( $wccb_posted_data[ $key ] ) ) {
+                return sanitize_text_field( $wccb_posted_data[ $key ] ?? $default );
+            }
+
             return sanitize_text_field( $_POST[ $key ] ?? $default ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
         }
 
