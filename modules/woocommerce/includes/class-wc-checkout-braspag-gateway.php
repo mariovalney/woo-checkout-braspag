@@ -138,6 +138,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 '<a href="https://wordpress.org/plugins/' . self::EXTRA_FIELDS_PLUGIN_SLUG . '" target="_blank">' . self::EXTRA_FIELDS_PLUGIN_NAME . '</a>'
             );
 
+            $wallet_key_description = sprintf(
+                // translators: link to documentation (portuguese only)
+                __( 'Encrypted key that identifies stores in wallets. Check %s for more details.', WCB_TEXTDOMAIN ),
+                '<a href="https://braspag.github.io/manual/braspag-pagador#walletkey" target="_blank">Walletkey</a>'
+            );
+
             $debug_description = sprintf(
                 // translators: link to debug page
                 __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
@@ -484,6 +490,28 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         ],
                         'default'           => 0,
                     );
+                }
+
+                // E-Wallet Options
+                if ( $code === 'wl' ) {
+                    $wallets = array();
+                    foreach ( WC_Checkout_Braspag_Providers::E_WALLET as $data ) {
+                        $data = $data['wallets'] ?? [];
+                        $wallets = array_merge( $wallets, $data );
+                    }
+
+                    $wallets = array_unique( $wallets );
+
+                    foreach ( $wallets as $wallet ) {
+                        $wallet_code = strtolower( $wallet );
+
+                        $this->form_fields[ 'method_' . $code . '_' . $wallet_code . '_walletkey'  ] = array(
+                            'type'              => 'textarea',
+                            'title'             => $sub_option_preffix . sprintf( __( 'Key for %s', WCB_TEXTDOMAIN ), $wallet ), // phpcs:ignore
+                            'description'       => $wallet_key_description,
+                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_wl_enabled' ],
+                        );
+                    }
                 }
             }
 

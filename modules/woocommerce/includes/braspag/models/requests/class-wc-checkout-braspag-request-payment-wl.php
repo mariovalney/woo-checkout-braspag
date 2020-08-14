@@ -62,9 +62,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Wl' ) ) {
                 throw new Exception( __( 'This e-wallet is not valid. Please try again.', WCB_TEXTDOMAIN ) );
             }
 
+            $walletkey = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_' . strtolower( $wallet_code ) . '_walletkey' );
+            $walletkey = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_walletkey', $walletkey, $wallet_code, $this->gateway );
+
             $this->Payment['Wallet'] = array(
-                'Type'           => $wallet_code,
-                'WalletKey'      => 'IDENTIFICADOR DA LOJA NA WALLET',
+                'Type'      => $wallet_code,
+                'WalletKey' => $walletkey,
             );
 
             // Apple fields
@@ -117,6 +120,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Wl' ) ) {
             if ( empty( $this->Payment['Wallet']['WalletKey'] ) ) {
                 $errors[] = __( 'This e-wallet is not valid. Please try again.', WCB_TEXTDOMAIN );
             }
+
+            $wallet_code = $this->Payment['Wallet']['Type'] ?? '';
 
             // Apple fields
             if ( $wallet_code === 'ApplePay' && empty( $this->Payment['Wallet']['AdditionalData']['EphemeralPublicKey'] ) ) {
