@@ -8,10 +8,11 @@
  * @subpackage      WC_Checkout_Braspag_Gateway
  * @since           1.0.0
  *
- * @SuppressWarnings(PHPMD.CyclomaticComplexity)
- * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  * @SuppressWarnings(PHPMD.LongVariable)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.ExcessiveClassLength)
  * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 
 // If this file is called directly, call the cops.
@@ -215,6 +216,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'default'     => 'no',
                     'description' => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
                 );
+
+                // E-Wallet is still not implemented
+                if ( $code === 'wl' ) {
+                    $this->form_fields['method_wl_enabled']['desc_tip'] = false;
+                    $this->form_fields['method_wl_enabled']['description'] = __( 'Still not fully implemented. Only activate if you can crete your own integration.', WCB_TEXTDOMAIN );
+                }
 
                 $sub_option_preffix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -782,7 +789,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 $order->set_date_paid( $payment_data['CapturedDate'] . ' GMT' );
             }
 
-
             // Customer Data
             $customer_data = $transaction['Customer'] ?? [];
             $order->update_meta_data( '_wc_braspag_customer_data', $customer_data );
@@ -1029,6 +1035,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'code'      => 'Boleto',
                     'name'      => __( 'Bank Slip', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
+                ],
+                'wl' => [
+                    'enabled'   => false,
+                    'code'      => 'EWallet',
+                    'name'      => __( 'E-Wallet', WCB_TEXTDOMAIN ),
+                    'providers' => WC_Checkout_Braspag_Providers::E_WALLET,
                 ],
                 // TODO: Still waiting Braspag Support
                 // 'et' => [
