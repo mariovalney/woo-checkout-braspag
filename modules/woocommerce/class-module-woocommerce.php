@@ -246,7 +246,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 return;
             }
 
-            add_meta_box( 'braspag-create-payment-meta-box', __( 'Create Payment', WCB_TEXTDOMAIN ), array( $this, 'render_create_payment_meta_box' ), 'shop_order', 'side' );
+            add_meta_box( 'braspag-create-payment-meta-box', __( 'Pay with Braspag', WCB_TEXTDOMAIN ), array( $this, 'render_create_payment_meta_box' ), 'shop_order', 'side' );
         }
 
         /**
