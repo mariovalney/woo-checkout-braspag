@@ -581,6 +581,25 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         }
 
         /**
+         * Get payment methods
+         *
+         * @return array
+         */
+        public function get_frontend_payment_methods() {
+            $methods = [];
+
+            foreach ( $this->get_payment_methods() as $key => $value ) {
+                if ( empty( $value['enabled'] ) || empty( $value['frontend'] ) ) {
+                    continue;
+                }
+
+                $methods[ $key ] = $value;
+            }
+
+            return apply_filters( 'wc_checkout_braspag_frontend_payment_methods', $methods, $this );
+        }
+
+        /**
          * Get payment method data
          *
          * @return string
@@ -613,12 +632,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             $payment_methods = [];
 
-            foreach ( $this->payment_methods as $code => $data ) {
-                // Ignore if not enabled
-                if ( empty( $data['enabled'] ) ) {
-                    continue;
-                }
-
+            foreach ( $this->get_frontend_payment_methods() as $code => $data ) {
                 // Ignore if has no provider selected (and we are not in sandbox)
                 if ( ! $this->is_sandbox && empty( $this->get_option( 'method_' . $code . '_provider' ) ) ) {
                     continue;
@@ -1050,6 +1064,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'code'      => 'CreditCard',
                     'name'      => __( 'Credit Card', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
+                    'frontend'  => true,
                 ],
                 // TODO: Still waiting Braspag Support
                 // 'dc' => [
@@ -1063,12 +1078,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'code'      => 'Boleto',
                     'name'      => __( 'Bank Slip', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
+                    'frontend'  => true,
                 ],
                 'wl' => [
                     'enabled'   => false,
                     'code'      => 'EWallet',
                     'name'      => __( 'E-Wallet', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::E_WALLET,
+                    'frontend'  => false,
                 ],
                 // TODO: Still waiting Braspag Support
                 // 'et' => [
