@@ -226,7 +226,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 // E-Wallet is still not implemented
                 if ( $code === 'wl' ) {
                     $this->form_fields['method_wl_enabled']['desc_tip'] = false;
-                    $this->form_fields['method_wl_enabled']['description'] = __( 'Still not fully implemented. Only activate if you can crete your own integration.', WCB_TEXTDOMAIN );
+                    $this->form_fields['method_wl_enabled']['description'] = __( 'Still not fully implemented: will not show up on checkout page. Please, check FAQ for more information.', WCB_TEXTDOMAIN );
                 }
 
                 $sub_option_preffix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
