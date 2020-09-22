@@ -10,6 +10,10 @@
  * @subpackage      WCB_Module_Woocommerce
  * @since           1.0.0
  *
+ * @SuppressWarnings(PHPMD.NPathComplexity)
+ * @SuppressWarnings(PHPMD.CyclomaticComplexity)
+ * @SuppressWarnings(PHPMD.TooManyPublicMethods)
+ * @SuppressWarnings(PHPMD.ExcessiveClassComplexity)
  */
 
 // If this file is called directly, call the cops.
@@ -56,9 +60,10 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 'braspag/models/class-wc-checkout-braspag-address',
                 'braspag/models/class-wc-checkout-braspag-query',
                 'braspag/models/class-wc-checkout-braspag-request',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
-                'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-wl',
             );
         }
 
@@ -185,12 +190,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $version = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? uniqid() : WCB_VERSION;
 
             $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/shop-order.';
-            $js = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
-            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url . $js, [ 'jquery' ], $version, true );
+            $extension = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
+            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url . $extension, [ 'jquery' ], $version, true );
 
             $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/css/shop-order.';
-            $css = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'css' : 'min.css';
-            wp_enqueue_style( 'wc-checkout-braspag-shop-order-style', $file_url . $css, [], $version );
+            $extension = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'css' : 'min.css';
+            wp_enqueue_style( 'wc-checkout-braspag-shop-order-style', $file_url . $extension, [], $version );
         }
 
         /**
@@ -219,7 +224,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          */
         public function woocommerce_admin_order_data_after_shipping_address( $order ) {
 
-
             /**
              * If we haven't Extra_Checkout_Fields_For_Brazil_Order we already added to left side
              * @see woocommerce_admin_order_data_after_billing_address
@@ -242,7 +246,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 return;
             }
 
-            add_meta_box( 'braspag-create-payment-meta-box', __( 'Create Payment', WCB_TEXTDOMAIN ), array( $this, 'render_create_payment_meta_box' ), 'shop_order', 'side' );
+            add_meta_box( 'braspag-create-payment-meta-box', __( 'Pay with Braspag', WCB_TEXTDOMAIN ), array( $this, 'render_create_payment_meta_box' ), 'shop_order', 'side' );
         }
 
         /**
@@ -269,6 +273,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
              */
             if ( ! function_exists( 'wc_add_notice' ) ) {
                 function wc_add_notice( $message, $notice_type = 'success', $data = array() ) {
+                    /* translators: %s is the message passed to notice. */
                     $message = sprintf( __( 'There was a problem creating your payment: %s.', WCB_TEXTDOMAIN ), $message );
                     WC_Admin_Meta_Boxes::add_error( $message );
                 }
@@ -281,7 +286,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 $gateway->process_payment( $order->get_id() );
 
                 $order->save();
-            } catch (Exception $e) {
+            } catch ( Exception $e ) {
                 error_log( '[WCB Create Payment Error] ' . $e->getMessage() );
             }
         }
@@ -312,6 +317,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          *
          * @param  WP_Post $post
          * @return void
+         *
+         * @SuppressWarnings(PHPMD.UnusedLocalVariable)
          */
         public function render_create_payment_meta_box( $post ) {
             global $braspag_gateway;

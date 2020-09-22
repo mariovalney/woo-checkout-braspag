@@ -172,9 +172,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         /**
          * Try to do a payment request
          *
+         * @param string                      $method
+         * @param WC_Order                    $order
+         * @param WC_Checkout_Braspag_Gateway $gateway
+         * @param array                       $data
+         *
          * @return array
          */
-        public function do_payment_request( $method, $order, $gateway ) {
+        public function do_payment_request( $method, $order, $gateway, $data = [] ) {
+            global $wccb_posted_data;
+
+            if ( ! empty( $data ) ) {
+                $wccb_posted_data = $data;
+            }
+
             // Check Payment Method
             if ( empty( $method ) ) {
                 return $this->return_error( __( 'Please, select a payment method.', WCB_TEXTDOMAIN ) );

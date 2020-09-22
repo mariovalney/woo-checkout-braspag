@@ -56,8 +56,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
             $this->Country    = $address_data['country'] ?? '';
 
             // Data from Extra Fields (meta data)
-            $this->Number   = sanitize_text_field( $_POST['billing_number'] ?? '' );       // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $this->District = sanitize_text_field( $_POST['billing_neighborhood'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+            $this->Number   = $this->sanitize_post_text_field( 'billing_number' );
+            $this->District = $this->sanitize_post_text_field( 'billing_neighborhood' );
 
             // Sanitization
             $this->ZipCode = $this->sanitize_numbers( $this->ZipCode );

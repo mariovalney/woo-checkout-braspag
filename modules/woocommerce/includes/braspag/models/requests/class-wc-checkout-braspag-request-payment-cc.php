@@ -47,8 +47,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             // Payment Data
             $data = $this->gateway->get_payment_method( $this::METHOD_CODE );
 
+            $provider = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' );
+            $provider = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_provider', $provider, $this->gateway );
+
             $payment = [
-                'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' ),
+                'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
                 'Type'             => $data['code'],
                 'Amount'           => ( (float) $order->get_total() ) * 100,
                 'ServiceTaxAmount' => 0,
