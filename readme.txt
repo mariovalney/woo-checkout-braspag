@@ -154,6 +154,17 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 3.0.0 =
+
+It's a developer version:
+
+* Allow developers to create payment with a payent data array (maybe by API).
+* E-wallet implementation on BETA (without front-end integration by now).
+
+For users:
+
+* Few translation fixes.
+
 = 2.1.1 =
 
 * Fixed customer identity if person type is not provided
@@ -212,7 +223,4 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Upgrade Notice ==
 
-= 2.1.1 =
-
-We fixed customer identity (CPF or CNPJ) not being sent to Braspag if persontype is not provided.
-Please, update!
+Just few new features for developers. Translations fixes for users.
