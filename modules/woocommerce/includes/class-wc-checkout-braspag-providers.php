@@ -251,8 +251,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 '' => __( '-- Choose your provider', WCB_TEXTDOMAIN ),
             );
 
+            ksort( $providers );
+
             foreach ( $providers as $key => $value ) {
-                $options[ $key ] = __( $value['description'], WCB_TEXTDOMAIN ); // phpcs:ignore
+                $options[ $key ] = sprintf( '%s - %s', $key, __( $value['description'], WCB_TEXTDOMAIN ) ); // phpcs:ignore
             }
 
             /**
