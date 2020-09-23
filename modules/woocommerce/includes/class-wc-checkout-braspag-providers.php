@@ -28,7 +28,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Credit Card Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-cr%C3%A9dito
-         * @version 1.0.0 24/01/2018
+         * @version 3.0.0 23/09/2020
          */
         const CREDIT_CARD = array(
             'Cielo'          => array(
@@ -63,6 +63,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo' ],
                 'description' => 'Plataforma de e-commerce Stone',
             ),
+            'Safra'          => array(
+                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ],
+                'description' => 'Provider para transações na plataforma de e-commerce Safra (legado)',
+            ),
+            'Safra2'          => array(
+                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ],
+                'description' => 'Provider para transações na plataforma de e-commerce Safra',
+            ),
             'FirstData'      => array(
                 'brands'      => [ 'Visa', 'Master', 'Cabal' ],
                 'description' => 'Plataforma de e-commerce First Data: transações em guaranis (PYG), pesos argentinos (ARG) e reais (BRL)',
@@ -95,13 +103,25 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 'brands'      => [ 'Visa', 'Master' ],
                 'description' => 'Plataforma GetNet com tecnologia TEF',
             ),
+            'Banese'         => array(
+                'brands'      => [ 'Banese' ],
+                'description' => 'Provider para transações com a bandeira BaneseCard',
+            ),
+            'BrasilCard'     => array(
+                'brands'      => [ 'BrasilCard' ],
+                'description' => 'Provider para transações com a bandeira BrasilCard',
+            ),
+            'Credsystem'     => array(
+                'brands'      => [],
+                'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
+            ),
+            'Credz'          => array(
+                'brands'      => [ 'Credz' ],
+                'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
+            ),
             'DMCard'         => array(
                 'brands'      => [],
-                'description' => 'DMCard',
-            ),
-            'Safra'          => array(
-                'brands'      => [],
-                'description' => 'Safra',
+                'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
             ),
         );
 
@@ -109,7 +129,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Debit Card Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-pra-d%C3%A9bito
-         * @version 1.0.0 24/01/2018
+         * @version 3.0.0 23/09/2020
          */
         const DEBIT_CARD = array(
             'Cielo'   => array(
@@ -120,25 +140,33 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
                 'brands'      => [ 'Visa', 'Master' ],
                 'description' => 'Débito na plataforma de e-commerce Cielo 3.0',
             ),
-            // 'Getnet'            => array(
-            //     'brands'        => [ 'Visa', 'Master' ],
-            //     'description'   => 'Débito na plataforma de e-commerce GetNet',
-            // ),
-            // 'FirstData'         => array(
-            //     'brands'        => [ 'Visa', 'Master' ],
-            //     'description'   => 'Débito na plataforma de e-commerce First Data',
-            // ),
-            // 'GlobalPayments'    => array(
-            //     'brands'        => [ 'Visa', 'Master' ],
-            //     'description'   => 'Débito na plataforma de e-commerce Global Payments',
-            // ),
+            'Getnet'            => array(
+                'brands'        => [ 'Visa', 'Master' ],
+                'description'   => 'Débito na plataforma de e-commerce GetNet',
+            ),
+            'Rede2'             => array(
+                'brands'        => [ 'Visa', 'Master' ],
+                'description'   => 'Débito na plataforma de e-commerce Rede',
+            ),
+            'Safra2'            => array(
+                'brands'        => [ 'Visa', 'Master' ],
+                'description'   => 'Débito na plataforma de e-commerce Safra',
+            ),
+            'FirstData'         => array(
+                'brands'        => [ 'Visa', 'Master' ],
+                'description'   => 'Débito na plataforma de e-commerce First Data',
+            ),
+            'GlobalPayments'    => array(
+                'brands'        => [ 'Visa', 'Master' ],
+                'description'   => 'Débito na plataforma de e-commerce Global Payments',
+            ),
         );
 
         /**
          * Bank Slip Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-boleto-com-registro
-         * @version 1.0.0 24/01/2018
+         * @version 3.0.0 23/09/2020
          */
         const BANK_SLIP = array(
             'Bradesco2'      => array(
@@ -188,25 +216,30 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Eletronic Transfer Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-transfer%C3%AAncia-eletronica-(d%C3%A9bito-online)
-         * @version 1.0.0 24/01/2018
+         * @version 3.0.0 23/09/2020
          */
         const ELETRONIC_TRANSFER = array(
-            'Bradesco'      => array(
+            'Bradesco'               => array(
                 'description' => 'Débito online no Bradesco',
             ),
-            'BancoDoBrasil' => array(
+            'BancoDoBrasil'          => array(
                 'description' => 'Débito online no Banco do Brasil',
             ),
-            'SafetyPay'     => array(
+            'SafetyPay'              => array(
                 'description' => 'Débito online no Safety Pay',
             ),
-            'Itau'          => array(
+            'Itau'                   => array(
                 'description' => 'Débito online no Itaú',
+            ),
+            'PayMeeRedirectCheckout' => array(
+                'description' => 'Débito online no PayMee Redirect Checkout',
+            ),
+            'PayMeeSemiTransparent'  => array(
+                'description' => 'Débito online no PayMee Semi Transparent',
             ),
         );
 
-        public function __construct() {
-        }
+        public function __construct() {}
 
         /**
          * Get Credit Card provider as option
