@@ -165,14 +165,18 @@ For users:
 
 * Few translation fixes.
 
+= 2.2.1 =
+
+* Updated Braspag Providers.
+
 = 2.1.1 =
 
-* Fixed customer identity if person type is not provided
+* Fixed customer identity if person type is not provided.
 
 = 2.1.0 =
 
-* Removed "BoletoNumber" field
-* Added filters
+* Removed "BoletoNumber" field.
+* Added filters.
 
 = 2.0.1 =
 
@@ -180,32 +184,32 @@ For users:
 
 = 2.0.0 =
 
-* Improved payment info on order
-* Added customer validation on checkout
-* Allow developers skip payment method on checkout
-* Allow create payment on order administration
+* Improved payment info on order.
+* Added customer validation on checkout.
+* Allow developers skip payment method on checkout.
+* Allow create payment on order administration.
 
 = 1.4.0 =
 
-* Added payment info on order
-* Added autofind for credit card brands
-* Removing Debit Card as it's not tested
+* Added payment info on order.
+* Added autofind for credit card brands.
+* Removing Debit Card as it's not tested.
 
 = 1.3.3 =
 
-* Added payment info on mails
+* Added payment info on mails.
 
 = 1.3.2 =
 
-* Support to empty Credentials if already configured on Braspag
+* Support to empty Credentials if already configured on Braspag.
 
 = 1.3.1 =
 
-* Support to Issuer
+* Support to Issuer.
 
 = 1.3.0 =
 
-* Fix cents on order amount and improve order validation
+* Fix cents on order amount and improve order validation.
 
 = 1.2.0 =
 
@@ -213,8 +217,8 @@ For users:
 
 = 1.1.0 =
 
-* Best file organization
-* Added methods to work with ExtraDataCollection on Payment info
+* Best file organization.
+* Added methods to work with ExtraDataCollection on Payment info.
 
 = 1.0 =
 
