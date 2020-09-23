@@ -368,6 +368,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         ],
                         'default'           => '',
                     );
+
+                    $this->form_fields[ 'method_' . $code . '_credential_signature_for_safra2' ] = array(
+                        'type'              => 'text',
+                        'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
+                        'description'       => __( 'Fill with "Safrapay;Cidade;Estado" (required for Safra unless already configured on Braspag).', WCB_TEXTDOMAIN ),
+                        'desc_tip'          => true,
+                        'custom_attributes' => [
+                            'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Safra2',
+                        ],
+                        'default'           => '',
+                    );
                 }
 
                 // Bank Slip Options

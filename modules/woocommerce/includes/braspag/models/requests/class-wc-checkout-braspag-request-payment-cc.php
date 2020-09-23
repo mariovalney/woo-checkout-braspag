@@ -88,6 +88,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 $this->Payment['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra' );
             }
 
+            if ( $this->Payment['Provider'] === 'Safra2' ) {
+                $this->Payment['Credentials']['Signature'] = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_signature_for_safra2' );
+            }
+
             // Braspag accept empty credentials if it's configured on merchant
             if ( empty( $this->Payment['Credentials']['Code'] ) && empty( $this->Payment['Credentials']['Key'] ) ) {
                 unset( $this->Payment['Credentials'] );
