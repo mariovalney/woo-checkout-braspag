@@ -28,7 +28,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Credit Card Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-cr%C3%A9dito
-         * @version 3.0.0 23/09/2020
+         * @version 2.2.1 23/09/2020
          */
         const CREDIT_CARD = array(
             'Cielo'          => array(
@@ -129,7 +129,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Debit Card Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-pra-d%C3%A9bito
-         * @version 3.0.0 23/09/2020
+         * @version 2.2.1 23/09/2020
          */
         const DEBIT_CARD = array(
             'Cielo'   => array(
@@ -166,7 +166,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Bank Slip Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-boleto-com-registro
-         * @version 3.0.0 23/09/2020
+         * @version 2.2.1 23/09/2020
          */
         const BANK_SLIP = array(
             'Bradesco2'      => array(
@@ -216,7 +216,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * Eletronic Transfer Providers
          *
          * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-transfer%C3%AAncia-eletronica-(d%C3%A9bito-online)
-         * @version 3.0.0 23/09/2020
+         * @version 2.2.1 23/09/2020
          */
         const ELETRONIC_TRANSFER = array(
             'Bradesco'               => array(
@@ -269,4 +269,3 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
     }
 
 }
-
