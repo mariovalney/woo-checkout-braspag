@@ -834,13 +834,22 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @param array     $transaction    API Request response from Braspag
          */
         public function update_order_transaction_data( WC_Order $order, $transaction ) {
-
             // Payment Data
             $payment_data = $transaction['Payment'] ?? [];
             $order->update_meta_data( '_wc_braspag_payment_data', $payment_data );
-            if ( ! empty( $payment_data['CapturedDate'] ) ) {
-                $order->set_date_paid( $payment_data['CapturedDate'] . ' GMT' );
+            if ( ! empty( $payment_data['CreditCard'] ) && ! empty( $payment_data['CreditCard']['CardToken'] ) ) {
+                $card_token = array(
+                    'Alias'     => $payment_data['CreditCard']['Alias'],
+                    'CardToken' => $payment_data['CreditCard']['CardToken'],
+                );
+
+                $order->update_meta_data( '_wc_braspag_payment_card_token', $card_token );
             }
+
+            // SavedCard
+            $payment_method = $payment_data['Type'] ?? '';
+            $payment_method = $this->get_payment_method_by_code( $payment_method );
+            $order->update_meta_data( '_wc_braspag_payment_method', $payment_method );
 
             // Customer Data
             $customer_data = $transaction['Customer'] ?? [];

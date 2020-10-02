@@ -171,6 +171,10 @@ For users:
 
 * Few translation fixes.
 
+### 2.2.3 ###
+
+* Fixed CardToken storage.
+
 ### 2.2.2 ###
 
 * Updated Braspag Providers.

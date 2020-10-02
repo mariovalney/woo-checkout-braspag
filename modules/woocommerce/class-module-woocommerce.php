@@ -363,7 +363,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
              *
              * @var array
              */
-            $fields = apply_filters( 'wc_checkout_braspag_admin_order_payment_data', $this->get_payment_info( $payment ), $payment );
+            $fields = apply_filters( 'wc_checkout_braspag_admin_order_payment_data', $this->get_payment_info( $order ), $payment, $order );
             foreach ( $fields as $field ) {
                 echo '<strong>' . esc_html( $field['label'] ) . '</strong>: ' . $field['value'] . '<br>'; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped
             }
@@ -393,21 +393,20 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
         /**
          * Get payment info from braspag data
          *
-         * @param  array $payment
+         * @param  WC_Order $order
          * @return array
          */
-        private function get_payment_info( $payment ) {
-            $payment_type = $payment['Type'] ?? '-';
+        private function get_payment_info( $order ) {
+            $payment = $order->get_meta( '_wc_braspag_payment_data' );
 
-            $fields = $this->payment_fields( $payment );
-
+            // Payment Type
             $methods = array();
             $gateway = $this->get_gateway_object();
             if ( ! empty( $gateway ) ) {
                 $methods = $gateway->get_payment_methods();
             }
 
-            // Payment Type
+            $payment_type = $payment['Type'] ?? '-';
             foreach ( $methods as $method ) {
                 if ( ( $method['code'] ?? '' ) !== $payment_type ) {
                     continue;
@@ -415,6 +414,18 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
                 $payment_type = $method['name'];
                 break;
+            }
+
+            // Payment Fields
+            $fields = $this->payment_fields( $payment );
+
+            // Card Token
+            $card_token = $order->get_meta( '_wc_braspag_payment_card_token' );
+            if ( ! empty( $card_token ) ) {
+                $fields[] = array(
+                    'label' => __( 'Card Token', WCB_TEXTDOMAIN ),
+                    'value' => esc_html( $card_token['CardToken'] ),
+                );
             }
 
             return array_merge(
@@ -473,10 +484,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                     array(
                         'label' => __( 'Card Brand', WCB_TEXTDOMAIN ),
                         'value' => esc_html( $creditcard['Brand'] ?? '-' ),
-                    ),
-                    array(
-                        'label' => __( 'Card Token', WCB_TEXTDOMAIN ),
-                        'value' => esc_html( $creditcard['CardToken'] ?? '-' ),
                     ),
                 );
             }
