@@ -154,6 +154,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 3.0.1 =
+
+* Fixed CardToken storage.
+
 = 3.0.0 =
 
 It's a developer version:
@@ -164,10 +168,6 @@ It's a developer version:
 For users:
 
 * Few translation fixes.
-
-= 2.2.3 =
-
-* Fixed CardToken storage.
 
 = 2.2.2 =
 
@@ -232,3 +232,5 @@ For users:
 == Upgrade Notice ==
 
 Just few new features for developers. Translations fixes for users.
+
+I'ts a major version. Please, check changes on staging.
