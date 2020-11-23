@@ -154,6 +154,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 3.1.0 =
+
+* Added option to send Company Name instead Customer Name if CNPJ is presented.
+
 = 3.0.1 =
 
 * Fixed CardToken storage.
@@ -231,6 +235,6 @@ For users:
 
 == Upgrade Notice ==
 
-Just few new features for developers. Translations fixes for users.
+Added option to send Company Name instead Customer Name if CNPJ is presented.
 
-I'ts a major version. Please, check changes on staging.
+Please, check changes on staging.
