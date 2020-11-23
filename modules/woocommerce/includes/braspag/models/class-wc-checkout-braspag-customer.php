@@ -49,11 +49,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
                 $person_type = ! empty( $billing_cpf ) ? '1' : '2';
             }
 
+            // PF
             if ( (string) $person_type === '1' ) {
                 $this->Identity     = $billing_cpf;
                 $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CPF' : '';
             }
 
+            // PJ
             if ( (string) $person_type === '2' ) {
                 $this->Identity     = $billing_cnpj;
                 $this->IdentityType = ( ! empty( $this->Identity ) ) ? 'CNPJ' : '';

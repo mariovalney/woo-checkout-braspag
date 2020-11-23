@@ -106,10 +106,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
                 }
             }
 
-            // DEBUG
-            // $this->Payment['Assignor']       = 'Empresa Teste';
-            // $this->Payment['Demonstrative']  = 'Desmonstrative Teste';
-            // $this->Payment['ExpirationDate'] = '2019-02-25';
+            // Prefer company name
+            $prefer_company = ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_prefer_company', 'no' ) === 'yes' );
+            if ( $prefer_company && ! empty( $this->Customer ) && $this->Customer->IdentityType === 'CNPJ' ) {
+                $this->Customer->Name = $order->get_billing_company() ?: $this->Customer->Name;
+            }
 
             /**
              * Action allow developers to change request data
