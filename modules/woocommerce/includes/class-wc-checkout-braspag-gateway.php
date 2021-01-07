@@ -507,8 +507,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'checkbox',
                         'title'             => $sub_option_preffix . __( 'Prefer Company', WCB_TEXTDOMAIN ),
                         'label'             => __( 'Use Company Name on Bank Slip data if Customer has CNPJ.', WCB_TEXTDOMAIN ),
-                        'description'       => $prefer_company_description,
-                        'desc_tip'          => false,
                         'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
                         'default'           => 'no',
                     );
