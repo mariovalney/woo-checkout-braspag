@@ -70,6 +70,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Wl' ) ) {
                 'WalletKey' => $walletkey,
             );
 
+            // Override WalletKey from Request
+            $walletkey = $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_walletkey' );
+            if ( ! empty( $walletkey ) ) {
+                $this->Payment['WalletKey'] = $walletkey;
+            }
+
             // Apple fields
             if ( $wallet_code === 'ApplePay' ) {
                 $this->Payment['Wallet']['AdditionalData'] = array(
