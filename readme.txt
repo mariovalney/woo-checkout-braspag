@@ -3,7 +3,7 @@ Contributors: mariovalney, vizir
 Donate link: https://github.com/Vizir/woo-checkout-braspag
 Tags: woocommerce, payment, braspag, vizir, mariovalney
 Requires at least: 4.7
-Tested up to: 5.4.2
+Tested up to: 5.7
 Requires PHP: 7.2
 Stable tag: 3.1.3
 License: GPLv2 or later
