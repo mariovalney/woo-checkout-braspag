@@ -249,10 +249,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $args['headers']['MerchantId']  = $this->get_merchant_id();
             $args['headers']['MerchantKey'] = $this->get_merchant_key();
 
-            // Hardcoded for e-wallets
-            // $args['headers']['MerchantId']  = '63D6ACCB-2734-4236-AB5D-843A9DAC44C7';
-            // $args['headers']['MerchantKey'] = 'ZCVHDJWKTGOZXADDYJFURIDIKHEMRYQAQDYEJMQK';
-
             // Make Request
             $result = wp_remote_request( $url, $args );
 

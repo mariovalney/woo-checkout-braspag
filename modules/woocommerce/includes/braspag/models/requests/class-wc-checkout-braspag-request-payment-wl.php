@@ -45,10 +45,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Wl' ) ) {
             $provider = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_provider', $provider, $this->gateway );
 
             $payment = [
-                'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
-                'Type'             => 'CreditCard',
-                'Amount'           => ( (float) $order->get_total() ) * 100,
-                'Installments'     => (int) $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_installments', 0 ),
+                'Provider'     => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
+                'Capture'      => true,
+                'Type'         => 'CreditCard',
+                'Amount'       => ( (float) $order->get_total() ) * 100,
+                'Installments' => (int) $this->sanitize_post_text_field( 'braspag_payment_' . $this::METHOD_CODE . '_installments', 0 ),
             ];
 
             $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
