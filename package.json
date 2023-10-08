@@ -4,7 +4,10 @@
   "description": "Checkout Braspag for WooCommerce",
   "author": "Mário Valney",
   "main": "index.js",
-  "scripts": {},
+  "scripts": {
+    "dev": "gulp watch",
+    "make": "gulp"
+  },
   "repository": {
     "type": "git",
     "url": "https://github.com/Vizir/woo-checkout-braspag"
