@@ -24,34 +24,49 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
          * @since    1.0.0
          */
         public static function payment_status( $code ) {
+            $status = '';
+
             switch ( $code ) {
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_ABORTED:
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED:
-                    return __( 'Failed', WCB_TEXTDOMAIN );
+                    $status = __( 'Failed', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED:
-                    return __( 'Processing', WCB_TEXTDOMAIN );
+                    $status = __( 'Processing', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED:
-                    return __( 'Paid', WCB_TEXTDOMAIN );
+                    $status = __( 'Paid', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED:
-                    return __( 'Denied', WCB_TEXTDOMAIN );
+                    $status = __( 'Denied', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED:
-                    return __( 'Canceled', WCB_TEXTDOMAIN );
+                    $status = __( 'Canceled', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED:
-                    return __( 'Refunded', WCB_TEXTDOMAIN );
+                    $status = __( 'Refunded', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PENDING:
-                    return __( 'Waiting confirmation', WCB_TEXTDOMAIN );
+                    $status = __( 'Waiting confirmation', WCB_TEXTDOMAIN );
+                    break;
 
                 default:
                     break;
             }
 
-            return '';
+            /**
+             * Filter payment status
+             *
+             * @param string $status
+             * @param int $code
+             */
+            return apply_filters( 'wc_checkout_braspag_payment_status', $status, $code );
         }
 
         /**
@@ -61,36 +76,52 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
          * @since    1.0.0
          */
         public static function payment_status_note( $code ) {
+            $note = '';
+
             switch ( $code ) {
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED:
-                    return __( 'Braspag: payment is not finished.', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment is not finished.', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_AUTHORIZED:
-                    return __( 'Braspag: payment method can be captured (credit/debit card) or paid (bank slip).', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment method can be captured (credit/debit card) or paid (bank slip).', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED:
-                    return __( 'Braspag: payment confirmed.', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment confirmed.', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED:
-                    return __( 'Braspag: payment denied (credit card and debit - eletronic transfer).', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment denied (credit card and debit - eletronic transfer).', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED:
-                    return __( 'Braspag: payment canceled.', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment canceled.', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED:
-                    return __( 'Braspag: payment canceled/refund.', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment canceled/refund.', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PENDING:
-                    return __( 'Braspag: waiting for bank (credit card and debit - eletronic transfer).', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: waiting for bank (credit card and debit - eletronic transfer).', WCB_TEXTDOMAIN );
+                    break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_ABORTED:
-                    return __( 'Braspag: payment aborted because processing failed.', WCB_TEXTDOMAIN );
+                    $note = __( 'Braspag: payment aborted because processing failed.', WCB_TEXTDOMAIN );
+                    break;
 
                 default:
                     break;
             }
 
-            return '';
+            /**
+             * Filter payment status note
+             *
+             * @param string $note
+             * @param int $code
+             */
+            return apply_filters( 'wc_checkout_braspag_payment_status_note', $note, $code );
         }
 
         /**
@@ -140,7 +171,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     break;
             }
 
-            return $message;
+            /**
+             * Filter the error message from payments
+             *
+             * @param string $message
+             * @param int $code
+             * @param boolean $is_credit_card
+             */
+            return apply_filters( 'wc_checkout_braspag_payment_error_message', $message, $reason_code, $is_credit_card );
         }
 
     }

@@ -687,8 +687,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function process_payment( $order_id ) {
             $order = wc_get_order( $order_id );
 
-            $method   = sanitize_text_field( $_POST['braspag_payment_method'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            $response = $this->api->do_payment_request( $method, $order, $this );
+            $method = sanitize_text_field( $_POST['braspag_payment_method'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
+
+            /**
+             * Filters the do_payment_request response.
+             *
+             * @param array $response
+             * @param WC_Order $order
+             * @param WC_Payment_Gateway $this
+             */
+            $response = apply_filters( 'wc_checkout_braspag_do_payment_request', $this->api->do_payment_request( $method, $order, $this ), $order, $this );
 
             // Update Order after gateway response
             if ( ! empty( $response['transaction'] ) ) {
