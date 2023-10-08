@@ -891,6 +891,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * @param  string $payment_id
          * @return boolean
+         * @throws Exception
          */
         public function update_order_from_payment( $payment_id ) {
             if ( empty( $payment_id ) ) {
