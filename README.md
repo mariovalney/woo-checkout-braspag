@@ -1,11 +1,11 @@
 # Pagador (Braspag) Checkout for WooCommerce #
-**Contributors:** mariovalney, vizir  
-**Donate link:** https://github.com/Vizir/woo-checkout-braspag  
-**Tags:** woocommerce, payment, braspag, vizir, mariovalney  
+**Contributors:** mariovalney  
+**Donate link:** https://github.com/mariovalney/woo-checkout-braspag  
+**Tags:** woocommerce, payment, braspag, mariovalney  
 **Requires at least:** 4.7  
-**Tested up to:** 5.7  
+**Tested up to:** 6.3  
 **Requires PHP:** 7.2  
-**Stable tag:** 3.1.3  
+**Stable tag:** trunk  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -30,7 +30,7 @@ None of developers have link with Braspag or WooCommerce.
 
 ### Compatibility ###
 
-We tested this plugin against version 4.3+ of WooCommerce.
+We tested this plugin against version 8.1+ of WooCommerce.
 
 This plugin do not require [Brazilian Market on WooCommerce](http://wordpress.org/plugins/woocommerce-extra-checkout-fields-for-brazil/) but suggest your use.
 
@@ -159,6 +159,13 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 
 ## Changelog ##
+
+### 3.2.0 ###
+
+* Added 'wc_checkout_braspag_payment_status' filter.
+* Added 'wc_checkout_braspag_payment_status_note' filter.
+* Added 'wc_checkout_braspag_payment_error_message' filter.
+* Added 'wc_checkout_braspag_do_payment_request' filter.
 
 ### 3.1.3 ###
 

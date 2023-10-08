@@ -18,3 +18,5 @@ vendor
 
 modules/*/assets/css/*.min.css
 modules/*/assets/js/*.min.js
+
+.phpintel
