@@ -154,6 +154,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 == Changelog ==
 
+= 3.2.1 =
+
+* Added API error messages when creating orders ('WC_Checkout_Braspag_Messages::payment_error_message' on 'post_transaction').
+
 = 3.2.0 =
 
 * Added 'wc_checkout_braspag_payment_status' filter.

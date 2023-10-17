@@ -133,10 +133,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
          *
          * @since    1.0.0
          */
-        public static function payment_error_message( $reason_code, $is_credit_card = true ) {
+        public static function payment_error_message( $reason_code, $is_credit_card = true, $default_message = '' ) {
             $card_type = $is_credit_card ? _x( 'credit card', 'To payment error messages.', WCB_TEXTDOMAIN ) : _x( 'debit card', 'To payment error messages.', WCB_TEXTDOMAIN );
 
-            $message = '';
+            $message = $default_message;
             switch ( $reason_code ) {
                 case 7:
                     $message = __( 'Your payment was denied. Please try again with another method.', WCB_TEXTDOMAIN );
@@ -167,7 +167,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     break;
 
                 default:
-                    $message = __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );
+                    if ( empty( $message ) ) {
+                        $message = __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );
+                    }
                     break;
             }
 
@@ -177,8 +179,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
              * @param string $message
              * @param int $code
              * @param boolean $is_credit_card
+             * @param string $default_message
              */
-            return apply_filters( 'wc_checkout_braspag_payment_error_message', $message, $reason_code, $is_credit_card );
+            return apply_filters( 'wc_checkout_braspag_payment_error_message', $message, $reason_code, $is_credit_card, $default_message );
         }
 
     }

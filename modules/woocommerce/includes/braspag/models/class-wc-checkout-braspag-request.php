@@ -194,11 +194,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $code    = $body['Code'] ?? '';
             $message = $body['Message'] ?? '';
 
-            // Translate error message
-            if ( ! empty( $message ) ) {
-                $message = __( $message, WCB_TEXTDOMAIN );
-            }
-
             /**
              * Check for duplicated code to treat the error
              *
@@ -208,6 +203,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             if ( (int) $code === WC_Checkout_Braspag_Api::ERROR_API_DUPLICATED ) {
                 return $this->process_duplicated_payment();
             }
+
+            /**
+             * Check valid payment error message
+             */
+            $message = WC_Checkout_Braspag_Messages::payment_error_message( $code, ( $this::METHOD_CODE === 'cc' ), __( $message ) );
 
             /**
              * To be catched
