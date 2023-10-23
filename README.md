@@ -160,6 +160,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 ## Changelog ##
 
+### 3.2.2 ###
+
+* Added 'is_processing_payment' method on gateway to allow developers check the first transaction data.
+
 ### 3.2.1 ###
 
 * Added API error messages when creating orders ('WC_Checkout_Braspag_Messages::payment_error_message' on 'post_transaction').

@@ -45,6 +45,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         private $payment_methods = [];
 
         /**
+         * True if we are processing payment
+         *
+         * @var bool
+         */
+        private $processing_payment = false;
+
+        /**
          * The Constructor
          */
         public function __construct() {
@@ -685,6 +692,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return array
          */
         public function process_payment( $order_id ) {
+            $this->processing_payment = true;
+
             $order = wc_get_order( $order_id );
 
             $method = sanitize_text_field( $_POST['braspag_payment_method'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
@@ -923,6 +932,15 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             }
 
             return $this->update_order_status( $transaction );
+        }
+
+        /**
+         * Return true if we are processing payment
+         *
+         * @return bool
+         */
+        public function is_processing_payment() {
+            return ! empty( $this->processing_payment );
         }
 
         /**
