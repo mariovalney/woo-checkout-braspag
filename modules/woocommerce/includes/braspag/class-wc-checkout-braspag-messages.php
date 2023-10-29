@@ -166,6 +166,39 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
                     );
                     break;
 
+                case 105:
+                    $message = __( 'Customer name is required.', WCB_TEXTDOMAIN );
+                    break;
+
+                case 117:
+                    $message = __( 'Card holder is invalid.', WCB_TEXTDOMAIN );
+                    break;
+
+                case 118:
+                case 127:
+                case 128:
+                    $message = __( 'Card number is required.', WCB_TEXTDOMAIN );
+                    break;
+
+                case 125:
+                case 126:
+                    $message = __( 'Card expiration date is invalid.', WCB_TEXTDOMAIN );
+                    break;
+
+                case 147:
+                case 148:
+                case 149:
+                case 150:
+                case 151:
+                case 152:
+                case 153:
+                case 154:
+                case 155:
+                case 156:
+                case 157:
+                    $message = __( 'Customer data is invalid.', WCB_TEXTDOMAIN );
+                    break;
+
                 default:
                     if ( empty( $message ) ) {
                         $message = __( 'There was a problem with your payment. Please enter in contact or try again.', WCB_TEXTDOMAIN );

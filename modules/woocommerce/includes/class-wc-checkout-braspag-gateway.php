@@ -926,10 +926,20 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             if ( empty( $merchant_order_id ) || empty( $order->get_id() ) ) {
                 // Log
-                $this->log( 'Error on checkout_braspag_debit_card: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
+                $this->log( 'Error on checkout_braspag_gateway: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
 
-                throw new Exception( __( 'There was a problem processing your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem processing your payment: your order is invalid.', WCB_TEXTDOMAIN ) );
             }
+
+            /**
+             * Filters the transaction retrieved from payment_id
+             *
+             * @param array $transaction
+             * @param WC_Order $order
+             * @param WC_Checkout_Braspag_Query $api_query
+             * @param WC_Payment_Gateway $this
+             */
+            $transaction = apply_filters( 'wc_checkout_braspag_update_order_from_payment_transaction', $transaction, $order, $api_query, $this );
 
             return $this->update_order_status( $transaction );
         }

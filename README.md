@@ -162,7 +162,9 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 
 ### 3.2.2 ###
 
+* Added 'wc_checkout_braspag_update_order_from_payment_transaction' filter.
 * Added 'is_processing_payment' method on gateway to allow developers check the first transaction data.
+* Added 'get_recurrent_payment' method in query requrests.
 
 ### 3.2.1 ###
 

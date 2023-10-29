@@ -61,6 +61,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
         }
 
         /**
+         * Get RecurrentPayment by RecurrentPaymentId.
+         *
+         * @since    3.2.2
+         *
+         * @param    int $recurrent_payment_id
+         */
+        public function get_recurrent_payment( $recurrent_payment_id ) {
+            $endpoint = '/v2/RecurrentPayment/' . $recurrent_payment_id;
+
+            return $this->query( $endpoint );
+        }
+
+        /**
          * Make get requests
          *
          * @since    1.0.0
