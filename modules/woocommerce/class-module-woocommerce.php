@@ -85,7 +85,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             $this->core->add_filter( 'woocommerce_payment_gateways', array( $this, 'add_woocommerce_gateway' ) );
             $this->core->add_filter( 'plugin_action_links_' . WCB_PLUGIN_BASENAME, array( $this, 'plugin_action_links' ) );
 
-            $this->core->add_filter( 'woocommerce_order_actions', array( $this, 'woocommerce_order_actions' ) );
+            $this->core->add_filter( 'woocommerce_order_actions', array( $this, 'woocommerce_order_actions' ), 10, 2 );
             $this->core->add_action( 'woocommerce_order_action_checkout_braspag_update', array( $this, 'checkout_braspag_update' ) );
 
             $this->core->add_action( 'add_meta_boxes', array( $this, 'add_meta_boxes' ), 10, 2 );
@@ -124,12 +124,10 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          *
          * @return array
          */
-        public function woocommerce_order_actions( $actions ) {
-            global $theorder;
-
+        public function woocommerce_order_actions( $actions, $order ) {
             $gateway = $this->get_gateway_object();
 
-            if ( ! empty( $gateway ) && ! empty( $theorder ) && $theorder->get_payment_method() === $gateway->id ) {
+            if ( ! empty( $gateway ) && ! empty( $order ) && $order->get_payment_method() === $gateway->id ) {
                 $actions['checkout_braspag_update'] = __( 'Update payment info from Braspag', WCB_TEXTDOMAIN );
             }
 
@@ -140,7 +138,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * Action 'woocommerce_order_action_checkout_braspag_update'
          * Process the action order on dashboard
          *
-         * @return array
+         * @return void
          */
         public function checkout_braspag_update( $order ) {
             $gateway = $this->get_gateway_object();
