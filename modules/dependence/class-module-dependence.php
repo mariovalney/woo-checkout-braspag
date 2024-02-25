@@ -18,6 +18,12 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
     class WCB_Module_Dependence {
 
         /**
+         * The core
+         * @var Woo_Checkout_Braspag
+         */
+        public $core;
+
+        /**
          * List of dependencies to check
          * @var array
          */
@@ -28,6 +34,13 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
          * @var array
          */
         private $notices = [];
+
+        /**
+         * Include files
+         *
+         * @var array
+         */
+        public $includes = [];
 
         /**
          * After Run

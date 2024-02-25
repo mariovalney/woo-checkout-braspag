@@ -52,6 +52,27 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         private $processing_payment = false;
 
         /**
+         * @var WC_Checkout_Braspag_Api
+         */
+        public $api;
+
+        /**
+         * Gateway parameters
+         *
+         * @var string
+         */
+        public $sandbox;
+        public $merchant_id;
+        public $merchant_key;
+        public $sandbox_merchant_key;
+        public $debug;
+
+        /**
+         * @var boolean
+         */
+        public $is_sandbox;
+
+        /**
          * The Constructor
          */
         public function __construct() {

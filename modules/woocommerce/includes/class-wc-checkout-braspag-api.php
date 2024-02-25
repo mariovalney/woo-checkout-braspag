@@ -81,6 +81,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         private $endpoint_api_query;
 
         /**
+         * The gateway
+         * @var WC_Checkout_Braspag_Gateway
+         */
+        protected $gateway;
+
+        /**
          * Set parameters and start API
          *
          * @return void

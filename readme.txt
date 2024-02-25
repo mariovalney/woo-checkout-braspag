@@ -139,12 +139,11 @@ If you are using PHP in version below 7, please contact your host to update your
 
 = Who are the developers? =
 
-* [Vizir](http://vizir.com.br/en) is a Brazilian software studio.
-* [Mário Valney](https://mariovalney.com/me) is a Brazilian developer who works at Vizir Software Studio and integrates the [WordPress community](https://profiles.wordpress.org/mariovalney).
+* [Mário Valney](https://mariovalney.com/me) is a Brazilian developer who integrates the [WordPress community](https://profiles.wordpress.org/mariovalney).
 
 = Can I help you? =
 
-Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
+Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-braspag).
 
 == Screenshots ==
 
@@ -153,6 +152,10 @@ Yes! Visit [GitHub repository](https://github.com/Vizir/woo-checkout-braspag).
 3. Screenshot 3
 
 == Changelog ==
+
+= 4.0.0 =
+
+* Support to PHP 8.2.
 
 = 3.2.2 =
 
@@ -256,6 +259,6 @@ For users:
 
 == Upgrade Notice ==
 
-Added option to send Company Name instead Customer Name if CNPJ is presented.
+Support to new PHP version. It's a major update!
 
-Please, check changes on staging.
+Please, check changes on staging before update.

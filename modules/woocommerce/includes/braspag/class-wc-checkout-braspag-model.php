@@ -57,7 +57,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
          *
          * @since    1.0.0
          */
-        public function jsonSerialize() {
+        public function jsonSerialize() : mixed {
             return $this;
         }
 

@@ -33,7 +33,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
         const TRANSACTION_ENDPOINT = '/v2/sales/';
 
         /**
-         * The gateway to be used
+         * The gateway
+         * @var WC_Checkout_Braspag_Gateway
          */
         protected $gateway;
 

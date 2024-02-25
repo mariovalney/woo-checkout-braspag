@@ -18,7 +18,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
     class WC_Checkout_Braspag_Query extends WC_Checkout_Braspag_Model {
 
         /**
-         * The gateway to be used
+         * The gateway
+         * @var WC_Checkout_Braspag_Gateway
          */
         protected $gateway;
 
