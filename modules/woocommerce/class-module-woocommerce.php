@@ -34,23 +34,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          *
          * @var array
          */
-        public $includes = [
-            'class-wc-checkout-braspag-gateway',
-            'class-wc-checkout-braspag-api',
-            'class-wc-checkout-braspag-providers',
-            'class-wc-checkout-braspag-credit-card-brand',
-            'braspag/class-wc-checkout-braspag-model',
-            'braspag/class-wc-checkout-braspag-messages',
-            'braspag/traits/class-wc-checkout-braspag-extradata',
-            'braspag/models/class-wc-checkout-braspag-customer',
-            'braspag/models/class-wc-checkout-braspag-address',
-            'braspag/models/class-wc-checkout-braspag-query',
-            'braspag/models/class-wc-checkout-braspag-request',
-            'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
-            'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
-            'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
-            'braspag/models/requests/class-wc-checkout-braspag-request-payment-wl',
-        ];
+        public $includes = [];
 
         /**
          * Run
@@ -76,6 +60,24 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             if ( ! defined( 'WCB_WOOCOMMERCE_TEMPLATES' ) ) {
                 define( 'WCB_WOOCOMMERCE_TEMPLATES', WCB_PLUGIN_PATH . '/modules/woocommerce/includes/templates/' );
             }
+
+            $this->includes = [
+                'class-wc-checkout-braspag-gateway',
+                'class-wc-checkout-braspag-api',
+                'class-wc-checkout-braspag-providers',
+                'class-wc-checkout-braspag-credit-card-brand',
+                'braspag/class-wc-checkout-braspag-model',
+                'braspag/class-wc-checkout-braspag-messages',
+                'braspag/traits/class-wc-checkout-braspag-extradata',
+                'braspag/models/class-wc-checkout-braspag-customer',
+                'braspag/models/class-wc-checkout-braspag-address',
+                'braspag/models/class-wc-checkout-braspag-query',
+                'braspag/models/class-wc-checkout-braspag-request',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
+                'braspag/models/requests/class-wc-checkout-braspag-request-payment-wl',
+            ];
         }
 
         /**

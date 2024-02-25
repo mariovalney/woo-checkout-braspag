@@ -23,6 +23,19 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
         protected $order;
 
         /**
+         * @var mixed
+         * @since PHP 8.2
+         */
+        public $City;
+        public $Complement;
+        public $Country;
+        public $District;
+        public $Number;
+        public $State;
+        public $Street;
+        public $ZipCode;
+
+        /**
          * Constructor
          *
          * @see WC_Order

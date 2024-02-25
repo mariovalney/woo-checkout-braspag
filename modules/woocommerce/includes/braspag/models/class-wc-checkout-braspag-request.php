@@ -39,6 +39,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
         protected $gateway;
 
         /**
+         * @var mixed
+         * @since PHP 8.2
+         */
+        public $Customer;
+        public $MerchantOrderId;
+        public $Payment;
+
+        /**
          * Constructor
          *
          * @since    1.0.0

@@ -199,7 +199,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
             // Search for request class
             $class = WC_Checkout_Braspag_Request::get_request_class( 'payment_' . $method );
-            if ( ! is_callable( array( $class, 'do_request' ) ) ) {
+            if ( ! class_exists( $class ) || ! method_exists( $class, 'do_request' ) ) {
                 return $this->return_error( __( 'Please, select a valid payment method.', WCB_TEXTDOMAIN ) );
             }
 

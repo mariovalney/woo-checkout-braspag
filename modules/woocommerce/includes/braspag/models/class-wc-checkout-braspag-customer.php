@@ -18,6 +18,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
     class WC_Checkout_Braspag_Customer extends WC_Checkout_Braspag_Model {
 
         /**
+         * @var mixed
+         * @since PHP 8.2
+         */
+        public $Address;
+        public $Birthdate;
+        public $DeliveryAddress;
+        public $Email;
+        public $Identity;
+        public $IdentityType;
+        public $Name;
+
+        /**
          * Populate data.
          *
          * @see WC_Order()
