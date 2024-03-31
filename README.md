@@ -159,6 +159,10 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 ## Changelog ##
 
+### 4.0.1 ###
+
+* Minor fixes.
+
 ### 4.0.0 ###
 
 * Support to PHP 8.2.
