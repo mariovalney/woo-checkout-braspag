@@ -276,7 +276,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          */
         public function woocommerce_process_shop_order_meta( $post_id, $post ) {
             // phpcs:ignore WordPress.Security.NonceVerification.Missing
-            if ( empty( $_POST['braspag_payment_method'] ) ) {
+            if ( empty( $_POST['braspag_payment_method'] ) || $_POST['braspag_payment_method'] === 'none' ) {
                 return;
             }
 
