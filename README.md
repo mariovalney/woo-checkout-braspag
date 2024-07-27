@@ -5,7 +5,7 @@
 **Requires at least:** 4.7  
 **Tested up to:** 6.3  
 **Requires PHP:** 7.2  
-**Stable tag:** trunk  
+**Stable tag:** 4.0.2  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -158,6 +158,10 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 
 ## Changelog ##
+
+### 4.0.2 ###
+
+* Minor fixes.
 
 ### 4.0.1 ###
 
