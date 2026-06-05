@@ -5,7 +5,7 @@ Tags: woocommerce, payment, braspag, mariovalney
 Requires at least: 4.7
 Tested up to: 6.3
 Requires PHP: 7.2
-Stable tag: 4.0.2
+Stable tag: 5.0.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -153,6 +153,11 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 == Changelog ==
 
+= 5.0.0 =
+
+* Added refund support for credit card and debit card payments via WooCommerce admin.
+* Added required field validation for bank slip (boleto) payments.
+
 = 4.0.2 =
 
 * Minor fixes.
@@ -267,6 +272,8 @@ For users:
 
 == Upgrade Notice ==
 
-Support to new PHP version. It's a major update!
+= 5.0.0 =
+
+Adds refund support via WooCommerce admin for credit card and debit card payments. It's a major update!
 
 Please, check changes on staging before update.
