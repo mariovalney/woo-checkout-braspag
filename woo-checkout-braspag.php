@@ -4,7 +4,7 @@
  * Plugin Name:     Pagador (Braspag) Checkout for WooCommerce
  * Plugin URI:      https://github.com/Vizir/woo-checkout-braspag
  * Description:     Braspag payment gateway for WooCommerce.
- * Version:         4.0.2
+ * Version:         5.0.0
  * License:         GPLv2 or later
  * Author:          Vizir Software Studio, Mário Valney
  * Author URI:      http://vizir.com.br/en
