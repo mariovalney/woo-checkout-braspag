@@ -122,6 +122,52 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
         }
 
         /**
+         * Validate data.
+         * Return errors
+         *
+         * @since    1.0.0
+         *
+         * @param    array  $errors
+         */
+        public function validate() {
+            $errors = parent::validate();
+
+            // Customer document
+            $customer_fields = array(
+                'Identity'     => __( 'Please fill the customer document (CPF/CNPJ).', WCB_TEXTDOMAIN ),
+                'IdentityType' => __( 'Please fill the customer document type (CPF/CNPJ).', WCB_TEXTDOMAIN ),
+            );
+
+            foreach ( $customer_fields as $field => $error ) {
+                if ( ! empty( $this->Customer->$field ) ) {
+                    continue;
+                }
+
+                $errors[] = $error;
+            }
+
+            // Address fields
+            $address_fields = array(
+                'Street'   => __( 'Please fill the billing street.', WCB_TEXTDOMAIN ),
+                'Number'   => __( 'Please fill the billing number.', WCB_TEXTDOMAIN ),
+                'ZipCode'  => __( 'Please fill the billing zip code.', WCB_TEXTDOMAIN ),
+                'District' => __( 'Please fill the billing district.', WCB_TEXTDOMAIN ),
+                'City'     => __( 'Please fill the billing city.', WCB_TEXTDOMAIN ),
+                'State'    => __( 'Please fill the billing state.', WCB_TEXTDOMAIN ),
+            );
+
+            foreach ( $address_fields as $field => $error ) {
+                if ( ! empty( $this->Customer->Address->$field ) ) {
+                    continue;
+                }
+
+                $errors[] = $error;
+            }
+
+            return $errors;
+        }
+
+        /**
          * Cancel the transaction
          *
          * @param  string $payment_id
