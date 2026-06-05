@@ -310,13 +310,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @param  string $amount
          * @return bool If cancelled.
          */
-        public function cancel_transaction( $payment_id, $amount ) {
+        public function cancel_transaction( $payment_id, $amount = 0 ) {
             /**
              * Filter endpoint to cancel a transaction
              *
              * @var string  $endpoint
              */
-            $endpoint = $this->gateway->api->get_endpoint_api() . $this::TRANSACTION_ENDPOINT . $payment_id . '/void?amount=' . $amount;
+            $endpoint = $this->gateway->api->get_endpoint_api() . $this::TRANSACTION_ENDPOINT . $payment_id . '/void';
+            if ( $amount > 0 ) {
+                $endpoint .= '?amount=' . $amount;
+            }
             $endpoint = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_cancel_transaction_endpoint', $endpoint );
 
             // PUT Request
