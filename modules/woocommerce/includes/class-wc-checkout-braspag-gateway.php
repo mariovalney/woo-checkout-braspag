@@ -797,30 +797,48 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 return new WP_Error( 'no_payment_id', __( 'Braspag Payment ID not found for this order.', WCB_TEXTDOMAIN ) );
             }
 
-            $method_code   = $order->get_meta( '_wc_braspag_payment_method' );
-            $request_class = WC_Checkout_Braspag_Request::get_request_class( 'Payment_' . strtoupper( $method_code ) );
+            $method_code = $order->get_meta( '_wc_braspag_payment_method' );
+            if ( empty( $method_code ) ) {
+                return new WP_Error( 'missing_method', __( 'Payment method not found for this order.', WCB_TEXTDOMAIN ) );
+            }
 
+            // Only CC and DC support void; BS and WL always return false
+            $refundable_methods = [ 'cc', 'dc' ];
+            if ( ! in_array( $method_code, $refundable_methods, true ) ) {
+                return new WP_Error( 'unsupported_method', __( 'Refund not supported for this payment method.', WCB_TEXTDOMAIN ) );
+            }
+
+            $request_class = WC_Checkout_Braspag_Request::get_request_class( 'Payment_' . strtoupper( $method_code ) );
             if ( ! class_exists( $request_class ) ) {
                 return new WP_Error( 'unsupported_method', __( 'Refund not supported for this payment method.', WCB_TEXTDOMAIN ) );
             }
 
-            $request         = new $request_class( $order, $this );
             $amount_in_cents = $amount ? (int) round( $amount * 100 ) : 0;
             $is_partial      = $amount_in_cents > 0 && $amount_in_cents < (int) round( (float) $order->get_total() * 100 );
 
-            if ( $is_partial ) {
-                $api_query   = new WC_Checkout_Braspag_Query( $this );
-                $transaction = $api_query->get_transaction( $payment_id );
-                $status      = (int) ( $transaction['Payment']['Status'] ?? 0 );
+            // Check transaction status before attempting void
+            $api_query   = new WC_Checkout_Braspag_Query( $this );
+            $transaction = $api_query->get_transaction( $payment_id );
+            $status      = (int) ( $transaction['Payment']['Status'] ?? -1 );
 
-                if ( $status !== WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED ) {
-                    return new WP_Error(
-                        'not_captured',
-                        __( 'Partial refund is only available for captured transactions.', WCB_TEXTDOMAIN )
-                    );
-                }
+            $non_refundable = [
+                WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED,
+                WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED,
+                WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED,
+                WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED,
+                WC_Checkout_Braspag_Api::TRANSACTION_STATUS_ABORTED,
+            ];
+
+            if ( in_array( $status, $non_refundable, true ) ) {
+                return new WP_Error( 'invalid_status', __( 'This transaction cannot be refunded in its current status.', WCB_TEXTDOMAIN ) );
             }
 
+            // Partial refund only works on captured transactions
+            if ( $is_partial && $status !== WC_Checkout_Braspag_Api::TRANSACTION_STATUS_PAYMENT_CONFIRMED ) {
+                return new WP_Error( 'not_captured', __( 'Partial refund is only available for captured transactions.', WCB_TEXTDOMAIN ) );
+            }
+
+            $request = new $request_class( $order, $this );
             $success = $request->cancel_transaction( $payment_id, $amount_in_cents );
             if ( $success ) {
                 $order->add_order_note( sprintf(
