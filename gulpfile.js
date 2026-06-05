@@ -5,7 +5,6 @@ var autoprefixer = require( 'gulp-autoprefixer' );
 var cleanCSS     = require( 'gulp-clean-css' );
 var rename       = require( 'gulp-rename' );
 var uglifyEs     = require( 'gulp-uglify-es' ).default;
-var watch        = require( 'gulp-watch' );
 var zip          = require( 'gulp-zip' );
 
 // Directories
