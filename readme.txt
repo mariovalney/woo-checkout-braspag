@@ -153,6 +153,14 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 == Changelog ==
 
+= 5.0.0 =
+
+* Added refund support for credit card and debit card payments via WooCommerce admin.
+* Full and partial refunds are supported for captured transactions.
+* Full refunds are also supported for authorized but not yet captured transactions.
+* Boleto and e-wallet payments do not support refunds via WooCommerce admin.
+* Added required field validation for boleto (bank slip) payments: customer document (CPF/CNPJ), billing street, number, zip code, district, city and state are now validated before sending to Braspag.
+
 = 4.0.2 =
 
 * Minor fixes.
@@ -267,6 +275,6 @@ For users:
 
 == Upgrade Notice ==
 
-Support to new PHP version. It's a major update!
+= 5.0.0 =
 
-Please, check changes on staging before update.
+Adds refund support for credit card and debit card payments and required field validation for boleto. Major update — please test on staging before updating.
