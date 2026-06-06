@@ -1098,6 +1098,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $voided_amount = (int) ( $transaction['Payment']['VoidedAmount'] ?? 0 );
 
             if ( $voided_amount <= 0 ) {
+                $this->delete_synced_refunds( $order );
                 return;
             }
 
@@ -1124,6 +1125,24 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             }
 
             $this->log( sprintf( '[sync_voided_amount] created refund of %s for order %d', $difference, $order->get_id() ) );
+        }
+
+        public function delete_synced_refunds( $order ) {
+            $sync_reason = __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN );
+            $deleted     = false;
+
+            foreach ( $order->get_refunds() as $refund ) {
+                if ( $refund->get_reason() !== $sync_reason ) {
+                    continue;
+                }
+
+                wc_delete_refund( $refund->get_id() );
+                $deleted = true;
+            }
+
+            if ( $deleted ) {
+                $this->log( sprintf( '[sync_voided_amount] deleted synced refunds for order %d (VoidedAmount is 0)', $order->get_id() ) );
+            }
         }
 
         /**
