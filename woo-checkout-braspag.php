@@ -13,7 +13,7 @@
  * Requires PHP:    7.2
  *
  * WC requires at least: 3.6.5
- * WC tested up to: 8.1.1
+ * WC tested up to: 10.8.1
  *
  * @package         Woo_Checkout_Braspag
  * @since           1.0.0
