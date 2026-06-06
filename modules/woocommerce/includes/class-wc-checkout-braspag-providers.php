@@ -195,50 +195,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
             ),
         );
 
-        /**
-         * E-Wallet Providers
-         *
-         * @link https://braspag.github.io/manual/braspag-pagador#requisi%C3%A7%C3%A3o-padr%C3%A3o
-         * @version 1.0.0 14/08/2020
-         */
-        const E_WALLET = array(
-            'Cielo'          => array(
-                'description' => 'Plataforma legado Cielo 1.5',
-                'wallets'     => [ 'ApplePay', 'SamsungPay', 'AndroidPay', 'VisaCheckout', 'Masterpass' ],
-            ),
-            'Cielo30'        => array(
-                'description' => 'Plataforma de e-commerce Cielo 3.0',
-                'wallets'     => [ 'ApplePay', 'SamsungPay', 'AndroidPay', 'VisaCheckout', 'Masterpass' ],
-            ),
-        );
-
-        /**
-         * Eletronic Transfer Providers
-         *
-         * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-transfer%C3%AAncia-eletronica-(d%C3%A9bito-online)
-         * @version 2.2.1 23/09/2020
-         */
-        const ELETRONIC_TRANSFER = array(
-            'Bradesco'               => array(
-                'description' => 'Débito online no Bradesco',
-            ),
-            'BancoDoBrasil'          => array(
-                'description' => 'Débito online no Banco do Brasil',
-            ),
-            'SafetyPay'              => array(
-                'description' => 'Débito online no Safety Pay',
-            ),
-            'Itau'                   => array(
-                'description' => 'Débito online no Itaú',
-            ),
-            'PayMeeRedirectCheckout' => array(
-                'description' => 'Débito online no PayMee Redirect Checkout',
-            ),
-            'PayMeeSemiTransparent'  => array(
-                'description' => 'Débito online no PayMee Semi Transparent',
-            ),
-        );
-
         public function __construct() {}
 
         /**

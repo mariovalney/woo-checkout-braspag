@@ -169,12 +169,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 '<a href="https://wordpress.org/plugins/' . self::EXTRA_FIELDS_PLUGIN_SLUG . '" target="_blank">' . self::EXTRA_FIELDS_PLUGIN_NAME . '</a>'
             );
 
-            $wallet_key_description = sprintf(
-                // translators: link to documentation (portuguese only)
-                __( 'Encrypted key that identifies stores in wallets. Check %s for more details.', WCB_TEXTDOMAIN ),
-                '<a href="https://braspag.github.io/manual/braspag-pagador#walletkey" target="_blank">Walletkey</a>'
-            );
-
             $debug_description = sprintf(
                 // translators: link to debug page
                 __( 'Log Checkout Braspag events, such as API requests, you can check this log in %s.', WCB_TEXTDOMAIN ),
@@ -253,12 +247,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'default'     => 'no',
                     'description' => __( 'It should be available to your merchant.', WCB_TEXTDOMAIN ),
                 );
-
-                // E-Wallet is still not implemented
-                if ( $code === 'wl' ) {
-                    $this->form_fields['method_wl_enabled']['desc_tip'] = false;
-                    $this->form_fields['method_wl_enabled']['description'] = __( 'Still not fully implemented: will not show up on checkout page. Please, check FAQ for more information.', WCB_TEXTDOMAIN );
-                }
 
                 $sub_option_preffix = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 
@@ -543,27 +531,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     );
                 }
 
-                // E-Wallet Options
-                if ( $code === 'wl' ) {
-                    $wallets = array();
-                    foreach ( WC_Checkout_Braspag_Providers::E_WALLET as $data ) {
-                        $data = $data['wallets'] ?? [];
-                        $wallets = array_merge( $wallets, $data );
-                    }
 
-                    $wallets = array_unique( $wallets );
-
-                    foreach ( $wallets as $wallet ) {
-                        $wallet_code = strtolower( $wallet );
-
-                        $this->form_fields[ 'method_' . $code . '_' . $wallet_code . '_walletkey'  ] = array(
-                            'type'              => 'textarea',
-                            'title'             => $sub_option_preffix . sprintf( __( 'Key for %s', WCB_TEXTDOMAIN ), $wallet ), // phpcs:ignore
-                            'description'       => $wallet_key_description,
-                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_wl_enabled' ],
-                        );
-                    }
-                }
             }
 
             // Options after Payment Methods
@@ -802,7 +770,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 return new WP_Error( 'missing_method', __( 'Payment method not found for this order.', WCB_TEXTDOMAIN ) );
             }
 
-            // Only CC and DC support void; BS and WL always return false
+            // Only CC and DC support void; BS always returns false
             $refundable_methods = [ 'cc', 'dc' ];
             if ( ! in_array( $method_code, $refundable_methods, true ) ) {
                 return new WP_Error( 'unsupported_method', __( 'Refund not supported for this payment method.', WCB_TEXTDOMAIN ) );
@@ -1244,20 +1212,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
                     'frontend'  => true,
                 ],
-                'wl' => [
-                    'enabled'   => false,
-                    'code'      => 'EWallet',
-                    'name'      => __( 'E-Wallet', WCB_TEXTDOMAIN ),
-                    'providers' => WC_Checkout_Braspag_Providers::E_WALLET,
-                    'frontend'  => false,
-                ],
-                // TODO: Still waiting Braspag Support
-                // 'et' => [
-                //     'enabled'   => false,
-                //     'code'      => 'EletronicTransfer',
-                //     'name'      => __( 'Eletronic Transfer', WCB_TEXTDOMAIN ),
-                //     'providers' => WC_Checkout_Braspag_Providers::ELETRONIC_TRANSFER,
-                // ],
             ];
 
             foreach ( array_keys( $this->payment_methods ) as $code ) {
