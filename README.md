@@ -1,17 +1,17 @@
-=== Pagador (Braspag) Checkout for WooCommerce ===
-Contributors: mariovalney
-Donate link: https://github.com/mariovalney/woo-checkout-braspag
-Tags: woocommerce, payment, braspag, mariovalney
-Requires at least: 4.7
-Tested up to: 6.3
-Requires PHP: 7.2
-Stable tag: 5.0.0
-License: GPLv2 or later
-License URI: http://www.gnu.org/licenses/gpl-2.0.html
+# Pagador (Braspag) Checkout for WooCommerce
+**Contributors:** [mariovalney](https://profiles.wordpress.org/mariovalney/)  
+**Donate link:** https://github.com/mariovalney/woo-checkout-braspag  
+**Tags:** woocommerce, payment, braspag, mariovalney  
+**Requires at least:** 4.7  
+**Tested up to:** 6.3  
+**Requires PHP:** 7.2  
+**Stable tag:** 5.0.0  
+**License:** GPLv2 or later  
+**License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
 Add Braspag payment to your WooCommerce e-commerce!
 
-== Description ==
+## Description
 
 Add Braspag gateway to WooCommerce.
 
@@ -50,11 +50,11 @@ After that, just activate the available payment methods.
 
 All of them require a "Provider" provided by Braspag and some settings: read the tips (icon with the question mark) for more information.
 
-= Translations =
+### Translations
 
 You can [translate Pagador (Braspag) Checkout for WooCommerce](https://translate.wordpress.org/projects/wp-plugins/woo-checkout-braspag) to your language.
 
-== Installation ==
+## Installation
 
 * Install "Pagador (Braspag) Checkout for WooCommerce" by plugins dashboard.
 
@@ -66,17 +66,17 @@ Then
 
 * Activate the plugin through the 'Plugins' menu in WordPress.
 
-== Frequently Asked Questions ==
+## Frequently Asked Questions
 
-= Does it works with Gutenberg? =
+### Does it works with Gutenberg?
 
 Yes. WooCommerce supports WordPress 5+ and we too.
 
-= Does it works for another e-commerce plugin? =
+### Does it works for another e-commerce plugin?
 
 Nope. This is a WooCommerce extension.
 
-= I cannot add a payment on order administration =
+### I cannot add a payment on order administration
 
 To create a payment on admin you should:
 
@@ -85,13 +85,13 @@ To create a payment on admin you should:
 - Set Braspag as payment method.
 - Transaction ID must be empty.
 
-= Transaction ID? =
+### Transaction ID?
 
 The transaction ID is the Braspag number on your order.
 
 If you already have a Transaction ID (payment was done in Braspag) you must use the relative Order Action to get information from Braspag.
 
-= My orders are not being updated automatically =
+### My orders are not being updated automatically
 
 You should configure a URL to receive notification from Braspag.
 
@@ -99,17 +99,17 @@ It should be: "example.com/?wc-api=WC_Checkout_Braspag_Gateway"
 
 Do not forget to change "example.com" to your home url.
 
-= Which URL I should inform to receive Braspag POST Notifications? =
+### Which URL I should inform to receive Braspag POST Notifications?
 
 Check the previous FAQ.
 
-= How about e-wallet? =
+### How about e-wallet?
 
 We don't support e-wallets.
 
 If you want to contribute a PR will be appreciated.
 
-= My bank slip number changed =
+### My bank slip number changed
 
 We used to sent the "BoletoNumber" to Braspag but it's not required and can cause problems for some providers.
 
@@ -117,29 +117,32 @@ By now we decided to remove this field and alow you to add/change it if "wc_chec
 
 This will not change nothing on WordPress dashboard.
 
-= What is PHP? =
+### What is PHP?
 
 It is a programming language for web development. PHP as like any software it has versions. And we just support 7 (and above).
 
 If you are using PHP in version below 7, please contact your host to update your environment.
 
-= Who are the developers? =
+### Who are the developers?
 
 * [Mário Valney](https://mariovalney.com/me) is a Brazilian developer who integrates the [WordPress community](https://profiles.wordpress.org/mariovalney).
 
-= Can I help you? =
+### Can I help you?
 
 Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-braspag).
 
-== Screenshots ==
+## Screenshots
 
-1. Screenshot 1
-2. Screenshot 2
-3. Screenshot 3
+![Screenshot 1](https://ps.w.org/pagador-(braspag)-checkout-for-woocommerce/assets/screenshot-1.png)
+*Screenshot 1*
+![Screenshot 2](https://ps.w.org/pagador-(braspag)-checkout-for-woocommerce/assets/screenshot-2.png)
+*Screenshot 2*
+![Screenshot 3](https://ps.w.org/pagador-(braspag)-checkout-for-woocommerce/assets/screenshot-3.png)
+*Screenshot 3*
 
-== Changelog ==
+## Changelog
 
-= 5.0.0 =
+### 5.0.0
 
 * Added refund support for credit card and debit card payments via WooCommerce admin.
 * Full and partial refunds are supported for captured transactions.
@@ -151,48 +154,48 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 * "Update payment info from Braspag" action now syncs VoidedAmount to WooCommerce refunds.
 * Fixed Voided transaction status mapping: captured transactions now correctly map to "refunded" instead of "cancelled".
 
-= 4.0.2 =
+### 4.0.2
 
 * Minor fixes.
 
-= 4.0.1 =
+### 4.0.1
 
 * Minor fixes.
 
-= 4.0.0 =
+### 4.0.0
 
 * Support to PHP 8.2.
 
-= 3.2.2 =
+### 3.2.2
 
 * Added 'wc_checkout_braspag_update_order_from_payment_transaction' filter.
 * Added 'is_processing_payment' method on gateway to allow developers check the first transaction data.
 * Added 'get_recurrent_payment' method in query requrests.
 
-= 3.2.1 =
+### 3.2.1
 
 * Added API error messages when creating orders ('WC_Checkout_Braspag_Messages::payment_error_message' on 'post_transaction').
 
-= 3.2.0 =
+### 3.2.0
 
 * Added 'wc_checkout_braspag_payment_status' filter.
 * Added 'wc_checkout_braspag_payment_status_note' filter.
 * Added 'wc_checkout_braspag_payment_error_message' filter.
 * Added 'wc_checkout_braspag_do_payment_request' filter.
 
-= 3.1.3 =
+### 3.1.3
 
 * Added a way to overwrite wallet key with front-end (e-wallet are still in BETA).
 
-= 3.1.0 =
+### 3.1.0
 
 * Added option to send Company Name instead Customer Name if CNPJ is presented.
 
-= 3.0.1 =
+### 3.0.1
 
 * Fixed CardToken storage.
 
-= 3.0.0 =
+### 3.0.0
 
 It's a developer version:
 
@@ -203,68 +206,68 @@ For users:
 
 * Few translation fixes.
 
-= 2.2.2 =
+### 2.2.2
 
 * Updated Braspag Providers.
 
-= 2.1.1 =
+### 2.1.1
 
 * Fixed customer identity if person type is not provided.
 
-= 2.1.0 =
+### 2.1.0
 
 * Removed "BoletoNumber" field.
 * Added filters.
 
-= 2.0.1 =
+### 2.0.1
 
 * Translation fix
 
-= 2.0.0 =
+### 2.0.0
 
 * Improved payment info on order.
 * Added customer validation on checkout.
 * Allow developers skip payment method on checkout.
 * Allow create payment on order administration.
 
-= 1.4.0 =
+### 1.4.0
 
 * Added payment info on order.
 * Added autofind for credit card brands.
 * Removing Debit Card as it's not tested.
 
-= 1.3.3 =
+### 1.3.3
 
 * Added payment info on mails.
 
-= 1.3.2 =
+### 1.3.2
 
 * Support to empty Credentials if already configured on Braspag.
 
-= 1.3.1 =
+### 1.3.1
 
 * Support to Issuer.
 
-= 1.3.0 =
+### 1.3.0
 
 * Fix cents on order amount and improve order validation.
 
-= 1.2.0 =
+### 1.2.0
 
 * Support to Safra
 
-= 1.1.0 =
+### 1.1.0
 
 * Best file organization.
 * Added methods to work with ExtraDataCollection on Payment info.
 
-= 1.0 =
+### 1.0
 
 * It's alive!
 * Receive payments with Braspag!
 
-== Upgrade Notice ==
+## Upgrade Notice
 
-= 5.0.0 =
+### 5.0.0
 
 Major update. Adds refund support for credit and debit card, VoidedAmount sync from Braspag, HTTP/1.1 enforcement, and fixes for Voided status mapping. Please test on staging before updating.
