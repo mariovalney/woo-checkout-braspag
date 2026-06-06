@@ -1095,24 +1095,23 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * refunded in WooCommerce, so both stay in sync.
          */
         public function sync_voided_amount( $order, $transaction ) {
-            $voided_amount = (int) ( $transaction['Payment']['VoidedAmount'] ?? 0 );
+            $voided_amount  = (int) ( $transaction['Payment']['VoidedAmount'] ?? 0 );
+            $voided_total   = wc_format_decimal( $voided_amount / 100 );
+            $refunded_total = wc_format_decimal( $order->get_total_refunded() );
 
-            if ( $voided_amount <= 0 ) {
-                $this->delete_synced_refunds( $order );
+            if ( $voided_total === $refunded_total ) {
                 return;
             }
 
-            $voided_total   = wc_format_decimal( $voided_amount / 100 );
-            $refunded_total = (float) $order->get_total_refunded();
-            $difference     = round( (float) $voided_total - $refunded_total, wc_get_price_decimals() );
+            $this->delete_synced_refunds( $order );
 
-            if ( $difference <= 0 ) {
+            if ( $voided_amount <= 0 ) {
                 return;
             }
 
             $refund = wc_create_refund(
                 array(
-                    'amount'        => $difference,
+                    'amount'        => $voided_total,
                     'reason'        => __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN ),
                     'order_id'      => $order->get_id(),
                     'restock_items' => false,
@@ -1124,7 +1123,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 return;
             }
 
-            $this->log( sprintf( '[sync_voided_amount] created refund of %s for order %d', $difference, $order->get_id() ) );
+            $this->log( sprintf( '[sync_voided_amount] created refund of %s for order %d', $voided_total, $order->get_id() ) );
         }
 
         public function delete_synced_refunds( $order ) {
@@ -1141,7 +1140,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             }
 
             if ( $deleted ) {
-                $this->log( sprintf( '[sync_voided_amount] deleted synced refunds for order %d (VoidedAmount is 0)', $order->get_id() ) );
+                $this->log( sprintf( '[sync_voided_amount] deleted synced refunds for order %d', $order->get_id() ) );
             }
         }
 
