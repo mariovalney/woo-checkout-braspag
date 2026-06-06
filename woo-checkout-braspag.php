@@ -13,7 +13,7 @@
  * Requires PHP:    7.2
  *
  * WC requires at least: 3.6.5
- * WC tested up to: 8.1.1
+ * WC tested up to: 10.8.1
  *
  * @package         Woo_Checkout_Braspag
  * @since           1.0.0
@@ -252,7 +252,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
          */
         public function run() {
             // Definitions to plugin
-            define( 'WCB_VERSION', '4.0.2' );
+            define( 'WCB_VERSION', '5.0.0' );
             define( 'WCB_PLUGIN_FILE', __FILE__ );
             define( 'WCB_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
             define( 'WCB_PLUGIN_PATH', WP_PLUGIN_DIR . '/' . dirname( WCB_PLUGIN_BASENAME ) );

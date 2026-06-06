@@ -107,6 +107,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->merchant_key         = $this->get_option( 'merchant_key' );
             $this->sandbox_merchant_key = $this->get_option( 'sandbox_merchant_key' );
             $this->debug                = $this->get_option( 'debug' );
+            $this->override_user_agent  = $this->get_option( 'override_user_agent' );
 
             // Is Sandbox?
             $this->is_sandbox = ( 'yes' === $this->sandbox ) ? true : false;
@@ -542,7 +543,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'  => 'title',
                         'title' => __( 'Advanced Settings', WCB_TEXTDOMAIN ),
                     ),
-                    'use_extra_fields' => array(
+                    'use_extra_fields'    => array(
                         'type'        => 'checkbox',
                         'title'       => __( 'Customer Fields', WCB_TEXTDOMAIN ),
                         'label'       => sprintf(
@@ -553,7 +554,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'description' => $use_extra_fields_description,
                         'default'     => 'yes',
                     ),
-                    'debug'            => array(
+                    'override_user_agent' => array(
+                        'type'        => 'checkbox',
+                        'title'       => __( 'Override User-Agent', WCB_TEXTDOMAIN ),
+                        'label'       => __( 'Override the User-Agent sent in API requests', WCB_TEXTDOMAIN ),
+                        'description' => sprintf(
+                            // translators: %s is the plugin version, e.g. "4.0.2"
+                            __( 'Replaces WordPress\'s default User-Agent with "WooCheckoutBraspag/%s". Useful when the hosting domain triggers blocks on Braspag\'s WAF. Be careful activating.', WCB_TEXTDOMAIN ),
+                            WCB_VERSION
+                        ),
+                        'default'     => 'no',
+                    ),
+                    'debug'               => array(
                         'type'        => 'checkbox',
                         'title'       => __( 'Debug Log', WCB_TEXTDOMAIN ),
                         'label'       => __( 'Enable logging', WCB_TEXTDOMAIN ),
@@ -690,6 +702,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             $method = sanitize_text_field( $_POST['braspag_payment_method'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+            $this->log( sprintf( '[process_payment] order_id=%d method=%s', $order_id, $method ) );
+
             /**
              * Filters the do_payment_request response.
              *
@@ -698,6 +712,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
              * @param WC_Payment_Gateway $this
              */
             $response = apply_filters( 'wc_checkout_braspag_do_payment_request', $this->api->do_payment_request( $method, $order, $this ), $order, $this );
+
+            $this->log( sprintf( '[process_payment] response keys: %s', implode( ', ', array_keys( $response ) ) ) );
 
             // Update Order after gateway response
             if ( ! empty( $response['transaction'] ) ) {
@@ -709,6 +725,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 try {
                     // Our Stuff
                     $updated = $this->update_order_status( $response['transaction'] );
+
+                    $this->log( sprintf( '[process_payment] update_order_status result: %s', var_export( $updated, true ) ) ); // phpcs:ignore
+
                     if ( empty( $updated ) ) {
                         throw new Exception( __( 'There was a problem updating your payment.', WCB_TEXTDOMAIN ) );
                     }
@@ -730,12 +749,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'redirect' => ( ! empty( $response['url'] ) ) ? $response['url'] : $this->get_return_url( $order ),
                     );
                 } catch ( Exception $e ) {
+                    $this->log( sprintf( '[process_payment] exception after update_order_status: %s', $e->getMessage() ), 'error' );
                     $response['errors'] = [ $e->getMessage() ];
                 }
             }
 
             // If not success, add error notices
             $errors = ( ! empty( $response['errors'] ) ) ? $response['errors'] : [];
+
+            if ( ! empty( $errors ) ) {
+                $this->log( sprintf( '[process_payment] errors: %s', implode( ' | ', $errors ) ), 'error' );
+            }
+
             foreach ( $errors as $error ) {
                 wc_add_notice( $error, 'error' );
             }
@@ -867,7 +892,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED:
-                    $order_status = 'cancelled';
+                    // Voided can mean either cancelled (not captured) or refunded (captured)
+                    $captured_amount = (int) ( $transaction['Payment']['CapturedAmount'] ?? 0 );
+                    $order_status    = $captured_amount > 0 ? 'refunded' : 'cancelled';
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED:
@@ -1007,7 +1034,48 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
              */
             $transaction = apply_filters( 'wc_checkout_braspag_update_order_from_payment_transaction', $transaction, $order, $api_query, $this );
 
-            return $this->update_order_status( $transaction );
+            $updated = $this->update_order_status( $transaction );
+
+            $this->sync_voided_amount( $order, $transaction );
+
+            return $updated;
+        }
+
+        /**
+         * Sync VoidedAmount from Braspag to WooCommerce refunds.
+         *
+         * Creates a single WooCommerce refund for the difference between
+         * the VoidedAmount reported by Braspag and the total already
+         * refunded in WooCommerce, so both stay in sync.
+         */
+        public function sync_voided_amount( $order, $transaction ) {
+            $voided_amount = (int) ( $transaction['Payment']['VoidedAmount'] ?? 0 );
+
+            if ( $voided_amount <= 0 ) {
+                return;
+            }
+
+            $voided_total    = wc_format_decimal( $voided_amount / 100 );
+            $refunded_total  = (float) $order->get_total_refunded();
+            $difference      = round( (float) $voided_total - $refunded_total, wc_get_price_decimals() );
+
+            if ( $difference <= 0 ) {
+                return;
+            }
+
+            $refund = wc_create_refund( array(
+                'amount'     => $difference,
+                'reason'     => __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN ),
+                'order_id'   => $order->get_id(),
+                'restock_items' => false,
+            ) );
+
+            if ( is_wp_error( $refund ) ) {
+                $this->log( sprintf( '[sync_voided_amount] failed to create refund: %s', $refund->get_error_message() ), 'error' );
+                return;
+            }
+
+            $this->log( sprintf( '[sync_voided_amount] created refund of %s for order %d', $difference, $order->get_id() ) );
         }
 
         /**
