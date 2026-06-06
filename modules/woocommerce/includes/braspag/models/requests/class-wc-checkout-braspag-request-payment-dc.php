@@ -37,7 +37,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
             parent::populate( $order );
 
             if ( empty( $this->Payment ) ) {
-                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // Return URL
@@ -70,7 +70,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
 
                 // Redirect URL
                 if ( empty( $payment['AuthenticationUrl'] ) ) {
-                    throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                    throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                 }
 
                 // Log Redirect
@@ -87,9 +87,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
             $reason_code = $payment['ReasonCode'] ?? '';
             $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, false );
 
-            throw new Exception( $message );
+            throw new Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
-
     }
 
 }

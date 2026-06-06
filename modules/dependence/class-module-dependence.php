@@ -157,6 +157,5 @@ if ( ! class_exists( 'WCB_Module_Dependence' ) ) {
                 '<a href="' . esc_url( $url ) . '">' . __( 'activate the plugin', WCB_TEXTDOMAIN ) . '</a>'
             );
         }
-
     }
 }

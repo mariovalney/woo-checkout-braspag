@@ -97,7 +97,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
             $body = $result['body'] ?? '';
             return ( $decode_json ) ? json_decode( $body, true ) : $body;
         }
-
     }
 
 }

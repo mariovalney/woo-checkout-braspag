@@ -41,7 +41,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // Check for order
             if ( empty( $order->get_id() ) ) {
-                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // Payment Data
@@ -244,7 +244,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $reason_code = $payment['ReasonCode'] ?? '';
             $message     = WC_Checkout_Braspag_Messages::payment_error_message( $reason_code, true );
 
-            throw new Exception( $message );
+            throw new Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         /**
@@ -258,7 +258,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          */
         public function capture_transaction( $transaction ) {
             if ( empty( $transaction['Payment'] ) ) {
-                throw new Exception();
+                throw new Exception(); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // Get PaymentId
@@ -297,7 +297,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             // If there's no action, we throw the standard message
             if ( has_action( $not_captured_action ) ) {
-                throw new Exception( $error );
+                throw new Exception( $error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
         }
 
@@ -371,7 +371,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
 
             return $brand;
         }
-
     }
 
 }

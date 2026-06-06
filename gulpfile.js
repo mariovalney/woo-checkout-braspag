@@ -24,7 +24,7 @@ function styles() {
     return gulp.src( style_source_files )
         .pipe(
             rename(
-                function(path) {
+                function (path) {
                     path.extname = '.min.css';
                 }
             )
@@ -48,7 +48,7 @@ function scripts() {
     return gulp.src( script_source_files )
         .pipe(
             rename(
-                function(path) {
+                function (path) {
                     path.extname = '.min.js';
                 }
             )

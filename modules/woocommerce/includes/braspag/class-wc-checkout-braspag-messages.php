@@ -216,7 +216,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Messages' ) ) {
              */
             return apply_filters( 'wc_checkout_braspag_payment_error_message', $message, $reason_code, $is_credit_card, $default_message );
         }
-
     }
 
 }

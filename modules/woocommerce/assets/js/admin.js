@@ -1,9 +1,9 @@
 'use strict';
 
-jQuery( document ).ready( function($) {
+jQuery( document ).ready( function ($) {
     var inputs_to_init = [];
 
-    $( '[data-condition]' ).each( function(index, el) {
+    $( '[data-condition]' ).each( function (index, el) {
         var condition_attr = $( el ).data( 'condition' );
 
         if ( ! condition_attr ) {
@@ -47,7 +47,7 @@ jQuery( document ).ready( function($) {
         var elements_to_observe_length = elements_to_observe.length;
         for (var j = 0; j < elements_to_observe_length; j++) {
 
-            elements_to_observe[j].on( 'change', function(event) {
+            elements_to_observe[j].on( 'change', function (event) {
                 var show = true,
                 value    = '';
 
@@ -86,7 +86,7 @@ jQuery( document ).ready( function($) {
 
     // Trigger conditions
     inputs_to_init = _.uniq( inputs_to_init );
-    _.each( inputs_to_init, function(element) {
+    _.each( inputs_to_init, function (element) {
         $( '[name="' + element + '"]' ).trigger( 'change' );
     } );
 } );

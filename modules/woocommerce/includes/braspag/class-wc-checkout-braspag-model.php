@@ -93,7 +93,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
                 return $string;
             }
 
-            return date( $format, strtotime( $string ) );
+            return gmdate( $format, strtotime( $string ) );
         }
 
         /**
@@ -112,7 +112,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
 
             return sanitize_text_field( $_POST[ $key ] ?? $default ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
         }
-
     }
 
 }

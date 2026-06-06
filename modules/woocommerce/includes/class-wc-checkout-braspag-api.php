@@ -302,7 +302,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $this->gateway->log( [ 'url' => $url, 'result' => $result ], 'error' ); // phpcs:ignore
 
             // Create a default connection message
-            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.', WCB_TEXTDOMAIN ) );
+            throw new Exception( __( 'Ops... We cannot connect to the server. Please, verify your internet connection.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         /**
@@ -368,7 +368,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         private function return_error( $error ) {
             return array( 'errors' => (array) $error );
         }
-
     }
 
 }

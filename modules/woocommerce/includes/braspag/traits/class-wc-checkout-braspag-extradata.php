@@ -84,7 +84,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
 
             $collection = array_filter(
                 $collection,
-                function( $item ) use ( $name ) {
+                function ( $item ) use ( $name ) {
                     if ( empty( $item->Name ) ) {
                         return false;
                     }
@@ -121,7 +121,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
 
             $this->Payment['ExtraDataCollection'] = (array) $collection;
         }
-
     }
 
 }

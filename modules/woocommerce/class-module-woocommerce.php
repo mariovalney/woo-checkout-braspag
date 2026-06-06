@@ -171,6 +171,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                     $order->add_order_note( __( 'Braspag: updating payment info.', WCB_TEXTDOMAIN ), 0, get_current_user_id() );
                 }
             } catch ( Exception $e ) {
+                // translators: %s: error message
                 $order->add_order_note( sprintf( __( 'Braspag: updating payment info error (%s).', WCB_TEXTDOMAIN ), $e->getMessage() ), 0, get_current_user_id() );
             }
         }
@@ -187,12 +188,12 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             $post_type = '';
-            if ( ! empty( $_GET['post_type'] ) ) {
-                $post_type = sanitize_text_field( $_GET['post_type'] );
+            if ( ! empty( $_GET['post_type'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $post_type = sanitize_text_field( $_GET['post_type'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
             }
 
-            if ( ! $post_type && ! empty( $_GET['post'] ) ) {
-                $post      = sanitize_text_field( $_GET['post'] );
+            if ( ! $post_type && ! empty( $_GET['post'] ) ) { // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+                $post      = sanitize_text_field( $_GET['post'] ); // phpcs:ignore WordPress.Security.NonceVerification.Recommended
                 $post      = get_post( $post );
                 $post_type = $post ? $post->post_type : '';
             }
@@ -506,7 +507,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             return array();
         }
-
     }
 
 }

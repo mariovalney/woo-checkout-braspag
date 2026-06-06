@@ -35,7 +35,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
 
             // Check for order
             if ( empty( $order->get_id() ) ) {
-                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // Payment Data
@@ -109,7 +109,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             // Prefer company name
             $prefer_company = ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_prefer_company', 'no' ) === 'yes' );
             if ( $prefer_company && ! empty( $this->Customer ) && $this->Customer->IdentityType === 'CNPJ' ) {
-                $this->Customer->Name = $order->get_billing_company() ?: $this->Customer->Name;
+                $company              = $order->get_billing_company();
+                $this->Customer->Name = ! empty( $company ) ? $company : $this->Customer->Name;
             }
 
             /**
@@ -195,7 +196,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
 
             return true;
         }
-
     }
 
 }

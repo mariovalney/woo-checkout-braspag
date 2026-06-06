@@ -221,7 +221,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
              */
             return apply_filters( 'wc_checkout_braspag_providers_as_option', $options, $providers );
         }
-
     }
 
 }

@@ -111,7 +111,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
 
             return $errors;
         }
-
     }
 
 }

@@ -16,17 +16,17 @@
 
 defined( 'ABSPATH' ) || exit;
 
-_e( 'Payment data:', WCB_TEXTDOMAIN );
+esc_html_e( 'Payment data:', WCB_TEXTDOMAIN );
 
 // Method Name
 echo "\n\n";
-_e( 'Payment method:', WCB_TEXTDOMAIN );
-echo "\n" . $method['name'];
+esc_html_e( 'Payment method:', WCB_TEXTDOMAIN );
+echo "\n" . esc_html( $method['name'] );
 
 // Installments
 if ( ! empty( $payment['Installments'] ) ) {
     echo "\n\n";
-    _e( 'Installments:', WCB_TEXTDOMAIN );
+    esc_html_e( 'Installments:', WCB_TEXTDOMAIN );
     echo "\n";
 
     if ( ! empty( $payment['Amount'] ) ) {
@@ -34,40 +34,40 @@ if ( ! empty( $payment['Installments'] ) ) {
         $installment = number_format( $installment, 2, ',', '' );
 
         // translators: First is installments count and second is amount by installment
-        printf( __( '%1$s x R$%2$s' ), $payment['Installments'], $installment );
+        printf( esc_html__( '%1$s x R$%2$s' ), esc_html( $payment['Installments'] ), esc_html( $installment ) );
     } else {
-        echo $payment['Installments'];
+        echo esc_html( $payment['Installments'] );
     }
 }
 
 // Status
 if ( ! empty( $payment['Status'] ) ) {
     echo "\n\n";
-    _e( 'Status:', WCB_TEXTDOMAIN );
-    echo "\n" . WC_Checkout_Braspag_Messages::payment_status( $payment['Status'] );
+    esc_html_e( 'Status:', WCB_TEXTDOMAIN );
+    echo "\n" . esc_html( WC_Checkout_Braspag_Messages::payment_status( $payment['Status'] ) );
 }
 
 // Credit Card
 if ( ! empty( $payment['CreditCard'] ) ) {
     echo "\n\n";
-    _e( 'Credit Card:', WCB_TEXTDOMAIN );
-    echo "\n" . $payment['CreditCard']['CardNumber'];
+    esc_html_e( 'Credit Card:', WCB_TEXTDOMAIN );
+    echo "\n" . esc_html( $payment['CreditCard']['CardNumber'] );
 
     if ( ! empty( $payment['CreditCard']['Brand'] ) ) {
-        echo ' (' . $payment['CreditCard']['Brand'] . ')';
+        echo ' (' . esc_html( $payment['CreditCard']['Brand'] ) . ')';
     }
 }
 
 // Bank Slip
 if ( ! empty( $payment['Url'] ) && ! empty( $payment['BoletoNumber'] ) && ( empty( $payment['Status'] ) || (string) $payment['Status'] !== '2' ) ) {
     echo "\n\n";
-    _e( 'Bank Slip:', WCB_TEXTDOMAIN );
-    echo "\n" . $payment['Url'];
+    esc_html_e( 'Bank Slip:', WCB_TEXTDOMAIN );
+    echo "\n" . esc_html( $payment['Url'] );
 
     if ( ! empty( $payment['DigitableLine'] ) ) {
         echo "\n\n";
-        _e( 'Digitable Line:', WCB_TEXTDOMAIN );
-        echo "\n" . $payment['DigitableLine'];
+        esc_html_e( 'Digitable Line:', WCB_TEXTDOMAIN );
+        echo "\n" . esc_html( $payment['DigitableLine'] );
     }
 }
 

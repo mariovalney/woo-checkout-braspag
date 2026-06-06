@@ -727,7 +727,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     $this->log( sprintf( '[process_payment] update_order_status result: %s', var_export( $updated, true ) ) ); // phpcs:ignore
 
                     if ( empty( $updated ) ) {
-                        throw new Exception( __( 'There was a problem updating your payment.', WCB_TEXTDOMAIN ) );
+                        throw new Exception( __( 'There was a problem updating your payment.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
                     }
 
                     // WooCommerce Stuff (without order status)
@@ -1021,7 +1021,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 // Log
                 $this->log( 'Error on checkout_braspag_gateway: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
 
-                throw new Exception( __( 'There was a problem processing your payment: your order is invalid.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem processing your payment: your order is invalid.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             /**
@@ -1317,7 +1317,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             wp_enqueue_style( $this->id . '-' . $handle . '-style', $file_url, $dependencies, $version );
         }
-
     }
 
 }

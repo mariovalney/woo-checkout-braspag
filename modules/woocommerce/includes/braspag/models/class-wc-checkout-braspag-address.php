@@ -83,7 +83,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
              */
             do_action( 'wc_checkout_braspag_populate_address', $this, $this->order );
         }
-
     }
 
 }

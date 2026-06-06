@@ -69,7 +69,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          */
         public function populate( $order ) {
             if ( ! $order instanceof WC_Order ) {
-                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'There was a problem with your payment. Please try again.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             $this->MerchantOrderId = $order->get_id();
@@ -222,7 +222,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
              * To be catched
              * @see WC_Checkout_Braspag_Api::do_payment_request()
              */
-            throw new Exception( $message );
+            throw new Exception( $message ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         /**
@@ -255,14 +255,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             // If not find any payment, alert error
             if ( empty( $payments[0]['PaymentId'] ) ) {
-                throw new Exception( $default_error );
+                throw new Exception( $default_error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // Get transaction
             $transaction = $api_query->get_transaction( $payments[0]['PaymentId'] );
 
             if ( empty( $transaction['Payment'] ) ) {
-                throw new Exception( $default_error );
+                throw new Exception( $default_error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
             // If it's the same payment, return transaction
@@ -272,10 +272,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             // Try to cancel
             if ( $this->cancel_transaction( $transaction['Payment']['PaymentId'], $transaction['Payment']['Amount'] ) ) {
-                throw new Exception( __( 'You already tried to pay this order. We are canceling this attempt so you can retry.', WCB_TEXTDOMAIN ) );
+                throw new Exception( __( 'You already tried to pay this order. We are canceling this attempt so you can retry.', WCB_TEXTDOMAIN ) ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
             }
 
-            throw new Exception( $default_error );
+            throw new Exception( $default_error ); // phpcs:ignore WordPress.Security.EscapeOutput.ExceptionNotEscaped
         }
 
         /**
@@ -289,7 +289,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
 
             return 'WC_Checkout_Braspag_Request_' . $identifier;
         }
-
     }
 
 }

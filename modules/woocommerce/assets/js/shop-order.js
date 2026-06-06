@@ -1,7 +1,7 @@
 'use strict';
 
-jQuery( document ).ready( function($) {
-    $( 'body' ).on('change', '#braspag_payment_method', function(event) {
+jQuery( document ).ready( function ($) {
+    $( 'body' ).on('change', '#braspag_payment_method', function (event) {
         event.preventDefault();
 
         var method = $( this ).val();
