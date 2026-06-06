@@ -78,7 +78,7 @@ gulp.task( 'watch', watch_changes );
  * Run style, script and generate a ZIP to be published
  */
 var trunk_files = [
-    './modules',
+    './modules/**/*',
     './index.php',
     './LICENSE.txt',
     './readme.txt',
@@ -86,7 +86,7 @@ var trunk_files = [
 ];
 
 function build() {
-    return gulp.src( trunk_files )
+    return gulp.src( trunk_files, { base: './' } )
         .pipe( zip( 'trunk.zip' ) )
         .pipe( gulp.dest( '.' ) );
 }
