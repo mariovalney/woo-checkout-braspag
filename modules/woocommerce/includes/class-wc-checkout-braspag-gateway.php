@@ -107,6 +107,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->merchant_key         = $this->get_option( 'merchant_key' );
             $this->sandbox_merchant_key = $this->get_option( 'sandbox_merchant_key' );
             $this->debug                = $this->get_option( 'debug' );
+            $this->override_user_agent  = $this->get_option( 'override_user_agent' );
 
             // Is Sandbox?
             $this->is_sandbox = ( 'yes' === $this->sandbox ) ? true : false;
@@ -542,7 +543,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'  => 'title',
                         'title' => __( 'Advanced Settings', WCB_TEXTDOMAIN ),
                     ),
-                    'use_extra_fields' => array(
+                    'use_extra_fields'    => array(
                         'type'        => 'checkbox',
                         'title'       => __( 'Customer Fields', WCB_TEXTDOMAIN ),
                         'label'       => sprintf(
@@ -553,7 +554,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'description' => $use_extra_fields_description,
                         'default'     => 'yes',
                     ),
-                    'debug'            => array(
+                    'override_user_agent' => array(
+                        'type'        => 'checkbox',
+                        'title'       => __( 'Override User-Agent', WCB_TEXTDOMAIN ),
+                        'label'       => __( 'Override the User-Agent sent in API requests', WCB_TEXTDOMAIN ),
+                        'description' => sprintf(
+                            // translators: %s is the plugin version, e.g. "4.0.2"
+                            __( 'Replaces WordPress\'s default User-Agent with "WooCheckoutBraspag/%s". Useful when the hosting domain triggers blocks on Braspag\'s WAF. Be careful activating.', WCB_TEXTDOMAIN ),
+                            WCB_VERSION
+                        ),
+                        'default'     => 'no',
+                    ),
+                    'debug'               => array(
                         'type'        => 'checkbox',
                         'title'       => __( 'Debug Log', WCB_TEXTDOMAIN ),
                         'label'       => __( 'Enable logging', WCB_TEXTDOMAIN ),

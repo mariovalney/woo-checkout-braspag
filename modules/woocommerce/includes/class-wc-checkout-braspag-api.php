@@ -260,8 +260,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 'blocking'    => true,
                 'headers'     => [],
                 'httpversion' => '1.1',
-                'user-agent'  => 'WooCheckoutBraspag/' . WCB_VERSION,
             );
+
+            if ( 'yes' === $this->gateway->override_user_agent ) {
+                $default['user-agent'] = 'WooCheckoutBraspag/' . WCB_VERSION;
+            }
 
             $args = wp_parse_args( $args, $default );
 
