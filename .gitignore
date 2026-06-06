@@ -19,4 +19,7 @@ vendor
 modules/*/assets/css/*.min.css
 modules/*/assets/js/*.min.js
 
+trunk.zip
+trunk/
+
 .phpintel
