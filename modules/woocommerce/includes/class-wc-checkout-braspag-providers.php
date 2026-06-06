@@ -195,33 +195,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
             ),
         );
 
-        /**
-         * Eletronic Transfer Providers
-         *
-         * @link https://braspag.github.io/manual/braspag-pagador?json#providers-para-transfer%C3%AAncia-eletronica-(d%C3%A9bito-online)
-         * @version 2.2.1 23/09/2020
-         */
-        const ELETRONIC_TRANSFER = array(
-            'Bradesco'               => array(
-                'description' => 'Débito online no Bradesco',
-            ),
-            'BancoDoBrasil'          => array(
-                'description' => 'Débito online no Banco do Brasil',
-            ),
-            'SafetyPay'              => array(
-                'description' => 'Débito online no Safety Pay',
-            ),
-            'Itau'                   => array(
-                'description' => 'Débito online no Itaú',
-            ),
-            'PayMeeRedirectCheckout' => array(
-                'description' => 'Débito online no PayMee Redirect Checkout',
-            ),
-            'PayMeeSemiTransparent'  => array(
-                'description' => 'Débito online no PayMee Semi Transparent',
-            ),
-        );
-
         public function __construct() {}
 
         /**

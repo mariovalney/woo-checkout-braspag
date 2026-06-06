@@ -1212,14 +1212,6 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
                     'frontend'  => true,
                 ],
-
-                // TODO: Still waiting Braspag Support
-                // 'et' => [
-                //     'enabled'   => false,
-                //     'code'      => 'EletronicTransfer',
-                //     'name'      => __( 'Eletronic Transfer', WCB_TEXTDOMAIN ),
-                //     'providers' => WC_Checkout_Braspag_Providers::ELETRONIC_TRANSFER,
-                // ],
             ];
 
             foreach ( array_keys( $this->payment_methods ) as $code ) {
