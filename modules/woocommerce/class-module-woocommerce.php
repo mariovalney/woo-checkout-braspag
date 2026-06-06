@@ -76,7 +76,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
-                'braspag/models/requests/class-wc-checkout-braspag-request-payment-wl',
             ];
         }
 
@@ -429,32 +428,6 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 }
 
                 $payment_type = $method['name'];
-
-                if ( ( $method['code'] ?? '' ) === 'CreditCard' && ! empty( $payment['Wallet'] ) ) {
-                    $wallet = __( 'e-wallet', WCB_TEXTDOMAIN );
-
-                    switch ( $payment['Wallet']['Type'] ?? '' ) {
-                        case 'ApplePay':
-                            $wallet = 'Apple Pay';
-                            break;
-                        case 'SamsungPay':
-                            $wallet = 'Samsung Pay';
-                            break;
-                        case 'AndroidPay':
-                            $wallet = 'Android Pay';
-                            break;
-                        case 'VisaCheckout':
-                            $wallet = 'Visa Checkout';
-                            break;
-                        case 'Masterpass':
-                            $wallet = 'Masterpass';
-                            break;
-                        default:
-                            break;
-                    }
-
-                    $payment_type = sprintf( __( 'Credit Card (%s)', WCB_TEXTDOMAIN ), $wallet );
-                }
 
                 break;
             }
