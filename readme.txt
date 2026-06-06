@@ -105,21 +105,7 @@ Check the previous FAQ.
 
 = How about e-wallet? =
 
-E-wallet is still on ALFA and not fully implemented. The payment method will not show up on checkout page (or order administration).
-
-We DO NOT RECOMMEND, but you can implement it by yourself:
-
-Step 1 - Create your frontend implementation as documented by e-wallet.
-
-Step 2 - Filter the `wc_checkout_braspag_frontend_payment_methods` return to allow e-wallet on front-end.
-
-Step 3 - Create and fill hidden inputs on `braspag/payment-methods/wl-form.php` for the data received by e-wallet:
-
-- braspag_payment_wl_type: the e-wallet type (Braspag docs: Wallet.Type).
-- braspag_payment_wl_token: the received token/code from e-wallet (we will fill the required Braspag field for each wallet type - there is no standard field name).
-- braspag_payment_wl_installments: payment installments (from Braspag docs, but we are not sure it can be not 1).
-
-Step 4 - Make sure everything is configured on WooCommerce admin (WalletKeys) and on Braspag (environment and production credentials).
+We don't support e-wallets.
 
 If you want to contribute a PR will be appreciated.
 
