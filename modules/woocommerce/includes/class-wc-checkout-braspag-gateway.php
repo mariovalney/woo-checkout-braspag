@@ -892,7 +892,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED:
-                    $order_status = 'cancelled';
+                    // Voided can mean either cancelled (not captured) or refunded (captured)
+                    $captured_amount = (int) ( $transaction['Payment']['CapturedAmount'] ?? 0 );
+                    $order_status    = $captured_amount > 0 ? 'refunded' : 'cancelled';
                     break;
 
                 case WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED:
@@ -1032,7 +1034,48 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
              */
             $transaction = apply_filters( 'wc_checkout_braspag_update_order_from_payment_transaction', $transaction, $order, $api_query, $this );
 
-            return $this->update_order_status( $transaction );
+            $updated = $this->update_order_status( $transaction );
+
+            $this->sync_voided_amount( $order, $transaction );
+
+            return $updated;
+        }
+
+        /**
+         * Sync VoidedAmount from Braspag to WooCommerce refunds.
+         *
+         * Creates a single WooCommerce refund for the difference between
+         * the VoidedAmount reported by Braspag and the total already
+         * refunded in WooCommerce, so both stay in sync.
+         */
+        public function sync_voided_amount( $order, $transaction ) {
+            $voided_amount = (int) ( $transaction['Payment']['VoidedAmount'] ?? 0 );
+
+            if ( $voided_amount <= 0 ) {
+                return;
+            }
+
+            $voided_total    = wc_format_decimal( $voided_amount / 100 );
+            $refunded_total  = (float) $order->get_total_refunded();
+            $difference      = round( (float) $voided_total - $refunded_total, wc_get_price_decimals() );
+
+            if ( $difference <= 0 ) {
+                return;
+            }
+
+            $refund = wc_create_refund( array(
+                'amount'     => $difference,
+                'reason'     => __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN ),
+                'order_id'   => $order->get_id(),
+                'restock_items' => false,
+            ) );
+
+            if ( is_wp_error( $refund ) ) {
+                $this->log( sprintf( '[sync_voided_amount] failed to create refund: %s', $refund->get_error_message() ), 'error' );
+                return;
+            }
+
+            $this->log( sprintf( '[sync_voided_amount] created refund of %s for order %d', $difference, $order->get_id() ) );
         }
 
         /**
