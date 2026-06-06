@@ -141,10 +141,11 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 = 5.0.0 =
 
+* Removed e-wallet (WL) support.
 * Added refund support for credit card and debit card payments via WooCommerce admin.
 * Full and partial refunds are supported for captured transactions.
 * Full refunds are also supported for authorized but not yet captured transactions.
-* Boleto and e-wallet payments do not support refunds via WooCommerce admin.
+* Boleto payments do not support refunds via WooCommerce admin.
 * Added required field validation for boleto (bank slip) payments: customer document (CPF/CNPJ), billing street, number, zip code, district, city and state are now validated before sending to Braspag.
 * API requests now use HTTP/1.1 to avoid WAF blocks on Braspag's Akamai edge.
 * Added "Override User-Agent" option in Advanced Settings to replace WordPress's default User-Agent in API requests.
