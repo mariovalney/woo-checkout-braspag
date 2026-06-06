@@ -59,6 +59,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
                 'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
                 'Interest'         => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_interest' ),
+                'NotificationUrl'  => $this->gateway->get_api_return_url(),
                 'Credentials'      => array(
                     'Code' => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
                     'Key'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),

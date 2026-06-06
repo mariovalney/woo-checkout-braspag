@@ -570,8 +570,54 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'description' => $debug_description,
                         'default'     => 'no',
                     ),
+                    'notification_url'    => array(
+                        'type'        => 'notification_url',
+                        'title'       => __( 'Notification URL', WCB_TEXTDOMAIN ),
+                        'description' => __( 'Register this URL in the Braspag merchant panel to receive POST notifications on payment status changes. It is generated automatically.', WCB_TEXTDOMAIN ),
+                    ),
                 )
             );
+        }
+
+        /**
+         * Render the read-only Notification URL field in admin settings.
+         *
+         * @param string $key
+         * @param array  $data
+         * @return string
+         */
+        public function generate_notification_url_html( $key, $data ) {
+            $field_key = $this->get_field_key( $key );
+            $url       = esc_url( $this->get_api_return_url() );
+            ob_start();
+            ?>
+            <tr valign="top">
+                <th scope="row" class="titledesc">
+                    <label><?php echo esc_html( $data['title'] ); ?></label>
+                </th>
+                <td class="forminp">
+                    <input type="text"
+                           id="<?php echo esc_attr( $field_key ); ?>"
+                           value="<?php echo $url; ?>"
+                           class="input-text regular-input"
+                           readonly="readonly"
+                           style="background-color:#f7f7f7;color:#555;" />
+                    <p class="description"><?php echo wp_kses_post( $data['description'] ); ?></p>
+                </td>
+            </tr>
+            <?php
+            return ob_get_clean();
+        }
+
+        /**
+         * Prevent the notification_url field from being saved to the database.
+         *
+         * @param string $key
+         * @param mixed  $value
+         * @return null
+         */
+        public function validate_notification_url_field( $key, $value ) {
+            return null;
         }
 
         /**
