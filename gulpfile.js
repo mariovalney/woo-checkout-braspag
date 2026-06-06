@@ -90,9 +90,9 @@ var trunk_files = [
 ];
 
 function build() {
-    return gulp.src(trunk_files)
-        .pipe(zip('trunk.zip'))
-        .pipe(gulp.dest('.'));
+    return gulp.src( trunk_files )
+        .pipe( zip( 'trunk.zip' ) )
+        .pipe( gulp.dest( '.' ) );
 }
 
 gulp.task( 'default', gulp.series( gulp.parallel( styles, scripts ), build ) );

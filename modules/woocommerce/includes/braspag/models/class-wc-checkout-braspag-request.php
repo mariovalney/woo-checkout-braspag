@@ -94,11 +94,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
          */
         public function validate() {
             if ( empty( $this::METHOD_CODE ) || empty( $this::TRANSACTION_ENDPOINT ) ) {
-                return [ __( 'Invalid payment method.', WCB_TEXTDOMAIN ) ];
+                return array( __( 'Invalid payment method.', WCB_TEXTDOMAIN ) );
             }
 
             if ( empty( $this->Payment['Amount'] ) ) {
-                return [ __( 'Invalid amount: your order is empty.', WCB_TEXTDOMAIN ) ];
+                return array( __( 'Invalid amount: your order is empty.', WCB_TEXTDOMAIN ) );
             }
 
             // Validate Customer
@@ -130,7 +130,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $errors = $this->validate();
 
             if ( ! empty( $errors ) ) {
-                return [ 'errors' => $errors ];
+                return array( 'errors' => $errors );
             }
 
             return $this->post_transaction();
@@ -169,7 +169,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             // Create WP Request
             $request = array(
                 'method'  => 'POST',
-                'headers' => [ 'Content-Type' => 'application/json' ],
+                'headers' => array( 'Content-Type' => 'application/json' ),
                 'body'    => wp_json_encode( $this ),
             );
 
@@ -185,7 +185,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request' ) ) {
             $result = $this->gateway->api->make_request( $endpoint, $request );
 
             // Check for success
-            $response = $result['response'] ?? [];
+            $response = $result['response'] ?? array();
             $body     = json_decode( ( $result['body'] ?? '' ), true );
 
             // If the payment WAS CREATED

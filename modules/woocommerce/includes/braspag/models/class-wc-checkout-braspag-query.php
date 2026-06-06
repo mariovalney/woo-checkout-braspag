@@ -45,7 +45,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
             $endpoint = '/v2/sales?merchantOrderId=' . $merchantOrderId;
             $payments = $this->query( $endpoint );
 
-            return $payments['Payments'] ?? [];
+            return $payments['Payments'] ?? array();
         }
 
         /**
@@ -89,7 +89,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Query' ) ) {
              *
              * @var array $args
              */
-            $args = apply_filters( 'wc_checkout_braspag_query_request', [], $endpoint );
+            $args = apply_filters( 'wc_checkout_braspag_query_request', array(), $endpoint );
 
             // Send the request
             $result = $this->gateway->api->make_request( $url, $args );

@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Address' ) ) {
             $this->order = $order;
 
             $data = $this->order->get_data();
-            $data = ( empty( $data[ $address_type ] ) ) ? [] : $data[ $address_type ];
+            $data = ( empty( $data[ $address_type ] ) ) ? array() : $data[ $address_type ];
 
             $this->populate( $data );
         }

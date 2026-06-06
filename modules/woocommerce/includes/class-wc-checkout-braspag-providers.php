@@ -32,95 +32,95 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          */
         const CREDIT_CARD = array(
             'Cielo'          => array(
-                'brands'      => [ 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover' ],
+                'brands'      => array( 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover' ),
                 'description' => 'Plataforma legado Cielo 1.5',
             ),
             'Cielo30'        => array(
-                'brands'      => [ 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover', 'Hipercard', 'Hiper' ],
+                'brands'      => array( 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover', 'Hipercard', 'Hiper' ),
                 'description' => 'Plataforma de e-commerce Cielo 3.0',
             ),
             'Redecard'       => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners' ),
                 'description' => 'Plataforma legado Rede Komerci',
             ),
             'Rede'           => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners', 'Elo', 'Amex' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners', 'Elo', 'Amex' ),
                 'description' => 'Plataforma de e-commerce Rede e-Rede na versão SOAP',
             ),
             'Rede2'          => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners', 'Elo', 'Amex' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Hiper', 'Diners', 'Elo', 'Amex' ),
                 'description' => 'Plataforma de e-commerce Rede e-Rede na versão REST',
             ),
             'Getnet'         => array(
-                'brands'      => [ 'Visa', 'Master', 'Elo', 'Amex' ],
+                'brands'      => array( 'Visa', 'Master', 'Elo', 'Amex' ),
                 'description' => 'Plataforma de e-commerce GetNet',
             ),
             'GlobalPayments' => array(
-                'brands'      => [ 'Visa', 'Master' ],
+                'brands'      => array( 'Visa', 'Master' ),
                 'description' => 'Plataforma de e-commerce Global Payments',
             ),
             'Stone'          => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Elo' ),
                 'description' => 'Plataforma de e-commerce Stone',
             ),
             'Safra'          => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ),
                 'description' => 'Provider para transações na plataforma de e-commerce Safra (legado)',
             ),
-            'Safra2'          => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ],
+            'Safra2'         => array(
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Elo', 'Amex' ),
                 'description' => 'Provider para transações na plataforma de e-commerce Safra',
             ),
             'FirstData'      => array(
-                'brands'      => [ 'Visa', 'Master', 'Cabal' ],
+                'brands'      => array( 'Visa', 'Master', 'Cabal' ),
                 'description' => 'Plataforma de e-commerce First Data: transações em guaranis (PYG), pesos argentinos (ARG) e reais (BRL)',
             ),
             'Sub1'           => array(
-                'brands'      => [ 'Visa', 'Master', 'Diners', 'Amex', 'Discover', 'Cabal', 'Naranja', 'Nevada' ],
+                'brands'      => array( 'Visa', 'Master', 'Diners', 'Amex', 'Discover', 'Cabal', 'Naranja', 'Nevada' ),
                 'description' => 'Plataforma legado Sub1 First Data: transações em pesos argentinos (ARG)',
             ),
             'Banorte'        => array(
-                'brands'      => [ 'Visa', 'Master', 'Carnet' ],
+                'brands'      => array( 'Visa', 'Master', 'Carnet' ),
                 'description' => 'Plataforma de e-commerce Banorte: transações em pesos mexicanos (MXN)',
             ),
             'Credibanco'     => array(
-                'brands'      => [ 'Visa', 'Master', 'Diners', 'Amex', 'Credential' ],
+                'brands'      => array( 'Visa', 'Master', 'Diners', 'Amex', 'Credential' ),
                 'description' => 'Plataforma de e-commerce Credibanco: transações em pesos colombianos (COP)',
             ),
             'Transbank'      => array(
-                'brands'      => [ 'Visa', 'Master', 'Diners', 'Amex' ],
+                'brands'      => array( 'Visa', 'Master', 'Diners', 'Amex' ),
                 'description' => 'Plataforma de e-commerce Transbank: transações em pesos chilenos (CLP)',
             ),
             'RedeSitef'      => array(
-                'brands'      => [ 'Visa', 'Master', 'Hipercard', 'Diners' ],
+                'brands'      => array( 'Visa', 'Master', 'Hipercard', 'Diners' ),
                 'description' => 'Plataforma Rede com tecnologia TEF',
             ),
             'CieloSitef'     => array(
-                'brands'      => [ 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover' ],
+                'brands'      => array( 'Visa', 'Master', 'Amex', 'Elo', 'Aura', 'Jcb', 'Diners', 'Discover' ),
                 'description' => 'Plataforma Cielo com tecnologia TEF',
             ),
             'SantanderSitef' => array(
-                'brands'      => [ 'Visa', 'Master' ],
+                'brands'      => array( 'Visa', 'Master' ),
                 'description' => 'Plataforma GetNet com tecnologia TEF',
             ),
             'Banese'         => array(
-                'brands'      => [ 'Banese' ],
+                'brands'      => array( 'Banese' ),
                 'description' => 'Provider para transações com a bandeira BaneseCard',
             ),
             'BrasilCard'     => array(
-                'brands'      => [ 'BrasilCard' ],
+                'brands'      => array( 'BrasilCard' ),
                 'description' => 'Provider para transações com a bandeira BrasilCard',
             ),
             'Credsystem'     => array(
-                'brands'      => [],
+                'brands'      => array(),
                 'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
             ),
             'Credz'          => array(
-                'brands'      => [ 'Credz' ],
+                'brands'      => array( 'Credz' ),
                 'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
             ),
             'DMCard'         => array(
-                'brands'      => [],
+                'brands'      => array(),
                 'description' => 'Sistema de cartões em regime de bandeira privativa (Private Label Brand)',
             ),
         );
@@ -132,33 +132,33 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Providers' ) ) {
          * @version 2.2.1 23/09/2020
          */
         const DEBIT_CARD = array(
-            'Cielo'   => array(
-                'brands'      => [ 'Visa', 'Master' ],
+            'Cielo'          => array(
+                'brands'      => array( 'Visa', 'Master' ),
                 'description' => 'Débito na plataforma legado Cielo 1.5',
             ),
-            'Cielo30' => array(
-                'brands'      => [ 'Visa', 'Master' ],
+            'Cielo30'        => array(
+                'brands'      => array( 'Visa', 'Master' ),
                 'description' => 'Débito na plataforma de e-commerce Cielo 3.0',
             ),
-            'Getnet'            => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce GetNet',
+            'Getnet'         => array(
+                'brands'      => array( 'Visa', 'Master' ),
+                'description' => 'Débito na plataforma de e-commerce GetNet',
             ),
-            'Rede2'             => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce Rede',
+            'Rede2'          => array(
+                'brands'      => array( 'Visa', 'Master' ),
+                'description' => 'Débito na plataforma de e-commerce Rede',
             ),
-            'Safra2'            => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce Safra',
+            'Safra2'         => array(
+                'brands'      => array( 'Visa', 'Master' ),
+                'description' => 'Débito na plataforma de e-commerce Safra',
             ),
-            'FirstData'         => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce First Data',
+            'FirstData'      => array(
+                'brands'      => array( 'Visa', 'Master' ),
+                'description' => 'Débito na plataforma de e-commerce First Data',
             ),
-            'GlobalPayments'    => array(
-                'brands'        => [ 'Visa', 'Master' ],
-                'description'   => 'Débito na plataforma de e-commerce Global Payments',
+            'GlobalPayments' => array(
+                'brands'      => array( 'Visa', 'Master' ),
+                'description' => 'Débito na plataforma de e-commerce Global Payments',
             ),
         );
 

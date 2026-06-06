@@ -62,7 +62,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
          * @return   array  $transaction A Braspag transaction.
          */
         public function finish_request( $transaction ) {
-            $payment = $transaction['Payment'] ?? [];
+            $payment = $transaction['Payment'] ?? array();
             $status  = $payment['Status'] ?? '';
 
             // Authorized and not finished should redirect to payment
@@ -77,10 +77,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Dc' ) ) {
                 $payment_id = $transaction['Payment']['PaymentId'];
                 $this->gateway->log( 'Payment ' . $payment_id . ' was authorized and user was sent to authentication.' );
 
-                return [
+                return array(
                     'url'         => $payment['AuthenticationUrl'],
                     'transaction' => $transaction,
-                ];
+                );
             }
 
             // Other cases we throw to create a notice

@@ -24,7 +24,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
          * @return mixed  The item if single or array of items. If not found returns false or empty array.
          */
         public function get_extradata( $name, $single = false ) {
-            $items = ( $single ) ? false : [];
+            $items = ( $single ) ? false : array();
 
             foreach ( $this->get_extradata_collection() as $item ) {
                 if ( empty( $item->Name ) || (string) $item->Name !== (string) $name ) {
@@ -56,10 +56,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
             $collection = $this->get_extradata_collection();
 
             // Add item
-            $collection[] = (object) [
+            $collection[] = (object) array(
                 'Name'  => $name,
                 'Value' => $value,
-            ];
+            );
 
             $this->set_extradata_collection( $collection );
         }
@@ -103,7 +103,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
          */
         public function get_extradata_collection() {
             if ( empty( $this->Payment ) || empty( $this->Payment['ExtraDataCollection'] ) || ! is_array( $this->Payment['ExtraDataCollection'] ) ) {
-                return [];
+                return array();
             }
 
             return $this->Payment['ExtraDataCollection'];
@@ -116,7 +116,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Traits_Extradata' ) ) {
          */
         public function set_extradata_collection( $collection ) {
             if ( empty( $this->Payment ) ) {
-                $this->Payment = [];
+                $this->Payment = array();
             }
 
             $this->Payment['ExtraDataCollection'] = (array) $collection;

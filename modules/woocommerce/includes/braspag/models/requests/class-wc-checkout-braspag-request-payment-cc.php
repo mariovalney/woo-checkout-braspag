@@ -50,7 +50,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             $provider = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' );
             $provider = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_provider', $provider, $this->gateway );
 
-            $payment = [
+            $payment = array(
                 'Provider'         => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
                 'Type'             => $data['code'],
                 'Amount'           => ( (float) $order->get_total() ) * 100,
@@ -59,13 +59,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 'SoftDescriptor'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_soft_description' ),
                 'Capture'          => ( $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_auto_capture', 'no' ) === 'yes' ),
                 'Interest'         => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_interest' ),
-                'Credentials'      => [
+                'Credentials'      => array(
                     'Code' => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_code' ),
                     'Key'  => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_credential_key' ),
-                ],
-            ];
+                ),
+            );
 
-            $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
+            $this->Payment = array_merge( ( empty( $this->Payment ) ? array() : $this->Payment ), $payment );
 
             // Make Interest ByMerchant default and validate
             if ( $this->Payment['Interest'] !== 'ByIssuer' ) {
@@ -117,7 +117,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
                 $alias = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_save_card_alias', $alias, $order, $this );
 
                 $this->Payment[ $this->card_node ]['SaveCard'] = true;
-                $this->Payment[ $this->card_node ]['Alias'] = $alias;
+                $this->Payment[ $this->card_node ]['Alias']    = $alias;
             }
 
             // Try to convert any month/year format to Y-m-d before to try sanitize
@@ -192,7 +192,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
             }
 
             // If captured, let's continue
-            $payment = $transaction['Payment'] ?? [];
+            $payment = $transaction['Payment'] ?? array();
 
             if ( ! empty( $payment['CapturedDate'] ) ) {
                 return $transaction;
@@ -212,7 +212,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Cc' ) ) {
          * @return   array  $transaction A Braspag transaction.
          */
         public function finish_request( $transaction ) {
-            $payment = $transaction['Payment'] ?? [];
+            $payment = $transaction['Payment'] ?? array();
             $status  = $payment['Status'] ?? '';
 
             // Authorized should capture

@@ -49,7 +49,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Model' ) ) {
          * @param    array  $errors
          */
         public function validate() {
-            return [];
+            return array();
         }
 
         /**

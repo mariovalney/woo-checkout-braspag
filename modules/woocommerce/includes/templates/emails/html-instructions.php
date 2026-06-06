@@ -16,14 +16,14 @@
 
 defined( 'ABSPATH' ) || exit;
 
-$data = [];
+$data = array();
 
 // Method Name
 if ( ! empty( $method['name'] ) ) {
-    $data[] = [
+    $data[] = array(
         __( 'Payment method:', WCB_TEXTDOMAIN ),
         $method['name'],
-    ];
+    );
 }
 
 // Installments
@@ -38,18 +38,18 @@ if ( ! empty( $payment['Installments'] ) ) {
         $installments = sprintf( __( '%1$s x R$%2$s' ), $payment['Installments'], $installment );
     }
 
-    $data[] = [
+    $data[] = array(
         __( 'Installments:', WCB_TEXTDOMAIN ),
         $installments,
-    ];
+    );
 }
 
 // Status
 if ( ! empty( $payment['Status'] ) ) {
-    $data[] = [
+    $data[] = array(
         __( 'Status:', WCB_TEXTDOMAIN ),
         WC_Checkout_Braspag_Messages::payment_status( $payment['Status'] ),
-    ];
+    );
 }
 
 // Credit Card
@@ -60,24 +60,24 @@ if ( ! empty( $payment['CreditCard'] ) ) {
         $card_number .= ' (' . $payment['CreditCard']['Brand'] . ')';
     }
 
-    $data[] = [
+    $data[] = array(
         __( 'Credit Card:', WCB_TEXTDOMAIN ),
         $card_number,
-    ];
+    );
 }
 
 // Bank Slip
 if ( ! empty( $payment['Url'] ) && ! empty( $payment['BoletoNumber'] ) && ( empty( $payment['Status'] ) || (string) $payment['Status'] !== '2' ) ) {
-    $data[] = [
+    $data[] = array(
         __( 'Bank Slip:', WCB_TEXTDOMAIN ),
         $payment['Url'],
-    ];
+    );
 
     if ( ! empty( $payment['DigitableLine'] ) ) {
-        $data[] = [
+        $data[] = array(
             __( 'Digitable Line:', WCB_TEXTDOMAIN ),
             $payment['DigitableLine'],
-        ];
+        );
     }
 }
 

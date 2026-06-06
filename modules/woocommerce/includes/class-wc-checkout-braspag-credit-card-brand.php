@@ -50,7 +50,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Credit_Card_Brand' ) ) {
          * @return boolean
          */
         public function is_amex() {
-            return $this->iin_is_between( [ 34, 37 ] );
+            return $this->iin_is_between( array( 34, 37 ) );
         }
 
         /**
@@ -78,7 +78,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Credit_Card_Brand' ) ) {
          * @return boolean
          */
         public function is_discover() {
-            return $this->iin_is_between( [ 64, 65, 6011 ] ) || $this->iin_is_between( 622126, 622925 )
+            return $this->iin_is_between( array( 64, 65, 6011 ) ) || $this->iin_is_between( 622126, 622925 )
                    || $this->iin_is_between( 624000, 626999 ) || $this->iin_is_between( 628200, 628899 );
         }
 
@@ -134,7 +134,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Credit_Card_Brand' ) ) {
          * @return boolean
          */
         public function is_hipercard() {
-            return $this->iin_is_between( [ 384100, 384140, 384160, 606282, 637095, 637568, 637599, 637609, 637612 ] );
+            return $this->iin_is_between( array( 384100, 384140, 384160, 606282, 637095, 637568, 637599, 637609, 637612 ) );
         }
 
         /**
@@ -190,7 +190,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Credit_Card_Brand' ) ) {
 
             $iin = (int) substr( $this->number, 0, $size );
 
-            $end = (int) str_pad( $end ?: $start, $size, '9' );
+            $end   = (int) str_pad( $end ?: $start, $size, '9' );
             $start = (int) str_pad( $start, $size, '0' );
 
             return $start <= $iin && $iin <= $end;

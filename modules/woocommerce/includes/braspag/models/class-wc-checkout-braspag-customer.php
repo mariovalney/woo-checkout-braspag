@@ -57,7 +57,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
             $billing_cnpj = $this->sanitize_post_text_field( 'billing_cnpj' );
 
             // If "person type" is not selectable
-            if ( empty( $person_type ) || ! in_array( $person_type, [ '1', '2' ], true ) ) {
+            if ( empty( $person_type ) || ! in_array( $person_type, array( '1', '2' ), true ) ) {
                 $person_type = ! empty( $billing_cpf ) ? '1' : '2';
             }
 
@@ -95,7 +95,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Customer' ) ) {
          * @param    array  $errors
          */
         public function validate() {
-            $errors = [];
+            $errors = array();
 
             $fields = array(
                 'Name' => __( 'Please fill the customer name.', WCB_TEXTDOMAIN ),

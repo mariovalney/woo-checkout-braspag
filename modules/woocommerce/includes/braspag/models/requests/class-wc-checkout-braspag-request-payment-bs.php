@@ -44,7 +44,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             $provider = $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_provider' );
             $provider = apply_filters( 'wc_checkout_braspag_request_payment_' . $this::METHOD_CODE . '_provider', $provider, $this->gateway );
 
-            $payment = [
+            $payment = array(
                 'Provider'       => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
                 'Type'           => $data['code'],
                 'Amount'         => ( (float) $order->get_total() ) * 100,
@@ -52,9 +52,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
                 'Demonstrative'  => '',
                 'Identification' => '',
                 'Instructions'   => $this->gateway->get_option( 'method_' . $this::METHOD_CODE . '_bank_slip_instructions' ),
-            ];
+            );
 
-            $this->Payment = array_merge( ( empty( $this->Payment ) ? [] : $this->Payment ), $payment );
+            $this->Payment = array_merge( ( empty( $this->Payment ) ? array() : $this->Payment ), $payment );
 
             /**
              * Filter bank slip number

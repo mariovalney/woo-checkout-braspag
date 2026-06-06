@@ -42,7 +42,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * @var array
          */
-        private $payment_methods = [];
+        private $payment_methods = array();
 
         /**
          * True if we are processing payment
@@ -86,7 +86,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $this->has_fields = true;
 
             // Supported features
-            $this->supports = [ 'products', 'refunds' ];
+            $this->supports = array( 'products', 'refunds' );
 
             /**
              * Load Payment Options
@@ -189,7 +189,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'title'             => __( 'Title', WCB_TEXTDOMAIN ),
                     'description'       => __( 'Title of payment method to user.', WCB_TEXTDOMAIN ),
                     'default'           => __( 'Braspag', WCB_TEXTDOMAIN ),
-                    'custom_attributes' => [ 'required' => 'required' ],
+                    'custom_attributes' => array( 'required' => 'required' ),
                 ),
                 'description'          => array(
                     'type'        => 'textarea',
@@ -206,7 +206,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'title'             => __( 'Merchant ID', WCB_TEXTDOMAIN ),
                     'description'       => $merchant_id_description,
                     'default'           => '',
-                    'custom_attributes' => [ 'required' => 'required' ],
+                    'custom_attributes' => array( 'required' => 'required' ),
                 ),
                 'sandbox'              => array(
                     'type'        => 'checkbox',
@@ -220,13 +220,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     'type'              => 'text',
                     'title'             => __( 'Merchant Key', WCB_TEXTDOMAIN ),
                     'description'       => $merchant_key_description,
-                    'custom_attributes' => [ 'data-condition' => '!woocommerce_checkout-braspag_sandbox' ],
+                    'custom_attributes' => array( 'data-condition' => '!woocommerce_checkout-braspag_sandbox' ),
                 ),
                 'sandbox_merchant_key' => array(
                     'type'              => 'text',
                     'title'             => __( 'Sandbox Merchant Key', WCB_TEXTDOMAIN ),
                     'description'       => $merchant_key_description,
-                    'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_sandbox' ],
+                    'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_sandbox' ),
                 ),
                 'methods_section'      => array(
                     'type'  => 'title',
@@ -263,7 +263,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                             __( 'Your %s provider', WCB_TEXTDOMAIN ),
                             mb_strtolower( $data['name'] )
                         ),
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => '',
                         'options'           => $providers_as_option,
                     );
@@ -276,7 +276,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Invoice Text', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Up to 13 characters.', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => '',
                     );
 
@@ -286,7 +286,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'label'             => __( 'Enable Auto Capture', WCB_TEXTDOMAIN ),
                         'description'       => $auto_capture_description,
                         'desc_tip'          => false,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => 'no',
                     );
 
@@ -298,7 +298,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                             'label'             => __( 'Enable Save Card', WCB_TEXTDOMAIN ),
                             'description'       => $save_card_description,
                             'desc_tip'          => false,
-                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                            'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                             'default'           => 'no',
                         );
 
@@ -308,7 +308,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                             'label'             => __( 'Find brand by credit card number', WCB_TEXTDOMAIN ),
                             'description'       => __( "Will check credit card number to find brand if it's not presented", WCB_TEXTDOMAIN ),
                             'desc_tip'          => true,
-                            'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                            'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                             'default'           => 'no',
                         );
                     }
@@ -318,12 +318,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Interest', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Installments Type: by merchant or by issuer.', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => 'ByMerchant',
-                        'options'           => [
+                        'options'           => array(
                             'ByMerchant' => __( 'By Merchant', WCB_TEXTDOMAIN ),
                             'ByIssuer'   => __( 'By Issuer', WCB_TEXTDOMAIN ),
-                        ],
+                        ),
                     );
 
                     $this->form_fields[ 'method_' . $code . '_credential_code' ] = array(
@@ -331,7 +331,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Code', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Affiliation generated by the acquirer (not required if configured on Braspag).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => '',
                     );
 
@@ -340,7 +340,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Key', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Affiliation Key/Token generated by the acquirer (not required if configured on Braspag).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => '',
                     );
 
@@ -350,7 +350,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Username', WCB_TEXTDOMAIN ),
                         'description'       => __( 'User generated by the acquirer (required for GetNet).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Getnet' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Getnet' ),
                         'default'           => '',
                     );
 
@@ -359,9 +359,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Password', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Password generated by the acquirer (required for GetNet).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Getnet',
-                        ],
+                        ),
                         'default'           => '',
                     );
 
@@ -371,9 +371,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
                         'description'       => __( 'TerminalID (required for Global Payments unless already configured on Braspag).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=GlobalPayments',
-                        ],
+                        ),
                         'default'           => '',
                     );
 
@@ -383,9 +383,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Fill with "Safrapay;Cidade;Estado" (required for Safra unless already configured on Braspag).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Safra',
-                        ],
+                        ),
                         'default'           => '',
                     );
 
@@ -394,9 +394,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Credential Signature', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Fill with "Safrapay;Cidade;Estado" (required for Safra unless already configured on Braspag).', WCB_TEXTDOMAIN ),
                         'desc_tip'          => true,
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled|woocommerce_checkout-braspag_method_' . $code . '_provider=Safra2',
-                        ],
+                        ),
                         'default'           => '',
                     );
                 }
@@ -411,7 +411,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Description', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Text about payment using bank slip to display to your customer (accepts HTML).', WCB_TEXTDOMAIN ),
                         'css'               => 'min-height: 150px;',
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ),
                         'default'           => $bs_description_default,
                     );
 
@@ -420,7 +420,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'title'             => $sub_option_preffix . __( 'Bank Slip Instructions', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Instructions displayed on bank slip. If not empty, will override the settings on Braspag.', WCB_TEXTDOMAIN ),
                         'css'               => 'min-height: 150px;',
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled' ),
                         'default'           => '',
                     );
 
@@ -428,11 +428,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Expiration Days', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Days from bank slip registration to customer pay. Will create expiration date. If not zero, will override the settings on Braspag.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -441,11 +441,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Nullify Days', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Days to cancel the bank slip. Only for Santander.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Santander2',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -454,11 +454,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Days To Fine', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Days to fine the customer after expiration date. Only for Bradesco.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -466,11 +466,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Fine Rate', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Fine amount (%). Only for Bradesco and allow 5 decimals.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 0.00001,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -478,11 +478,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Fine Amount', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Fine amount (in cents). Only for Bradesco and ignored if Fine Rate is not 0 or empty.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -490,11 +490,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Days To Interest', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Days to start charge interest after expiration date. Only for Bradesco.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -502,11 +502,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Interest Rate', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Interest amount (monthly % - for example 30% will charge 1% by day). Only for Bradesco and allow 5 decimals.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 0.00001,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -514,11 +514,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'number',
                         'title'             => $sub_option_preffix . __( 'Bank Slip Interest Amount', WCB_TEXTDOMAIN ),
                         'description'       => __( 'Interest amount (in cents). Only for Bradesco and ignored if Interest Rate is not 0 or empty.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [
+                        'custom_attributes' => array(
                             'data-condition' => 'woocommerce_checkout-braspag_method_bs_enabled|woocommerce_checkout-braspag_method_bs_provider=Bradesco2',
                             'min'            => 0,
                             'step'           => 1,
-                        ],
+                        ),
                         'default'           => 0,
                     );
 
@@ -527,19 +527,17 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'type'              => 'checkbox',
                         'title'             => $sub_option_preffix . __( 'Prefer Company', WCB_TEXTDOMAIN ),
                         'label'             => __( 'Use Company Name on Bank Slip data if Customer has CNPJ.', WCB_TEXTDOMAIN ),
-                        'custom_attributes' => [ 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ],
+                        'custom_attributes' => array( 'data-condition' => 'woocommerce_checkout-braspag_method_' . $code . '_enabled' ),
                         'default'           => 'no',
                     );
                 }
-
-
             }
 
             // Options after Payment Methods
             $this->form_fields = array_merge(
                 $this->form_fields,
                 array(
-                    'advanced_section' => array(
+                    'advanced_section'    => array(
                         'type'  => 'title',
                         'title' => __( 'Advanced Settings', WCB_TEXTDOMAIN ),
                     ),
@@ -599,7 +597,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return array
          */
         public function get_payment_method( $method ) {
-            return $this->payment_methods[ $method ] ?? [];
+            return $this->payment_methods[ $method ] ?? array();
         }
 
         /**
@@ -617,7 +615,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return array
          */
         public function get_frontend_payment_methods() {
-            $methods = [];
+            $methods = array();
 
             foreach ( $this->get_payment_methods() as $key => $value ) {
                 if ( empty( $value['enabled'] ) || empty( $value['frontend'] ) ) {
@@ -661,7 +659,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             global $braspag_gateway;
             $braspag_gateway = $this;
 
-            $payment_methods = [];
+            $payment_methods = array();
 
             foreach ( $this->get_frontend_payment_methods() as $code => $data ) {
                 // Ignore if has no provider selected (and we are not in sandbox)
@@ -682,7 +680,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
              *
              * We use wp_parse_args so you can filter a empty array to override defaults.
              */
-            $override_args = apply_filters( 'wc_checkout_braspag_form_data', [] );
+            $override_args = apply_filters( 'wc_checkout_braspag_form_data', array() );
             $args          = wp_parse_args( $override_args, $defaults );
 
             wc_get_template( 'checkout-form.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
@@ -750,12 +748,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                     );
                 } catch ( Exception $e ) {
                     $this->log( sprintf( '[process_payment] exception after update_order_status: %s', $e->getMessage() ), 'error' );
-                    $response['errors'] = [ $e->getMessage() ];
+                    $response['errors'] = array( $e->getMessage() );
                 }
             }
 
             // If not success, add error notices
-            $errors = ( ! empty( $response['errors'] ) ) ? $response['errors'] : [];
+            $errors = ( ! empty( $response['errors'] ) ) ? $response['errors'] : array();
 
             if ( ! empty( $errors ) ) {
                 $this->log( sprintf( '[process_payment] errors: %s', implode( ' | ', $errors ) ), 'error' );
@@ -796,7 +794,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             }
 
             // Only CC and DC support void; BS always returns false
-            $refundable_methods = [ 'cc', 'dc' ];
+            $refundable_methods = array( 'cc', 'dc' );
             if ( ! in_array( $method_code, $refundable_methods, true ) ) {
                 return new WP_Error( 'unsupported_method', __( 'Refund not supported for this payment method.', WCB_TEXTDOMAIN ) );
             }
@@ -814,13 +812,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $transaction = $api_query->get_transaction( $payment_id );
             $status      = (int) ( $transaction['Payment']['Status'] ?? -1 );
 
-            $non_refundable = [
+            $non_refundable = array(
                 WC_Checkout_Braspag_Api::TRANSACTION_STATUS_NOT_FINISHED,
                 WC_Checkout_Braspag_Api::TRANSACTION_STATUS_DENIED,
                 WC_Checkout_Braspag_Api::TRANSACTION_STATUS_VOIDED,
                 WC_Checkout_Braspag_Api::TRANSACTION_STATUS_REFUNDED,
                 WC_Checkout_Braspag_Api::TRANSACTION_STATUS_ABORTED,
-            ];
+            );
 
             if ( in_array( $status, $non_refundable, true ) ) {
                 return new WP_Error( 'invalid_status', __( 'This transaction cannot be refunded in its current status.', WCB_TEXTDOMAIN ) );
@@ -834,11 +832,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $request = new $request_class( $order, $this );
             $success = $request->cancel_transaction( $payment_id, $amount_in_cents );
             if ( $success ) {
-                $order->add_order_note( sprintf(
+                $order->add_order_note(
+                    sprintf(
                     /* translators: %s: refund amount */
-                    __( 'Braspag: refund of %s processed successfully.', WCB_TEXTDOMAIN ),
-                    wc_price( $amount )
-                ) );
+                        __( 'Braspag: refund of %s processed successfully.', WCB_TEXTDOMAIN ),
+                        wc_price( $amount )
+                    )
+                );
                 return true;
             }
 
@@ -954,7 +954,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          */
         public function update_order_transaction_data( WC_Order $order, $transaction ) {
             // Payment Data
-            $payment_data = $transaction['Payment'] ?? [];
+            $payment_data = $transaction['Payment'] ?? array();
             $order->update_meta_data( '_wc_braspag_payment_data', $payment_data );
             if ( ! empty( $payment_data['CreditCard'] ) && ! empty( $payment_data['CreditCard']['CardToken'] ) ) {
                 $card_token = array(
@@ -971,7 +971,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $order->update_meta_data( '_wc_braspag_payment_method', $payment_method );
 
             // Customer Data
-            $customer_data = $transaction['Customer'] ?? [];
+            $customer_data = $transaction['Customer'] ?? array();
             $order->update_meta_data( '_wc_braspag_customer_data', $customer_data );
 
             // Payment ID
@@ -1055,20 +1055,22 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 return;
             }
 
-            $voided_total    = wc_format_decimal( $voided_amount / 100 );
-            $refunded_total  = (float) $order->get_total_refunded();
-            $difference      = round( (float) $voided_total - $refunded_total, wc_get_price_decimals() );
+            $voided_total   = wc_format_decimal( $voided_amount / 100 );
+            $refunded_total = (float) $order->get_total_refunded();
+            $difference     = round( (float) $voided_total - $refunded_total, wc_get_price_decimals() );
 
             if ( $difference <= 0 ) {
                 return;
             }
 
-            $refund = wc_create_refund( array(
-                'amount'     => $difference,
-                'reason'     => __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN ),
-                'order_id'   => $order->get_id(),
-                'restock_items' => false,
-            ) );
+            $refund = wc_create_refund(
+                array(
+                    'amount'        => $difference,
+                    'reason'        => __( 'Sync from Braspag (VoidedAmount)', WCB_TEXTDOMAIN ),
+                    'order_id'      => $order->get_id(),
+                    'restock_items' => false,
+                )
+            );
 
             if ( is_wp_error( $refund ) ) {
                 $this->log( sprintf( '[sync_voided_amount] failed to create refund: %s', $refund->get_error_message() ), 'error' );
@@ -1095,7 +1097,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * @SuppressWarnings(PHPMD.DevelopmentCodeFragment)
          */
-        public function log( $message, $level = 'debug', $source = '', array $context = [] ) {
+        public function log( $message, $level = 'debug', $source = '', array $context = array() ) {
             if ( 'yes' !== $this->debug ) {
                 return;
             }
@@ -1138,7 +1140,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function enqueue_admin_script() {
-            $this->enqueue_asset( 'admin', [ 'jquery', 'underscore' ] );
+            $this->enqueue_asset( 'admin', array( 'jquery', 'underscore' ) );
         }
 
         /**
@@ -1148,8 +1150,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         public function enqueue_frontend_script() {
-            $this->enqueue_asset( 'frontend', [ 'jquery' ] );
-            $this->enqueue_asset( 'frontend', [], false );
+            $this->enqueue_asset( 'frontend', array( 'jquery' ) );
+            $this->enqueue_asset( 'frontend', array(), false );
         }
 
         /**
@@ -1169,10 +1171,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             // Add Payment Info
             $method = $order->get_meta( '_wc_braspag_payment_method' );
 
-            $args = [
+            $args = array(
                 'payment' => $order->get_meta( '_wc_braspag_payment_data' ),
                 'method'  => $this->get_payment_method( $method ),
-            ];
+            );
 
             wc_get_template( 'order-received.php', $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
         }
@@ -1186,16 +1188,16 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
         public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
             // Add Payment Info
             $payment_data = $order->get_meta( '_wc_braspag_payment_data' );
-            $method = $order->get_meta( '_wc_braspag_payment_method' );
+            $method       = $order->get_meta( '_wc_braspag_payment_method' );
 
             if ( empty( $payment_data ) ) {
                 return;
             }
 
-            $args = [
+            $args = array(
                 'payment' => $payment_data,
                 'method'  => $this->get_payment_method( $method ),
-            ];
+            );
 
             $template = ( $plain_text ) ? 'emails/plain-instructions.php' : 'emails/html-instructions.php';
             wc_get_template( $template, $args, 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
@@ -1258,14 +1260,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          * @return void
          */
         private function init_payment_options() {
-            $this->payment_methods = [
-                'cc' => [
+            $this->payment_methods = array(
+                'cc' => array(
                     'enabled'   => false,
                     'code'      => 'CreditCard',
                     'name'      => __( 'Credit Card', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::CREDIT_CARD,
                     'frontend'  => true,
-                ],
+                ),
                 // TODO: Still waiting Braspag Support
                 // 'dc' => [
                 //     'enabled'   => false,
@@ -1273,14 +1275,14 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 //     'name'      => __( 'Debit Card', WCB_TEXTDOMAIN ),
                 //     'providers' => WC_Checkout_Braspag_Providers::DEBIT_CARD,
                 // ],
-                'bs' => [
+                'bs' => array(
                     'enabled'   => false,
                     'code'      => 'Boleto',
                     'name'      => __( 'Bank Slip', WCB_TEXTDOMAIN ),
                     'providers' => WC_Checkout_Braspag_Providers::BANK_SLIP,
                     'frontend'  => true,
-                ],
-            ];
+                ),
+            );
 
             foreach ( array_keys( $this->payment_methods ) as $code ) {
                 $enabled = ( $this->get_option( 'method_' . $code . '_enabled', 'no' ) === 'yes' );
@@ -1300,7 +1302,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
          *
          * @return void
          */
-        private function enqueue_asset( $handle, $dependencies = [], $is_script = true ) {
+        private function enqueue_asset( $handle, $dependencies = array(), $is_script = true ) {
             $ext = ( $is_script ) ? 'js' : 'css';
 
             $version = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? uniqid() : WCB_VERSION;

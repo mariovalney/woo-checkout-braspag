@@ -18,7 +18,7 @@ defined( 'ABSPATH' ) || exit;
 
 echo wpautop( esc_html( $description ) ); // phpcs:ignore
 
-$methods = ( is_array( $methods ) ) ? $methods : [];
+$methods = ( is_array( $methods ) ) ? $methods : array();
 
 ?>
 
@@ -83,7 +83,7 @@ $methods = ( is_array( $methods ) ) ? $methods : [];
         echo '<div id="braspag-payment-method-' . esc_attr( $code ) . '-form" class="braspag-method-form' . esc_attr( $active ) . '">';
 
         // Payment Method Template
-        wc_get_template( 'payment-methods/' . $code . '-form.php', [], 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
+        wc_get_template( 'payment-methods/' . $code . '-form.php', array(), 'woocommerce/braspag/', WCB_WOOCOMMERCE_TEMPLATES );
 
         echo '</div>';
     }

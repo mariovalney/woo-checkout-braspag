@@ -34,7 +34,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          *
          * @var array
          */
-        public $includes = [];
+        public $includes = array();
 
         /**
          * Run
@@ -61,7 +61,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 define( 'WCB_WOOCOMMERCE_TEMPLATES', WCB_PLUGIN_PATH . '/modules/woocommerce/includes/templates/' );
             }
 
-            $this->includes = [
+            $this->includes = array(
                 'class-wc-checkout-braspag-gateway',
                 'class-wc-checkout-braspag-api',
                 'class-wc-checkout-braspag-providers',
@@ -76,7 +76,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-bs',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-cc',
                 'braspag/models/requests/class-wc-checkout-braspag-request-payment-dc',
-            ];
+            );
         }
 
         /**
@@ -125,7 +125,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          */
         public function plugin_action_links( $links ) {
             $url          = admin_url( 'admin.php?page=wc-settings&tab=checkout&section=wc_checkout_braspag_gateway' );
-            $plugin_links = [ '<a href="' . esc_url( $url ) . '">' . __( 'Settings', WCB_TEXTDOMAIN ) . '</a>' ];
+            $plugin_links = array( '<a href="' . esc_url( $url ) . '">' . __( 'Settings', WCB_TEXTDOMAIN ) . '</a>' );
 
             return array_merge( $plugin_links, $links );
         }
@@ -192,8 +192,8 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             if ( ! $post_type && ! empty( $_GET['post'] ) ) {
-                $post = sanitize_text_field( $_GET['post'] );
-                $post = get_post( $post );
+                $post      = sanitize_text_field( $_GET['post'] );
+                $post      = get_post( $post );
                 $post_type = $post ? $post->post_type : '';
             }
 
@@ -206,11 +206,11 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
 
             $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/js/shop-order.';
             $extension = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'js' : 'min.js';
-            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url . $extension, [ 'jquery' ], $version, true );
+            wp_enqueue_script( 'wc-checkout-braspag-shop-order-script', $file_url . $extension, array( 'jquery' ), $version, true );
 
             $file_url  = WCB_PLUGIN_URL . '/modules/woocommerce/assets/css/shop-order.';
             $extension = ( defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ) ? 'css' : 'min.css';
-            wp_enqueue_style( 'wc-checkout-braspag-shop-order-style', $file_url . $extension, [], $version );
+            wp_enqueue_style( 'wc-checkout-braspag-shop-order-style', $file_url . $extension, array(), $version );
         }
 
         /**
@@ -313,7 +313,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
          * @return boolean
          */
         private function can_create_payment_on_admin( $post ) {
-            $order = wc_get_order( $post );
+            $order   = wc_get_order( $post );
             $gateway = $this->get_gateway_object();
             if ( ! $order->needs_payment() || $order->get_payment_method() !== $gateway->id ) {
                 return false;
@@ -478,7 +478,7 @@ if ( ! class_exists( 'WCB_Module_Woocommerce' ) ) {
             }
 
             if ( $type === 'CreditCard' ) {
-                $creditcard = $payment['CreditCard'] ?? [];
+                $creditcard = $payment['CreditCard'] ?? array();
 
                 return array(
                     array(

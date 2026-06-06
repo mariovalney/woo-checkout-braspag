@@ -124,7 +124,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                 $classname = str_replace( ' ', '_', $classname );
                 $classname = 'WCB_Module_' . $classname;
 
-                $module_data  = get_file_data( $classfile, [ 'dependencies' => 'Depends' ] );
+                $module_data  = get_file_data( $classfile, array( 'dependencies' => 'Depends' ) );
                 $dependencies = $module_data['dependencies'];
 
                 if ( ! empty( $dependencies ) ) {
@@ -132,7 +132,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
                     $dependencies = explode( ',', $dependencies );
                 }
 
-                $modules[ $result ] = [ $classfile, $classname, $dependencies ];
+                $modules[ $result ] = array( $classfile, $classname, $dependencies );
             }
 
             $this->load_modules_by_dependence( $modules );
@@ -145,7 +145,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
          * @access   private
          */
         private function load_modules_by_dependence( $modules ) {
-            $not_loaded_modules = [];
+            $not_loaded_modules = array();
 
             foreach ( $modules as $module => $module_data ) {
                 if ( ! empty( $module_data[2] ) ) {
@@ -315,4 +315,4 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
 global $wcb_core;
 
 $wcb_core = new Woo_Checkout_Braspag();
-add_action( 'plugins_loaded', [ $wcb_core, 'run' ] );
+add_action( 'plugins_loaded', array( $wcb_core, 'run' ) );

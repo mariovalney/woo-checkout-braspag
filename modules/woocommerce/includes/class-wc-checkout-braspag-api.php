@@ -185,7 +185,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @return array
          */
-        public function do_payment_request( $method, $order, $gateway, $data = [] ) {
+        public function do_payment_request( $method, $order, $gateway, $data = array() ) {
             global $wccb_posted_data;
 
             if ( ! empty( $data ) ) {
@@ -229,7 +229,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 // We should redirect ?
                 if ( ! empty( $response['url'] ) ) {
                     $this->gateway->log( sprintf( '[do_payment_request] redirect url=%s', $response['url'] ) );
-                    $transaction = $response['transaction'] ?? [];
+                    $transaction = $response['transaction'] ?? array();
                     return $this->return_success( $response['url'], $transaction );
                 }
 
@@ -252,13 +252,13 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @see wp_remote_request()
          */
-        public function make_request( $url, $args = [] ) {
+        public function make_request( $url, $args = array() ) {
             // Default args
             $default = array(
                 'method'      => 'GET',
                 'timeout'     => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
                 'blocking'    => true,
-                'headers'     => [],
+                'headers'     => array(),
                 'httpversion' => '1.1',
             );
 
@@ -275,21 +275,25 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             // Make Request
             $result = wp_remote_request( $url, $args );
 
-            $this->gateway->log( sprintf(
-                '[make_request] %s %s MerchantId=%s MerchantKey=%s body=%s',
-                $args['method'],
-                $url,
-                $this->get_merchant_id(),
-                $this->mask_credential( $this->get_merchant_key() ),
-                $this->sanitize_log( $args['body'] ?? '' )
-            ) );
+            $this->gateway->log(
+                sprintf(
+                    '[make_request] %s %s MerchantId=%s MerchantKey=%s body=%s',
+                    $args['method'],
+                    $url,
+                    $this->get_merchant_id(),
+                    $this->mask_credential( $this->get_merchant_key() ),
+                    $this->sanitize_log( $args['body'] ?? '' )
+                )
+            );
 
             if ( ! is_wp_error( $result ) ) {
-                $this->gateway->log( sprintf(
-                    '[make_request] response status=%s body=%s',
-                    wp_json_encode( $result['response'] ?? '' ),
-                    $this->sanitize_log( $result['body'] ?? '' )
-                ) );
+                $this->gateway->log(
+                    sprintf(
+                        '[make_request] response status=%s body=%s',
+                        wp_json_encode( $result['response'] ?? '' ),
+                        $this->sanitize_log( $result['body'] ?? '' )
+                    )
+                );
 
                 return $result;
             }
@@ -306,9 +310,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          *
          * @see wp_remote_request()
          */
-        public function make_put_request( $url, $args = [] ) {
+        public function make_put_request( $url, $args = array() ) {
             if ( empty( $args['headers'] ) ) {
-                $args['headers'] = [];
+                $args['headers'] = array();
             }
 
             $args['method']                    = 'PUT';
@@ -349,10 +353,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @return array
          */
         private function return_success( $url, $transaction ) {
-            return [
+            return array(
                 'url'         => $url,
                 'transaction' => $transaction,
-            ];
+            );
         }
 
         /**
@@ -362,7 +366,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
          * @return array
          */
         private function return_error( $error ) {
-            return [ 'errors' => (array) $error ];
+            return array( 'errors' => (array) $error );
         }
 
     }
