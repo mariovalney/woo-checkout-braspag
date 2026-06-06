@@ -199,6 +199,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
             // Search for request class
             $class = WC_Checkout_Braspag_Request::get_request_class( 'payment_' . $method );
+
+            $this->gateway->log( sprintf( '[do_payment_request] method=%s class=%s', $method, $class ) );
+
             if ( ! class_exists( $class ) || ! method_exists( $class, 'do_request' ) ) {
                 return $this->return_error( __( 'Please, select a valid payment method.', WCB_TEXTDOMAIN ) );
             }
@@ -209,23 +212,32 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             try {
                 $response = $request->do_request();
 
+                $this->gateway->log( sprintf( '[do_payment_request] raw response keys: %s', implode( ', ', array_keys( (array) $response ) ) ) );
+
                 // Check for errors
                 if ( ! empty( $response['errors'] ) ) {
+                    $this->gateway->log( sprintf( '[do_payment_request] response errors: %s', implode( ' | ', (array) $response['errors'] ) ), 'error' );
                     return $this->return_error( $response['errors'] );
                 }
 
                 // It's a transaction ?
                 if ( ! empty( $response['MerchantOrderId'] ) ) {
+                    $this->gateway->log( sprintf( '[do_payment_request] transaction ok — MerchantOrderId=%s', $response['MerchantOrderId'] ) );
                     return $this->return_success( '', $response );
                 }
 
                 // We should redirect ?
                 if ( ! empty( $response['url'] ) ) {
+                    $this->gateway->log( sprintf( '[do_payment_request] redirect url=%s', $response['url'] ) );
                     $transaction = $response['transaction'] ?? [];
                     return $this->return_success( $response['url'], $transaction );
                 }
+
+                $this->gateway->log( '[do_payment_request] response did not match any expected shape', 'error' );
             } catch ( Exception $e ) {
                 $message = $e->getMessage();
+
+                $this->gateway->log( sprintf( '[do_payment_request] exception: %s', $message ), 'error' );
 
                 if ( ! empty( $message ) ) {
                     return $this->return_error( $message );
@@ -243,10 +255,12 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
         public function make_request( $url, $args = [] ) {
             // Default args
             $default = array(
-                'method'   => 'GET',
-                'timeout'  => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
-                'blocking' => true,
-                'headers'  => [],
+                'method'      => 'GET',
+                'timeout'     => apply_filters( 'wc_checkout_braspag_api_request_timeout', 30 ), // Filter timeout
+                'blocking'    => true,
+                'headers'     => [],
+                'httpversion' => '1.1',
+                'user-agent'  => 'WooCheckoutBraspag/' . WCB_VERSION,
             );
 
             $args = wp_parse_args( $args, $default );
@@ -258,20 +272,21 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             // Make Request
             $result = wp_remote_request( $url, $args );
 
+            $this->gateway->log( sprintf(
+                '[make_request] %s %s MerchantId=%s MerchantKey=%s body=%s',
+                $args['method'],
+                $url,
+                $this->get_merchant_id(),
+                $this->mask_credential( $this->get_merchant_key() ),
+                $this->sanitize_log( $args['body'] ?? '' )
+            ) );
+
             if ( ! is_wp_error( $result ) ) {
-                // Log response
-                $response_log = array(
-                    'url'      => $url,
-                    'response' => ( $result['response'] ?? '' ),
-                    'body'     => ( $result['body'] ?? '' ),
-                );
-
-                // Add request if it's debugging
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    $response_log['request'] = $args;
-                }
-
-                $this->gateway->log( $response_log );
+                $this->gateway->log( sprintf(
+                    '[make_request] response status=%s body=%s',
+                    wp_json_encode( $result['response'] ?? '' ),
+                    $this->sanitize_log( $result['body'] ?? '' )
+                ) );
 
                 return $result;
             }
@@ -297,6 +312,31 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
             $args['headers']['Content-Length'] = 0;
 
             return $this->make_request( $url, $args );
+        }
+
+        /**
+         * Mask sensitive fields in a JSON string before logging.
+         */
+        private function sanitize_log( $data ) {
+            if ( ! is_string( $data ) ) {
+                $data = wp_json_encode( $data );
+            }
+            $data = preg_replace( '/"CardNumber"\s*:\s*"(\d{6})\d+(\d{4})"/', '"CardNumber":"$1****$2"', $data );
+            $data = preg_replace( '/"SecurityCode"\s*:\s*"\d+"/', '"SecurityCode":"***"', $data );
+            $data = preg_replace( '/"Identity"\s*:\s*"(\d{3})\d+(\d{2})"/', '"Identity":"$1*****$2"', $data );
+            $data = preg_replace( '/"MerchantKey"\s*:\s*"(\w{6})\w+(\w{4})"/', '"MerchantKey":"$1****$2"', $data );
+            return $data;
+        }
+
+        /**
+         * Mask a plain string credential: keep first 6 and last 4 chars.
+         */
+        private function mask_credential( $value ) {
+            $len = strlen( $value );
+            if ( $len <= 10 ) {
+                return str_repeat( '*', $len );
+            }
+            return substr( $value, 0, 6 ) . '****' . substr( $value, -4 );
         }
 
         /**

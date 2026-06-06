@@ -690,6 +690,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
 
             $method = sanitize_text_field( $_POST['braspag_payment_method'] ?? '' ); // phpcs:ignore WordPress.Security.NonceVerification.Missing
 
+            $this->log( sprintf( '[process_payment] order_id=%d method=%s', $order_id, $method ) );
+
             /**
              * Filters the do_payment_request response.
              *
@@ -698,6 +700,8 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
              * @param WC_Payment_Gateway $this
              */
             $response = apply_filters( 'wc_checkout_braspag_do_payment_request', $this->api->do_payment_request( $method, $order, $this ), $order, $this );
+
+            $this->log( sprintf( '[process_payment] response keys: %s', implode( ', ', array_keys( $response ) ) ) );
 
             // Update Order after gateway response
             if ( ! empty( $response['transaction'] ) ) {
@@ -709,6 +713,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                 try {
                     // Our Stuff
                     $updated = $this->update_order_status( $response['transaction'] );
+
+                    $this->log( sprintf( '[process_payment] update_order_status result: %s', var_export( $updated, true ) ) ); // phpcs:ignore
+
                     if ( empty( $updated ) ) {
                         throw new Exception( __( 'There was a problem updating your payment.', WCB_TEXTDOMAIN ) );
                     }
@@ -730,12 +737,18 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
                         'redirect' => ( ! empty( $response['url'] ) ) ? $response['url'] : $this->get_return_url( $order ),
                     );
                 } catch ( Exception $e ) {
+                    $this->log( sprintf( '[process_payment] exception after update_order_status: %s', $e->getMessage() ), 'error' );
                     $response['errors'] = [ $e->getMessage() ];
                 }
             }
 
             // If not success, add error notices
             $errors = ( ! empty( $response['errors'] ) ) ? $response['errors'] : [];
+
+            if ( ! empty( $errors ) ) {
+                $this->log( sprintf( '[process_payment] errors: %s', implode( ' | ', $errors ) ), 'error' );
+            }
+
             foreach ( $errors as $error ) {
                 wc_add_notice( $error, 'error' );
             }
