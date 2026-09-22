@@ -4,7 +4,7 @@
  * Plugin Name:     Pagador (Braspag) Checkout for WooCommerce
  * Plugin URI:      https://github.com/Vizir/woo-checkout-braspag
  * Description:     Braspag payment gateway for WooCommerce.
- * Version:         5.0.0
+ * Version:         5.1.0
  * License:         GPLv2 or later
  * Author:          Vizir Software Studio, Mário Valney
  * Author URI:      http://vizir.com.br/en
@@ -252,7 +252,7 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
          */
         public function run() {
             // Definitions to plugin
-            define( 'WCB_VERSION', '5.0.0' );
+            define( 'WCB_VERSION', '5.1.0' );
             define( 'WCB_PLUGIN_FILE', __FILE__ );
             define( 'WCB_PLUGIN_BASENAME', plugin_basename( __FILE__ ) );
             define( 'WCB_PLUGIN_PATH', WP_PLUGIN_DIR . '/' . dirname( WCB_PLUGIN_BASENAME ) );
@@ -263,6 +263,8 @@ if ( ! class_exists( 'Woo_Checkout_Braspag' ) ) {
             if ( ! defined( 'WCB_TEXTDOMAIN' ) ) {
                 define( 'WCB_TEXTDOMAIN', 'woo-checkout-braspag' );
             }
+
+            require_once WCB_PLUGIN_PATH . '/includes/functions.php';
 
             // Running Modules
             foreach ( $this->modules as $module_slug => $module ) {

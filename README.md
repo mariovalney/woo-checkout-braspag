@@ -5,7 +5,7 @@
 **Requires at least:** 4.7  
 **Tested up to:** 7.0  
 **Requires PHP:** 7.2  
-**Stable tag:** 5.0.0  
+**Stable tag:** 5.1.0  
 **License:** GPLv2 or later  
 **License URI:** http://www.gnu.org/licenses/gpl-2.0.html  
 
@@ -142,6 +142,11 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 ## Changelog
 
+### 5.1.0
+
+* Added helpers and filter `wc_checkout_braspag_merchant_order_id_to_order_id` to resolve WooCommerce orders from alphanumeric MerchantOrderId values.
+* `update_order_status` and `update_order_from_payment` now use the new helpers instead of casting MerchantOrderId to int.
+
 ### 5.0.0
 
 * Removed e-wallet (WL) support.
@@ -269,6 +274,7 @@ For users:
 
 ## Upgrade Notice
 
-### 5.0.0
+### 5.1.0
 
-Major update. Adds refund support for credit and debit card, VoidedAmount sync from Braspag, HTTP/1.1 enforcement, and fixes for Voided status mapping. Please test on staging before updating.
+Adds filterable MerchantOrderId → order resolution for alphanumeric IDs. Safe upgrade for stores using numeric MerchantOrderId.
+

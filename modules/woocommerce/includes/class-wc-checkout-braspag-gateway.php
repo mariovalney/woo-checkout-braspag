@@ -859,9 +859,10 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             }
 
             // Get Order
-            $order = wc_get_order( (int) $transaction['MerchantOrderId'] );
+            $merchant_order_id = $transaction['MerchantOrderId'];
+            $order             = wc_checkout_braspag_get_order_by_merchant_order_id( $merchant_order_id );
             if ( empty( $order ) ) {
-                $this->log( 'Update Order Status failed: order is invalid for MerchantOrderId: ' . (int) $transaction['MerchantOrderId'] );
+                $this->log( 'Update Order Status failed: order is invalid for MerchantOrderId: ' . $merchant_order_id );
                 return false;
             }
 
@@ -1012,12 +1013,11 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Gateway' ) ) {
             $transaction = $api_query->get_transaction( $payment_id );
 
             // Check payment
-            $merchant_order_id = (int) ( $transaction['MerchantOrderId'] ?? 0 );
+            $merchant_order_id = $transaction['MerchantOrderId'] ?? '';
+            $order_id          = wc_checkout_braspag_get_order_id_from_merchant_order_id( $merchant_order_id );
+            $order             = $order_id ? wc_get_order( $order_id ) : false;
 
-            // Check for Order
-            $order = wc_get_order( $merchant_order_id );
-
-            if ( empty( $merchant_order_id ) || empty( $order->get_id() ) ) {
+            if ( empty( $order_id ) || empty( $order ) || empty( $order->get_id() ) ) {
                 // Log
                 $this->log( 'Error on checkout_braspag_gateway: Merchant Order Id (' . $merchant_order_id . ') has not a valid order.' );
 
