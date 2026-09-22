@@ -5,7 +5,7 @@ Tags: woocommerce, payment, braspag, mariovalney
 Requires at least: 4.7
 Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 5.1.0
+Stable tag: 5.1.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -139,6 +139,10 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 
 == Changelog ==
 
+= 5.1.1 =
+
+* Fixed release package: include `includes/` in the trunk build so `functions.php` is shipped with the plugin.
+
 = 5.1.0 =
 
 * Added helpers and filter `wc_checkout_braspag_merchant_order_id_to_order_id` to resolve WooCommerce orders from alphanumeric MerchantOrderId values.
@@ -270,6 +274,10 @@ For users:
 * Receive payments with Braspag!
 
 == Upgrade Notice ==
+
+= 5.1.1 =
+
+Critical fix for 5.1.0 releases: ships the missing includes/functions.php required on plugin load.
 
 = 5.1.0 =
 

@@ -79,6 +79,7 @@ gulp.task( 'watch', watch_changes );
  */
 var trunk_files = [
     './modules/**/*',
+    './includes/**/*',
     './index.php',
     './LICENSE.txt',
     './readme.txt',
