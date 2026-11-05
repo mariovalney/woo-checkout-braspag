@@ -206,10 +206,9 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
                 return $this->return_error( __( 'Please, select a valid payment method.', WCB_TEXTDOMAIN ) );
             }
 
-            // Request
-            $request = new $class( $order, $gateway );
-
             try {
+                // Request
+                $request  = new $class( $order, $gateway );
                 $response = $request->do_request();
 
                 $this->gateway->log( sprintf( '[do_payment_request] raw response keys: %s', implode( ', ', array_keys( (array) $response ) ) ) );
