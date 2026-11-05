@@ -323,16 +323,99 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Api' ) ) {
 
         /**
          * Mask sensitive fields in a JSON string before logging.
+         * Personal data keeps a few characters: the MerchantOrderId finds the order.
          */
         private function sanitize_log( $data ) {
             if ( ! is_string( $data ) ) {
                 $data = wp_json_encode( $data );
             }
+
+            $decoded = json_decode( (string) $data, true );
+
+            if ( is_array( $decoded ) ) {
+                return wp_json_encode( $this->mask_log_data( $decoded ), JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES );
+            }
+
             $data = preg_replace( '/"CardNumber"\s*:\s*"(\d{6})\d+(\d{4})"/', '"CardNumber":"$1****$2"', $data );
             $data = preg_replace( '/"SecurityCode"\s*:\s*"\d+"/', '"SecurityCode":"***"', $data );
             $data = preg_replace( '/"Identity"\s*:\s*"(\d{3})\d+(\d{2})"/', '"Identity":"$1*****$2"', $data );
             $data = preg_replace( '/"MerchantKey"\s*:\s*"(\w{6})\w+(\w{4})"/', '"MerchantKey":"$1****$2"', $data );
             return $data;
+        }
+
+        /**
+         * Mask sensitive values of a decoded Braspag payload (recursive).
+         *
+         * @param array $data
+         * @return array
+         */
+        private function mask_log_data( $data ) {
+            foreach ( $data as $key => $value ) {
+                if ( is_array( $value ) ) {
+                    $data[ $key ] = $this->mask_log_data( $value );
+                    continue;
+                }
+
+                if ( ! is_string( $value ) || $value === '' ) {
+                    continue;
+                }
+
+                switch ( $key ) {
+                    case 'Name':
+                    case 'Holder':
+                        $data[ $key ] = implode( ' ', array_map( array( $this, 'mask_text' ), preg_split( '/\s+/', trim( $value ) ) ) );
+                        break;
+
+                    case 'Email':
+                        $parts        = explode( '@', $value, 2 );
+                        $data[ $key ] = $this->mask_text( $parts[0] ) . ( isset( $parts[1] ) ? '@' . $parts[1] : '' );
+                        break;
+
+                    case 'Street':
+                    case 'Complement':
+                    case 'District':
+                        $data[ $key ] = $this->mask_text( $value );
+                        break;
+
+                    case 'Number':
+                    case 'Birthdate':
+                    case 'SecurityCode':
+                        $data[ $key ] = '***';
+                        break;
+
+                    case 'ZipCode':
+                        $data[ $key ] = substr( $value, 0, 5 ) . '***';
+                        break;
+
+                    case 'Identity':
+                        $digits       = preg_replace( '/\D/', '', $value );
+                        $data[ $key ] = strlen( $digits ) > 5 ? substr( $digits, 0, 3 ) . '*****' . substr( $digits, -2 ) : '***';
+                        break;
+
+                    case 'CardNumber':
+                        $data[ $key ] = preg_replace( '/^(\d{6})\d+(\d{4})$/', '$1****$2', $value );
+                        break;
+
+                    case 'Key':
+                    case 'Password':
+                    case 'Signature':
+                    case 'MerchantKey':
+                        $data[ $key ] = $this->mask_credential( $value );
+                        break;
+                }
+            }
+
+            return $data;
+        }
+
+        /**
+         * Mask a personal text: keep first 2 chars.
+         *
+         * @param string $value
+         * @return string
+         */
+        private function mask_text( $value ) {
+            return mb_substr( (string) $value, 0, 2 ) . '***';
         }
 
         /**
