@@ -5,7 +5,7 @@ Tags: woocommerce, payment, braspag, mariovalney
 Requires at least: 4.7
 Tested up to: 7.0
 Requires PHP: 7.2
-Stable tag: 5.1.1
+Stable tag: 5.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -138,6 +138,12 @@ Yes! Visit [GitHub repository](https://github.com/mariovalney/woo-checkout-brasp
 3. Screenshot 3
 
 == Changelog ==
+
+= 5.1.2 =
+
+* Fixed `Amount` sent as float (e.g. 25989.999999999996 for R$ 259,90): credit card, debit card and boleto now send integer cents.
+* Debug log now masks customer data (name, e-mail, address, document, birthdate) and credentials (`Key`, `Password`, `Signature`), keeping a few characters to identify the order.
+* Exceptions thrown while building the payment request (including from `populate` hooks) are now handled as payment errors instead of escaping `do_payment_request`.
 
 = 5.1.1 =
 
@@ -274,6 +280,10 @@ For users:
 * Receive payments with Braspag!
 
 == Upgrade Notice ==
+
+= 5.1.2 =
+
+Fixes rounding of the amount sent to Braspag and masks personal data in the debug log. Safe upgrade.
 
 = 5.1.1 =
 
