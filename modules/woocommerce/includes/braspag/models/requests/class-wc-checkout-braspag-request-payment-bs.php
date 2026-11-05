@@ -47,7 +47,7 @@ if ( ! class_exists( 'WC_Checkout_Braspag_Request_Payment_Bs' ) ) {
             $payment = array(
                 'Provider'       => ( $this->gateway->is_sandbox ) ? WC_Checkout_Braspag_Providers::SANDBOX : $provider,
                 'Type'           => $data['code'],
-                'Amount'         => ( (float) $order->get_total() ) * 100,
+                'Amount'         => (int) round( (float) $order->get_total() * 100 ),
                 'Assignor'       => '',
                 'Demonstrative'  => '',
                 'Identification' => '',
