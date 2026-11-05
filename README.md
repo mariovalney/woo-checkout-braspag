@@ -3,7 +3,7 @@
 **Donate link:** https://github.com/mariovalney/woo-checkout-braspag  
 **Tags:** woocommerce, payment, braspag, mariovalney  
 **Requires at least:** 4.7  
-**Tested up to:** 7.0  
+**Tested up to:** 7.1  
 **Requires PHP:** 7.2  
 **Stable tag:** 5.1.2  
 **License:** GPLv2 or later  
